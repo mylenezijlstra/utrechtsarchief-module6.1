@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Panorama Utrecht – 1859 Stijl</title>
-    <link rel="stylesheet" href="startscherm.css">
+    <link rel="stylesheet" href="./assets/css/startscherm.css">
 </head>
 
 <body>
@@ -24,17 +24,17 @@
 
             <div class="icon-row">
                 <div class="icon-item">
-                    <img src="img-voorkant/zoekbalkje.png" alt="Zoekicoon">
+                    <img src="./assets/img-voorkant/zoekbalkje.png" alt="Zoekicoon">
                     <p>Zoekbalk gebruiken om plaatsen te vinden</p>
                 </div>
 
                 <div class="icon-item">
-                    <img src="img-voorkant/handje.png" alt="Hotspoticoon">
+                    <img src="./assets/img-voorkant/handje.png" alt="Hotspoticoon">
                     <p>Klik op de hotspots</p>
                 </div>
 
                 <div class="icon-item">
-                    <img src="img-voorkant/pijltjes.png" alt="Pijltjesicoon">
+                    <img src="./assets/img-voorkant/pijltjes.png" alt="Pijltjesicoon">
                     <p>Sleep om te verplaatsen</p>
                 </div>
             </div>
@@ -45,6 +45,6 @@
             <button class="button" onclick="toonDetails()">Bekijk Details</button>
         </div>
     </div>
-    <script src="app.js"></script>
+    <script src="./assets/js/app.js"></script>
 </body>
 </html>
