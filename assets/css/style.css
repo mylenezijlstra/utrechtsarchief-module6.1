@@ -1,0 +1,108 @@
+main .panorama { 
+    display: flex; 
+    flex-direction: row; 
+    position: absolute; height: 500px; /* vaste hoogte voor panorama */ 
+    overflow-x: scroll; 
+    overflow-y: hidden; } 
+    
+    main .panorama img { 
+      height: 100%; /* vul altijd de 500px hoogte */ 
+      width: auto; /* breedte schaalt mee */ 
+      object-fit: cover; /* snijdt af zodat alles exact 500px hoog is */ 
+      margin: 0; 
+      padding: 0; 
+      border: none; }
+  
+  /* .panorama-frame {
+    width: 90%;
+    margin: 40px auto;
+    background: #fffaf0;
+    border: 4px double #bda888;
+    box-shadow: 0 0 25px rgba(0,0,0,0.2);
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .panorama {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    gap: 10px;
+  }
+  
+  .image-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .image-wrapper img {
+    height: 500px;
+    transition: transform 0.3s ease;
+    border: 2px solid #c4ae8a;
+  }
+  
+  .image-wrapper img.zoomed {
+    transform: scale(1.2);
+    border-color: #8c7455;
+  }
+  
+  .hotspot {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 24px;
+    height: 24px;
+    background: #e8dbc4;
+    border: 2px solid #8c7455;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Georgia", serif;
+    font-weight: bold;
+    color: #8c7455;
+    transition: 0.2s;
+  }
+  
+  .hotspot:hover {
+    background: #d6c4a5;
+    transform: scale(1.1);
+  }
+  
+  .info-box {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    max-width: 320px;
+    background: #f9f1e3;
+    border: 2px solid #c4ae8a;
+    padding: 12px;
+    font-size: 14px;
+    font-family: "Georgia", serif;
+    color: #4b3a26;
+    text-align: left;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    display: none;
+  }
+  
+  .info-box strong {
+    color: #6b5334;
+  }
+  
+  
+  <div class="panorama-frame">
+              <div class="panorama">
+  
+                  <!-- Afbeelding 2 met hotspot -->
+                  <div class="image-wrapper">
+                      <img src="img/pannoramafoto2.jpg" alt="Panorama 2" style="height:500px; margin-left:0px; margin-top:0px; z-index:1;">
+                      <span class="hotspot">•</span>
+                      <div class="info-box">
+                          <strong>Opmerking:</strong><br>
+                          Pagina 2 van het Panorama van Utrecht, op de lithostenen getekend door J. Bos, gedrukt bij P.W. van de Weijer en in juli 1859 uitgegeven door de Wed. Herfkens en zoon. Het panorama is een rondwandeling met steeds wisselende gezichten op de stad Utrecht vanaf de singels. Het bestaat uit vier aaneengeplakte, zigzag gevouwen bladen met een totale lengte van 5,82 meter. Elk beeld tussen twee vouwen is afzonderlijk beschreven (nr. 135001-135033). Met een tweede, identiek exemplaar (alleen afwijkende titelpagina): nr. 135001-1 - 135033-1.<br><br>
+                          <strong>Beschrijving:</strong><br>
+                          Gezicht over de Wittevrouwenbrug in de Wittevrouwenstraat te Utrecht met het douanekantoor (de latere politiepost Wittevrouwen) en de Willemskazerne.
+                      </div>
+                  </div> */

@@ -1,0 +1,193 @@
+body {
+    background: #f3ecdd;
+    margin: 0;
+    padding: 40px;
+    font-family: "Georgia", serif;
+    color: #4b3a26;
+}
+
+.frame {
+    width: 85%;
+    margin: auto;
+    padding: 40px;
+    background: #fffaf0;
+    border: 4px double #bda888;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    padding-bottom: 100px;
+}
+
+/* knoppen boven */
+.top-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.nav-button {
+    background: #e8dbc4;
+    border: 2px solid #8c7455;
+    color: #4b3a26;
+    font-family: "Georgia", serif;
+    font-size: 16px;
+    padding: 8px 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.nav-button:hover {
+    background: #d6c4a5;
+    transform: scale(1.05);
+}
+
+.info-button {
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    font-size: 48px;
+    letter-spacing: 3px;
+    color: #6b5334;
+    margin-bottom: 20px;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+    font-family: "Times New Roman", serif;
+}
+
+/* ICON BLOK */
+.icon-block {
+    width: 90%;
+    margin: 40px auto;
+    background: #f9f1e3;
+    border: 2px solid #c4ae8a;
+    padding: 0px 30px;
+    text-align: center;
+    padding-bottom: 100px;
+}
+
+.icon-heading {
+    font-size: 26px;
+    color: #6b5334;
+    margin-top: 40px;
+    margin-bottom: 80px;
+    font-family: "Times New Roman", serif;
+}
+
+.icon-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1 1 200px;
+    max-width: 300px;
+    min-height: 220px; 
+    justify-content: flex-start;
+}
+
+.icon-item img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.icon-item p {
+    font-size: 24px;
+    color: #4b3a26;
+    margin: 0;
+    line-height: 1.4;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* knoppen onder */
+.buttons {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.button {
+    padding: 16px 30px;
+    background: #e8dbc4;
+    border: 2px solid #8c7455;
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #4b3a26;
+    font-family: "Georgia", serif;
+}
+
+.button:hover {
+    background: #d6c4a5;
+    transform: scale(1.08);
+}
+
+/* Mobiel */
+@media screen and (max-width: 768px) {
+    .icon-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .icon-item img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .icon-item p {
+        font-size: 20px;
+        min-height: 50px;
+    }
+
+    .icon-heading {
+        font-size: 26px;
+    }
+
+    .buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .button {
+        font-size: 20px;
+        padding: 14px 24px;
+    }
+}
+
+/* Tablet en desktop */
+@media screen and (min-width: 768px) {
+    .icon-heading {
+        font-size: 32px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .icon-heading {
+        font-size: 43px;
+    }
+}
