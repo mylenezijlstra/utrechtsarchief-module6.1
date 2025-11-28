@@ -1,113 +1,113 @@
-   /* dit is code voor de hotspots graag niet aan zitten!!!! */
-      /* css */
-  /* .panorama-frame {
-    width: 90%;
-    margin: 40px auto;
-    background: #fffaf0;
-    border: 4px double #bda888;
-    box-shadow: 0 0 25px rgba(0,0,0,0.2);
-    padding: 20px;
-    text-align: center;
-  }
+/* dit is code voor de hotspots graag niet aan zitten!!!! */
+/* css */
+/* .panorama-frame {
+width: 90%;
+margin: 40px auto;
+background: #fffaf0;
+border: 4px double #bda888;
+box-shadow: 0 0 25px rgba(0,0,0,0.2);
+padding: 20px;
+text-align: center;
+}
+
+.panorama {
+display: flex;
+flex-direction: row;
+overflow-x: scroll;
+overflow-y: hidden;
+gap: 10px;
+}
+
+.image-wrapper {
+position: relative;
+display: inline-block;
+}
+
+.image-wrapper img {
+height: 500px;
+transition: transform 0.3s ease;
+border: 2px solid #c4ae8a;
+}
+
+.image-wrapper img.zoomed {
+transform: scale(1.2);
+border-color: #8c7455;
+}
+
+.hotspot {
+position: absolute;
+top: 20px;
+left: 20px;
+width: 24px;
+height: 24px;
+background: #e8dbc4;
+border: 2px solid #8c7455;
+border-radius: 50%;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: "Georgia", serif;
+font-weight: bold;
+color: #8c7455;
+transition: 0.2s;
+}
+
+.hotspot:hover {
+background: #d6c4a5;
+transform: scale(1.1);
+}
+
+.info-box {
+position: absolute;
+top: 60px;
+left: 20px;
+max-width: 320px;
+background: #f9f1e3;
+border: 2px solid #c4ae8a;
+padding: 12px;
+font-size: 14px;
+font-family: "Georgia", serif;
+color: #4b3a26;
+text-align: left;
+box-shadow: 0 0 15px rgba(0,0,0,0.15);
+display: none;
+}
+
+.info-box strong {
+color: #6b5334;
+}
+
+php
+<div class="panorama-frame">
+        <div class="panorama">
+
+            <!-- Afbeelding 2 met hotspot -->
+            <div class="image-wrapper">
+                <img src="img/pannoramafoto2.jpg" alt="Panorama 2" style="height:500px; margin-left:0px; margin-top:0px; z-index:1;">
+                <span class="hotspot">•</span>
+                <div class="info-box">
+                    <strong>Opmerking:</strong><br>
+                    Pagina 2 van het Panorama van Utrecht, op de lithostenen getekend door J. Bos, gedrukt bij P.W. van de Weijer en in juli 1859 uitgegeven door de Wed. Herfkens en zoon. Het panorama is een rondwandeling met steeds wisselende gezichten op de stad Utrecht vanaf de singels. Het bestaat uit vier aaneengeplakte, zigzag gevouwen bladen met een totale lengte van 5,82 meter. Elk beeld tussen twee vouwen is afzonderlijk beschreven (nr. 135001-135033). Met een tweede, identiek exemplaar (alleen afwijkende titelpagina): nr. 135001-1 - 135033-1.<br><br>
+                    <strong>Beschrijving:</strong><br>
+                    Gezicht over de Wittevrouwenbrug in de Wittevrouwenstraat te Utrecht met het douanekantoor (de latere politiepost Wittevrouwen) en de Willemskazerne.
+                </div>
+            </div> 
+            
+            
+js
+<script>
+document.querySelectorAll('.hotspot').forEach(hotspot => {
+hotspot.addEventListener('click', () => {
+  const wrapper = hotspot.closest('.image-wrapper');
+  const img = wrapper.querySelector('img');
+  const infoBox = wrapper.querySelector('.info-box');
   
-  .panorama {
-    display: flex;
-    flex-direction: row;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    gap: 10px;
-  }
-  
-  .image-wrapper {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .image-wrapper img {
-    height: 500px;
-    transition: transform 0.3s ease;
-    border: 2px solid #c4ae8a;
-  }
-  
-  .image-wrapper img.zoomed {
-    transform: scale(1.2);
-    border-color: #8c7455;
-  }
-  
-  .hotspot {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 24px;
-    height: 24px;
-    background: #e8dbc4;
-    border: 2px solid #8c7455;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: "Georgia", serif;
-    font-weight: bold;
-    color: #8c7455;
-    transition: 0.2s;
-  }
-  
-  .hotspot:hover {
-    background: #d6c4a5;
-    transform: scale(1.1);
-  }
-  
-  .info-box {
-    position: absolute;
-    top: 60px;
-    left: 20px;
-    max-width: 320px;
-    background: #f9f1e3;
-    border: 2px solid #c4ae8a;
-    padding: 12px;
-    font-size: 14px;
-    font-family: "Georgia", serif;
-    color: #4b3a26;
-    text-align: left;
-    box-shadow: 0 0 15px rgba(0,0,0,0.15);
-    display: none;
-  }
-  
-  .info-box strong {
-    color: #6b5334;
-  }
-  
-  php
-  <div class="panorama-frame">
-              <div class="panorama">
-  
-                  <!-- Afbeelding 2 met hotspot -->
-                  <div class="image-wrapper">
-                      <img src="img/pannoramafoto2.jpg" alt="Panorama 2" style="height:500px; margin-left:0px; margin-top:0px; z-index:1;">
-                      <span class="hotspot">•</span>
-                      <div class="info-box">
-                          <strong>Opmerking:</strong><br>
-                          Pagina 2 van het Panorama van Utrecht, op de lithostenen getekend door J. Bos, gedrukt bij P.W. van de Weijer en in juli 1859 uitgegeven door de Wed. Herfkens en zoon. Het panorama is een rondwandeling met steeds wisselende gezichten op de stad Utrecht vanaf de singels. Het bestaat uit vier aaneengeplakte, zigzag gevouwen bladen met een totale lengte van 5,82 meter. Elk beeld tussen twee vouwen is afzonderlijk beschreven (nr. 135001-135033). Met een tweede, identiek exemplaar (alleen afwijkende titelpagina): nr. 135001-1 - 135033-1.<br><br>
-                          <strong>Beschrijving:</strong><br>
-                          Gezicht over de Wittevrouwenbrug in de Wittevrouwenstraat te Utrecht met het douanekantoor (de latere politiepost Wittevrouwen) en de Willemskazerne.
-                      </div>
-                  </div> 
-                  
-                  
-    js
-    <script>
-    document.querySelectorAll('.hotspot').forEach(hotspot => {
-      hotspot.addEventListener('click', () => {
-        const wrapper = hotspot.closest('.image-wrapper');
-        const img = wrapper.querySelector('img');
-        const infoBox = wrapper.querySelector('.info-box');
-        
-        img.classList.toggle('zoomed');
-        infoBox.style.display = infoBox.style.display === 'block' ? 'none' : 'block';
-      });
-    });
-  </script>*/
+  img.classList.toggle('zoomed');
+  infoBox.style.display = infoBox.style.display === 'block' ? 'none' : 'block';
+});
+});
+</script>*/
 
 
 
@@ -119,28 +119,28 @@ USE panorama;
 
 -- Algemene teksten
 CREATE TABLE texts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    key_name VARCHAR(50),
-    lang VARCHAR(5),       -- 'nl' of 'en'
-    value TEXT,
-    UNIQUE(key_name, lang)
+id INT AUTO_INCREMENT PRIMARY KEY,
+key_name VARCHAR(50),
+lang VARCHAR(5),       -- 'nl' of 'en'
+value TEXT,
+UNIQUE(key_name, lang)
 );
 
 -- Iconen
 CREATE TABLE icons (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    image VARCHAR(255),
-    alt_text VARCHAR(255),
-    description TEXT,
-    lang VARCHAR(5)
+id INT AUTO_INCREMENT PRIMARY KEY,
+image VARCHAR(255),
+alt_text VARCHAR(255),
+description TEXT,
+lang VARCHAR(5)
 );
 
 -- Knoppen
 CREATE TABLE buttons (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    label VARCHAR(100),
-    action VARCHAR(255),
-    lang VARCHAR(5)
+id INT AUTO_INCREMENT PRIMARY KEY,
+label VARCHAR(100),
+action VARCHAR(255),
+lang VARCHAR(5)
 );
 ------------------------------------------------------------------------------------------------------------------------
 iconen crud 
@@ -150,139 +150,139 @@ include 'db.php';
 
 /* ---------------- TEXTS CRUD ---------------- */
 if (isset($_POST['update_text'])) {
-    $stmt = $conn->prepare("UPDATE texts SET value=? WHERE key_name=? AND lang=?");
-    $stmt->bind_param("sss", $_POST['value'], $_POST['key_name'], $_POST['lang']);
-    $stmt->execute();
+$stmt = $conn->prepare("UPDATE texts SET value=? WHERE key_name=? AND lang=?");
+$stmt->bind_param("sss", $_POST['value'], $_POST['key_name'], $_POST['lang']);
+$stmt->execute();
 }
 $texts = $conn->query("SELECT * FROM texts ORDER BY key_name, lang");
 
 /* ---------------- ICONS CRUD ---------------- */
 if (isset($_POST['add_icon'])) {
-    $stmt = $conn->prepare("INSERT INTO icons (image, alt_text, description, lang) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $_POST['image'], $_POST['alt_text'], $_POST['description'], $_POST['lang']);
-    $stmt->execute();
+$stmt = $conn->prepare("INSERT INTO icons (image, alt_text, description, lang) VALUES (?, ?, ?, ?)");
+$stmt->bind_param("ssss", $_POST['image'], $_POST['alt_text'], $_POST['description'], $_POST['lang']);
+$stmt->execute();
 }
 if (isset($_POST['update_icon'])) {
-    $stmt = $conn->prepare("UPDATE icons SET image=?, alt_text=?, description=?, lang=? WHERE id=?");
-    $stmt->bind_param("ssssi", $_POST['image'], $_POST['alt_text'], $_POST['description'], $_POST['lang'], $_POST['id']);
-    $stmt->execute();
+$stmt = $conn->prepare("UPDATE icons SET image=?, alt_text=?, description=?, lang=? WHERE id=?");
+$stmt->bind_param("ssssi", $_POST['image'], $_POST['alt_text'], $_POST['description'], $_POST['lang'], $_POST['id']);
+$stmt->execute();
 }
 if (isset($_GET['delete_icon'])) {
-    $conn->query("DELETE FROM icons WHERE id=".(int)$_GET['delete_icon']);
+$conn->query("DELETE FROM icons WHERE id=".(int)$_GET['delete_icon']);
 }
 $icons = $conn->query("SELECT * FROM icons ORDER BY lang");
 
 /* ---------------- BUTTONS CRUD ---------------- */
 if (isset($_POST['add_button'])) {
-    $stmt = $conn->prepare("INSERT INTO buttons (label, action, lang) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $_POST['label'], $_POST['action'], $_POST['lang']);
-    $stmt->execute();
+$stmt = $conn->prepare("INSERT INTO buttons (label, action, lang) VALUES (?, ?, ?)");
+$stmt->bind_param("sss", $_POST['label'], $_POST['action'], $_POST['lang']);
+$stmt->execute();
 }
 if (isset($_POST['update_button'])) {
-    $stmt = $conn->prepare("UPDATE buttons SET label=?, action=?, lang=? WHERE id=?");
-    $stmt->bind_param("sssi", $_POST['label'], $_POST['action'], $_POST['lang'], $_POST['id']);
-    $stmt->execute();
+$stmt = $conn->prepare("UPDATE buttons SET label=?, action=?, lang=? WHERE id=?");
+$stmt->bind_param("sssi", $_POST['label'], $_POST['action'], $_POST['lang'], $_POST['id']);
+$stmt->execute();
 }
 if (isset($_GET['delete_button'])) {
-    $conn->query("DELETE FROM buttons WHERE id=".(int)$_GET['delete_button']);
+$conn->query("DELETE FROM buttons WHERE id=".(int)$_GET['delete_button']);
 }
 $buttons = $conn->query("SELECT * FROM buttons ORDER BY lang");
 ?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin CRUD</title>
-    <link rel="stylesheet" href="admin.css">
+<meta charset="UTF-8">
+<title>Admin CRUD</title>
+<link rel="stylesheet" href="admin.css">
 </head>
 <body>
 <div class="admin-container">
-    <h1>Beheer Startscherm</h1>
+<h1>Beheer Startscherm</h1>
 
-    <section>
-        <h2>Algemene teksten</h2>
-        <?php while($t = $texts->fetch_assoc()): ?>
-        <form method="post" class="crud-form">
-            <input type="hidden" name="key_name" value="<?= $t['key_name'] ?>">
-            <input type="hidden" name="lang" value="<?= $t['lang'] ?>">
-            <label><?= $t['key_name'] ?> (<?= strtoupper($t['lang']) ?>):</label>
-            <input type="text" name="value" value="<?= $t['value'] ?>">
-            <button type="submit" name="update_text">Opslaan</button>
-        </form>
-        <?php endwhile; ?>
-    </section>
+<section>
+  <h2>Algemene teksten</h2>
+  <?php while($t = $texts->fetch_assoc()): ?>
+  <form method="post" class="crud-form">
+      <input type="hidden" name="key_name" value="<?= $t['key_name'] ?>">
+      <input type="hidden" name="lang" value="<?= $t['lang'] ?>">
+      <label><?= $t['key_name'] ?> (<?= strtoupper($t['lang']) ?>):</label>
+      <input type="text" name="value" value="<?= $t['value'] ?>">
+      <button type="submit" name="update_text">Opslaan</button>
+  </form>
+  <?php endwhile; ?>
+</section>
 
-    <section>
-        <h2>Iconen</h2>
-        <form method="post" class="crud-form">
-            <input type="text" name="image" placeholder="Bestandsnaam">
-            <input type="text" name="alt_text" placeholder="Alt-tekst">
-            <input type="text" name="description" placeholder="Beschrijving">
-            <select name="lang">
-                <option value="nl">NL</option>
-                <option value="en">EN</option>
-            </select>
-            <button type="submit" name="add_icon">Toevoegen</button>
-        </form>
-        <table>
-            <tr><th>Afbeelding</th><th>Alt</th><th>Beschrijving</th><th>Taal</th><th>Acties</th></tr>
-            <?php while($i = $icons->fetch_assoc()): ?>
-            <tr>
-                <form method="post">
-                    <td><input type="text" name="image" value="<?= $i['image'] ?>"></td>
-                    <td><input type="text" name="alt_text" value="<?= $i['alt_text'] ?>"></td>
-                    <td><input type="text" name="description" value="<?= $i['description'] ?>"></td>
-                    <td>
-                        <select name="lang">
-                            <option value="nl" <?= $i['lang']=='nl'?'selected':'' ?>>NL</option>
-                            <option value="en" <?= $i['lang']=='en'?'selected':'' ?>>EN</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="hidden" name="id" value="<?= $i['id'] ?>">
-                        <button type="submit" name="update_icon">Opslaan</button>
-                        <a href="?delete_icon=<?= $i['id'] ?>" class="delete">Verwijderen</a>
-                    </td>
-                </form>
-            </tr>
-            <?php endwhile; ?>
-        </table>
-    </section>
+<section>
+  <h2>Iconen</h2>
+  <form method="post" class="crud-form">
+      <input type="text" name="image" placeholder="Bestandsnaam">
+      <input type="text" name="alt_text" placeholder="Alt-tekst">
+      <input type="text" name="description" placeholder="Beschrijving">
+      <select name="lang">
+          <option value="nl">NL</option>
+          <option value="en">EN</option>
+      </select>
+      <button type="submit" name="add_icon">Toevoegen</button>
+  </form>
+  <table>
+      <tr><th>Afbeelding</th><th>Alt</th><th>Beschrijving</th><th>Taal</th><th>Acties</th></tr>
+      <?php while($i = $icons->fetch_assoc()): ?>
+      <tr>
+          <form method="post">
+              <td><input type="text" name="image" value="<?= $i['image'] ?>"></td>
+              <td><input type="text" name="alt_text" value="<?= $i['alt_text'] ?>"></td>
+              <td><input type="text" name="description" value="<?= $i['description'] ?>"></td>
+              <td>
+                  <select name="lang">
+                      <option value="nl" <?= $i['lang']=='nl'?'selected':'' ?>>NL</option>
+                      <option value="en" <?= $i['lang']=='en'?'selected':'' ?>>EN</option>
+                  </select>
+              </td>
+              <td>
+                  <input type="hidden" name="id" value="<?= $i['id'] ?>">
+                  <button type="submit" name="update_icon">Opslaan</button>
+                  <a href="?delete_icon=<?= $i['id'] ?>" class="delete">Verwijderen</a>
+              </td>
+          </form>
+      </tr>
+      <?php endwhile; ?>
+  </table>
+</section>
 
-    <section>
-        <h2>Knoppen</h2>
-        <form method="post" class="crud-form">
-            <input type="text" name="label" placeholder="Knoptekst">
-            <input type="text" name="action" placeholder="JS functie of URL">
-            <select name="lang">
-                <option value="nl">NL</option>
-                <option value="en">EN</option>
-            </select>
-            <button type="submit" name="add_button">Toevoegen</button>
-        </form>
-        <table>
-            <tr><th>Label</th><th>Action</th><th>Taal</th><th>Acties</th></tr>
-            <?php while($b = $buttons->fetch_assoc()): ?>
-            <tr>
-                <form method="post">
-                    <td><input type="text" name="label" value="<?= $b['label'] ?>"></td>
-                    <td><input type="text" name="action" value="<?= $b['action'] ?>"></td>
-                    <td>
-                        <select name="lang">
-                            <option value="nl" <?= $b['lang']=='nl'?'selected':'' ?>>NL</option>
-                            <option value="en" <?= $b['lang']=='en'?'selected':'' ?>>EN</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="hidden" name="id" value="<?= $b['id'] ?>">
-                        <button type="submit" name="update_button">Opslaan</button>
-                        <a href="?delete_button=<?= $b['id'] ?>" class="delete">Verwijderen</a>
-                    </td>
-                </form>
-            </tr>
-            <?php endwhile; ?>
-        </table>
-    </section>
+<section>
+  <h2>Knoppen</h2>
+  <form method="post" class="crud-form">
+      <input type="text" name="label" placeholder="Knoptekst">
+      <input type="text" name="action" placeholder="JS functie of URL">
+      <select name="lang">
+          <option value="nl">NL</option>
+          <option value="en">EN</option>
+      </select>
+      <button type="submit" name="add_button">Toevoegen</button>
+  </form>
+  <table>
+      <tr><th>Label</th><th>Action</th><th>Taal</th><th>Acties</th></tr>
+      <?php while($b = $buttons->fetch_assoc()): ?>
+      <tr>
+          <form method="post">
+              <td><input type="text" name="label" value="<?= $b['label'] ?>"></td>
+              <td><input type="text" name="action" value="<?= $b['action'] ?>"></td>
+              <td>
+                  <select name="lang">
+                      <option value="nl" <?= $b['lang']=='nl'?'selected':'' ?>>NL</option>
+                      <option value="en" <?= $b['lang']=='en'?'selected':'' ?>>EN</option>
+                  </select>
+              </td>
+              <td>
+                  <input type="hidden" name="id" value="<?= $b['id'] ?>">
+                  <button type="submit" name="update_button">Opslaan</button>
+                  <a href="?delete_button=<?= $b['id'] ?>" class="delete">Verwijderen</a>
+              </td>
+          </form>
+      </tr>
+      <?php endwhile; ?>
+  </table>
+</section>
 </div>
 </body>
 </html>
@@ -291,95 +291,95 @@ $buttons = $conn->query("SELECT * FROM buttons ORDER BY lang");
 
 css
 body {
-    font-family: Arial, sans-serif;
-    background: #f3ecdd;
-    margin: 0;
-    padding: 20px;
-    color: #4b3a26;
+font-family: Arial, sans-serif;
+background: #f3ecdd;
+margin: 0;
+padding: 20px;
+color: #4b3a26;
 }
 
 .admin-container {
-    max-width: 900px;
-    margin: auto;
-    background: #fffaf0;
-    border: 2px solid #bda888;
-    padding: 30px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+max-width: 900px;
+margin: auto;
+background: #fffaf0;
+border: 2px solid #bda888;
+padding: 30px;
+box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #6b5334;
+text-align: center;
+margin-bottom: 30px;
+color: #6b5334;
 }
 
 section {
-    margin-bottom: 40px;
+margin-bottom: 40px;
 }
 
 h2 {
-    margin-bottom: 15px;
-    color: #6b5334;
+margin-bottom: 15px;
+color: #6b5334;
 }
 
 .crud-form {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+display: flex;
+gap: 10px;
+margin-bottom: 20px;
 }
 
 .crud-form input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #c4ae8a;
-    border-radius: 4px;
+flex: 1;
+padding: 8px;
+border: 1px solid #c4ae8a;
+border-radius: 4px;
 }
 
 .crud-form button {
-    background: #e8dbc4;
-    border: 2px solid #8c7455;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: 0.2s;
+background: #e8dbc4;
+border: 2px solid #8c7455;
+padding: 8px 16px;
+cursor: pointer;
+transition: 0.2s;
 }
 
 .crud-form button:hover {
-    background: #d6c4a5;
-    transform: scale(1.05);
+background: #d6c4a5;
+transform: scale(1.05);
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+width: 100%;
+border-collapse: collapse;
+margin-bottom: 20px;
 }
 
 table th, table td {
-    border: 1px solid #c4ae8a;
-    padding: 8px;
-    text-align: center;
+border: 1px solid #c4ae8a;
+padding: 8px;
+text-align: center;
 }
 
 table input {
-    width: 90%;
-    padding: 6px;
+width: 90%;
+padding: 6px;
 }
 
 button {
-    background: #e8dbc4;
-    border: 2px solid #8c7455;
-    cursor: pointer;
-    padding: 6px 12px;
+background: #e8dbc4;
+border: 2px solid #8c7455;
+cursor: pointer;
+padding: 6px 12px;
 }
 
 button:hover {
-    background: #d6c4a5;
+background: #d6c4a5;
 }
 
 a.delete {
-    color: red;
-    text-decoration: none;
-    margin-left: 10px;
+color: red;
+text-decoration: none;
+margin-left: 10px;
 }
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -391,58 +391,58 @@ include 'db.php';
 // taal ophalen uit localStorage via JS → fallback standaard NL
 $lang = 'nl';
 if (isset($_GET['lang'])) {
-    $lang = $_GET['lang'];
+$lang = $_GET['lang'];
 }
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
 <head>
-    <meta charset="UTF-8">
-    <title>Panorama Utrecht – 1859 Stijl</title>
-    <link rel="stylesheet" href="startscherm.css">
+<meta charset="UTF-8">
+<title>Panorama Utrecht – 1859 Stijl</title>
+<link rel="stylesheet" href="startscherm.css">
 </head>
 <body>
 <div class="frame">
-    <div class="top-buttons">
-        <button class="nav-button">BEGIN</button>
-        <!-- Twee aparte taal-knoppen -->
-        <button id="btn-nl" class="nav-button">Nederlands</button>
-        <button id="btn-en" class="nav-button">English</button>
-        <button class="nav-button info-button">i</button>
-    </div>
+<div class="top-buttons">
+  <button class="nav-button">BEGIN</button>
+  <!-- Twee aparte taal-knoppen -->
+  <button id="btn-nl" class="nav-button">Nederlands</button>
+  <button id="btn-en" class="nav-button">English</button>
+  <button class="nav-button info-button">i</button>
+</div>
 
-    <!-- Titel en subtitel uit DB -->
-    <?php
-    $title = $conn->query("SELECT value FROM texts WHERE key_name='title' AND lang='$lang'")
-                  ->fetch_assoc()['value'] ?? 'PANORAMA VAN UTRECHT';
-    $subtitle = $conn->query("SELECT value FROM texts WHERE key_name='subtitle' AND lang='$lang'")
-                     ->fetch_assoc()['value'] ?? 'Hoe werkt het?';
-    ?>
-    <h1 class="title"><?= $title ?></h1>
+<!-- Titel en subtitel uit DB -->
+<?php
+$title = $conn->query("SELECT value FROM texts WHERE key_name='title' AND lang='$lang'")
+            ->fetch_assoc()['value'] ?? 'PANORAMA VAN UTRECHT';
+$subtitle = $conn->query("SELECT value FROM texts WHERE key_name='subtitle' AND lang='$lang'")
+               ->fetch_assoc()['value'] ?? 'Hoe werkt het?';
+?>
+<h1 class="title"><?= $title ?></h1>
 
-    <div class="icon-block">
-        <h2 class="icon-heading"><?= $subtitle ?></h2>
-        <div class="icon-row">
-            <?php
-            $icons = $conn->query("SELECT * FROM icons WHERE lang='$lang'");
-            while($i = $icons->fetch_assoc()):
-            ?>
-            <div class="icon-item">
-                <img src="img/<?= $i['image'] ?>" alt="<?= $i['alt_text'] ?>">
-                <p><?= $i['description'] ?></p>
-            </div>
-            <?php endwhile; ?>
-        </div>
-    </div>
+<div class="icon-block">
+  <h2 class="icon-heading"><?= $subtitle ?></h2>
+  <div class="icon-row">
+      <?php
+      $icons = $conn->query("SELECT * FROM icons WHERE lang='$lang'");
+      while($i = $icons->fetch_assoc()):
+      ?>
+      <div class="icon-item">
+          <img src="img/<?= $i['image'] ?>" alt="<?= $i['alt_text'] ?>">
+          <p><?= $i['description'] ?></p>
+      </div>
+      <?php endwhile; ?>
+  </div>
+</div>
 
-    <div class="buttons">
-        <?php
-        $buttons = $conn->query("SELECT * FROM buttons WHERE lang='$lang'");
-        while($b = $buttons->fetch_assoc()):
-        ?>
-        <button class="button" onclick="<?= $b['action'] ?>"><?= $b['label'] ?></button>
-        <?php endwhile; ?>
-    </div>
+<div class="buttons">
+  <?php
+  $buttons = $conn->query("SELECT * FROM buttons WHERE lang='$lang'");
+  while($b = $buttons->fetch_assoc()):
+  ?>
+  <button class="button" onclick="<?= $b['action'] ?>"><?= $b['label'] ?></button>
+  <?php endwhile; ?>
+</div>
 </div>
 
 <script src="app.js"></script>
@@ -456,41 +456,41 @@ let currentLang = localStorage.getItem("lang") || "nl";
 
 // Functie om taal te wisselen
 function setLanguage(lang) {
-  currentLang = lang;
-  localStorage.setItem("lang", currentLang);
+currentLang = lang;
+localStorage.setItem("lang", currentLang);
 
-  // Zet ook het lang-attribuut van <html>
-  document.documentElement.lang = lang;
+// Zet ook het lang-attribuut van <html>
+document.documentElement.lang = lang;
 
-  // Pagina herladen met ?lang=nl of ?lang=en
-  window.location.href = "index.php?lang=" + lang;
+// Pagina herladen met ?lang=nl of ?lang=en
+window.location.href = "index.php?lang=" + lang;
 }
 
 // Event listeners voor de taal-knoppen
 document.getElementById("btn-nl").addEventListener("click", function() {
-  setLanguage("nl");
+setLanguage("nl");
 });
 
 document.getElementById("btn-en").addEventListener("click", function() {
-  setLanguage("en");
+setLanguage("en");
 });
 
 // Zet taal bij laden (uit localStorage)
 document.addEventListener("DOMContentLoaded", function() {
-  // Als de URL geen ?lang heeft, voeg die toe op basis van localStorage
-  const urlParams = new URLSearchParams(window.location.search);
-  if (!urlParams.has("lang")) {
-    window.location.replace("index.php?lang=" + currentLang);
-  }
+// Als de URL geen ?lang heeft, voeg die toe op basis van localStorage
+const urlParams = new URLSearchParams(window.location.search);
+if (!urlParams.has("lang")) {
+window.location.replace("index.php?lang=" + currentLang);
+}
 });
 
 // Functies voor knoppen
 function startPanorama() {
-  console.log("Panorama gestart");
-  window.location.href = "panorama.php";
+console.log("Panorama gestart");
+window.location.href = "panorama.php";
 }
 
 function toonDetails() {
-  console.log("Details geopend");
-  alert("Hier komen hotspots en extra uitleg (kan ook eigen pagina worden).");
+console.log("Details geopend");
+alert("Hier komen hotspots en extra uitleg (kan ook eigen pagina worden).");
 }

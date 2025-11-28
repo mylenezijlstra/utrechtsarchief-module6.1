@@ -1,17 +1,18 @@
-main .panorama { 
-    display: flex; 
-    flex-direction: row; 
-    position: absolute; height: 500px;
-    overflow-x: scroll; 
-    overflow-y: hidden; } 
-    
-    main .panorama img { 
-      height: 100%;
-      width: auto;
-      object-fit: cover;
-      margin: 0; 
-      padding: 0; 
-      border: none; }
+.panorama {
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  align-items: center;
+}
+
+.panorama img {
+  height: 500px;
+  transition: transform 0.3s ease;
+  transform-origin: center center;
+}
+
+
   
 
       /* dit is code voor de hotspots graag niet aan zitten!!!! */
