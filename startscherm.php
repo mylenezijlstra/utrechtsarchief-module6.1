@@ -10,6 +10,13 @@
 </head>
 
 <body>
+
+   <header>
+      <?php
+      include "includes/header.php"
+      ?>
+   </header>
+
     <div class="frame">
         <div class="top-buttons">
             <button id="btn-nl" class="nav-button">Nederlands</button>
@@ -45,6 +52,13 @@
             <button class="button" onclick="toonDetails()">Bekijk Details</button>
         </div>
     </div>
+
+     <footer>
+      <?php
+      include "includes/footer.php"
+      ?>
+    </footer>
+
     <script src="./assets/js/app.js"></script>
 </body>
 </html>

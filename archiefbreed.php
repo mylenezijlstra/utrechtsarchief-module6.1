@@ -4,13 +4,22 @@ require_once './includes/db.php';
 
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panorama</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
+
 <body>
+
+  <header>
+    <?php
+    include "includes/header.php"
+    ?>
+  </header>
+
   <main>
     <div class="panorama-frame">
       <div class="panorama">
@@ -28,15 +37,15 @@ require_once './includes/db.php';
         while ($row = $result->fetch_assoc()) {
           echo '<div class="image-wrapper">';
           echo '<img src="./assets/img/' . $row['filename'] . '" alt="Panorama ' . $count . '">';
-          
+
           // Hotspot + info-box samen
           if ($row['pos_top'] !== null && $row['pos_left'] !== null) {
             echo '<div class="hotspot" style="top:' . (int)$row['pos_top'] . 'px; left:' . (int)$row['pos_left'] . 'px;">•';
-            
+
             if (!empty($row['description'])) {
               echo '<div class="info-box"><strong>Beschrijving:</strong><br>' . htmlspecialchars($row['description']) . '</div>';
             }
-            
+
             echo '</div>'; // sluit hotspot
           }
 
@@ -46,7 +55,18 @@ require_once './includes/db.php';
         ?>
       </div>
     </div>
+
+    <footer>
+      <?php
+      include "includes/footer.php"
+      ?>
+    </footer>
+
   </main>
+
+
+
   <script src="./assets/js/panorama.js"></script>
 </body>
+
 </html>
