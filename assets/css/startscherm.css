@@ -6,12 +6,12 @@ body {
 }
 
 .frame {
+    margin-top: 70px !important;
     width: 85%;
     margin: auto;
     padding: 40px;
     background: #fffaf0;
     border: 4px double #bda888;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
     text-align: center;
     position: relative;
     padding-bottom: 100px;
