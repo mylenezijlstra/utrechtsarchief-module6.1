@@ -104,10 +104,12 @@
         </a>
 
         <nav>
-            <a href="/panorama">› Panorama</a>
-            <a href="/spel">› Spel</a>
+            <a href="startscherm.php"> Startscherm</a>
+            <a href="archiefbreed.php"> Panorama</a>
+            <a href="/spel"> Spel</a>
+            <a href="/Colofon"> Colofon</a>
             <a href="/over-ons">› Over ons</a>
-            <a href="/contact">› Contact</a>
+            <a href="https://hetutrechtsarchief.nl/contact"> Contact</a>
             <a href="/english"><i>English</i></a>
             <a href="/nederlands"><i>Nederlands</i></a>
         </nav>
