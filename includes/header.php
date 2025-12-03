@@ -94,6 +94,55 @@
             z-index: 1000;
             /* zodat hij boven andere elementen blijft */
         }
+
+        /* Positioneer de dropdown binnen je nav */
+        nav .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Stijl van de knop “› Over ons” */
+        nav .dropbtn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0 10px;
+            text-decoration: none;
+            font: inherit;
+            font-weight: 500;
+        
+        }
+
+        /* Dropdown stijl */
+        nav .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px 20px;
+            min-width: 220px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
+        /* Links in dropdown */
+        nav .dropdown-content a {
+            display: block;
+            padding: 6px 0;
+            color: black;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav .dropdown-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Dropdown openen bij hover */
+        nav .dropdown:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 
@@ -106,9 +155,26 @@
         <nav>
             <a href="startscherm.php"> Startscherm</a>
             <a href="archiefbreed.php"> Panorama</a>
-            <a href="/spel"> Spel</a>
-            <a href="/Colofon"> Colofon</a>
-            <a href="/over-ons">› Over ons</a>
+            <a href="spel.php"> Spel</a>
+            <a href="colofon.php"> Colofon</a>
+
+            <div class="dropdown">
+                <button class="dropbtn">› Over ons</button>
+
+                <div class="dropdown-content">
+                    <a href="https://hetutrechtsarchief.nl/over-ons/archief-overdragen">Archief overdragen</a>
+                    <a href="https://hetutrechtsarchief.nl/over-ons/missie">Beleid</a>
+                    <a href="https://hetutrechtsarchief.nl/over-ons/projecten">Projecten</a>
+                    <a href="https://hetutrechtsarchief.nl/over-ons/nieuws">Nieuws</a>
+                    <a href="https://hetutrechtsarchief.nl/over-ons/medewerkers">Medewerkers</a>
+                    <a href="https://hetutrechtsarchief.nl/over-ons/vacatures">Vacatures</a>
+                    <a href="https://hetutrechtsarchief.nl/over-ons/word-vriend">Word vriend</a>
+                    <a href="https://hetutrechtsarchief.nl/over-ons/toegankelijkheid">Toegankelijkheid</a>
+                    <a href="https://hetutrechtsarchief.nl/over-ons/heeft-u-een-klacht">Heeft u een klacht?</a>
+                </div>
+            </div>
+
+
             <a href="https://hetutrechtsarchief.nl/contact"> Contact</a>
             <a href="/english"><i>English</i></a>
             <a href="/nederlands"><i>Nederlands</i></a>
