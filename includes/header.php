@@ -111,7 +111,7 @@
             text-decoration: none;
             font: inherit;
             font-weight: 500;
-        
+
         }
 
         /* Dropdown stijl */
@@ -143,14 +143,129 @@
         nav .dropdown:hover .dropdown-content {
             display: block;
         }
+
+
+        .menu-toggle {
+            display: none;
+        }
+
+        /* Tablet (iPad) */
+        @media (max-width: 1024px) {
+
+            header {
+                flex-direction: row;
+                justify-content: space-between;
+
+            }
+
+            header nav {
+                display: none;
+                /* verberg menu standaard */
+                flex-direction: column;
+                width: 100%;
+                background: #f9f9f9;
+                padding: 10px;
+                margin-bottom: -300px;
+
+            }
+
+            header nav.active {
+                display: flex;
+                /* toon menu bij klik */
+            }
+
+            .menu-toggle {
+                display: block;
+                cursor: pointer;
+                font-size: 1.5rem;
+            }
+
+            .search-btn {
+                display: none;
+                /* verberg zoekknop op kleine schermen */
+
+            }
+
+            .logo img {
+                height: 95px;
+                /* kleiner logo */
+                bottom: -35px;
+                /* minder uitsteken */
+
+            }
+
+            .logo.shrink img {
+                height: 70px;
+                /* nog kleiner bij scroll */
+                bottom: 0px;
+
+            }
+        }
+
+        /* Telefoon */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: row;
+                justify-content: space-between;
+
+            }
+
+            header nav {
+                display: none;
+                /* verberg menu standaard */
+                flex-direction: column;
+                width: 100%;
+                background: #f9f9f9;
+                padding: 10px;
+                margin-bottom: -300px;
+            }
+
+            header nav.active {
+                display: flex;
+                /* toon menu bij klik */
+            }
+
+            .menu-toggle {
+                display: block;
+                cursor: pointer;
+                font-size: 1.5rem;
+            }
+
+            .search-btn {
+                display: none;
+                /* verberg zoekknop op kleine schermen */
+
+            }
+
+            .logo img {
+                height: 65px;
+                /* kleiner logo */
+                bottom: -15px;
+                /* minder uitsteken */
+
+            }
+
+            .logo.shrink img {
+                height: 50px;
+                /* nog kleiner bij scroll */
+                bottom: 15px;
+
+            }
+
+        }
     </style>
 </head>
 
 <body>
     <header>
+
+
+
         <a class="search-btn" href="/zoeken">
             <img src="./assets/img/searchicon.png" alt="Zoeken" />
         </a>
+
+        <div class="menu-toggle">☰</div>
 
         <nav>
             <a href="startscherm.php"> Startscherm</a>
@@ -197,6 +312,14 @@
                 logo.classList.remove('shrink');
                 img.src = './assets/img/logogroot.png';
             }
+        });
+
+
+        const toggle = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('header nav');
+
+        toggle.addEventListener('click', () => {
+            nav.classList.toggle('active');
         });
     </script>
 </body>
