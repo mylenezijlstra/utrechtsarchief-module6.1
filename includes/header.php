@@ -253,6 +253,17 @@
             }
 
         }
+
+        #btn-en,
+        #btn-nl {
+            all: unset;
+            /* haalt alle standaard button-styling weg */
+           
+            /* maakt de tekst dikgedrukt */
+            cursor: pointer;
+            /* blijft klikbaar */
+            font-style: italic;  
+        }
     </style>
 </head>
 
@@ -291,8 +302,8 @@
 
 
             <a href="https://hetutrechtsarchief.nl/contact"> Contact</a>
-            <a href="/english"><i>English</i></a>
-            <a href="/nederlands"><i>Nederlands</i></a>
+            <button id="btn-en">English</button>
+            <button id="btn-nl">Nederlands</button>
         </nav>
 
         <a class="logo" href="/">
