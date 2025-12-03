@@ -100,14 +100,18 @@
     <div class="footer-columns">
         <div class="footer-col">
             <h4>Plan een bezoek</h4>
-            <p>› Expo - Hamburgerstraat 28<br>› Studiezaal - Alexander Numankade 199 - 201</p>
+             <ul>
+                <li><a href="https://hetutrechtsarchief.nl/expo">› Expo - Hamburgerstraat 28</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/studiezaal-en-depot">› Studiezaal - Alexander Numankade 199 - 201</a></li>
+
+            </ul><br>
 
             <h4>Onderzoek</h4>
             <ul>
-                <li><a href="#">› Archieven doorzoeken</a></li>
-                <li><a href="#">› Beeldmateriaal bekijken</a></li>
-                <li><a href="#">› Bouwtekeningen</a></li>
-                <li><a href="#">› Personen zoeken</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/onderzoek/collecties">› Archieven doorzoeken</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/beeldmateriaal-bekijken/">› Beeldmateriaal bekijken</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/bouwtekeningen-en-woonomgeving">› Bouwtekeningen</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/onderzoek/resultaten/personen-mais?mivast=39&mizig=100&miadt=39&miview=tbl&milang=nl">› Personen zoeken</a></li>
             </ul><br><br>
 
             <form class="newsletter">
@@ -119,15 +123,14 @@
         <div class="footer-col">
             <h4>Over ons</h4>
             <ul>
-                <li><a href="#">› Nieuws</a></li>
-                <li><a href="#">› Agenda</a></li>
-                <li><a href="#">› Uw materiaal in ons archief</a></li>
-                <li><a href="#">› Contact</a></li>
-                <li><a href="#">› Toegankelijkheid</a></li>
-                <li><a href="#">› Auteursrecht en disclaimer</a></li>
-                <li><a href="#">› Privacyverklaring</a></li>
-                <li><a href="#">› ANBI</a></li>
-                <li><a href="#">› English</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/over-ons/nieuws">› Nieuws</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/ontdekken/agenda">› Agenda</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/uw-materiaal-in-ons-archief">› Uw materiaal in ons archief</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/contact">› Contact</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/toegankelijkheid">› Toegankelijkheid</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/disclaimer-colofon">› Auteursrecht en disclaimer</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/privacyverklaring">› Privacyverklaring</a></li>
+                <li><a href="https://hetutrechtsarchief.nl/anbi">› ANBI</a></li>
             </ul>
 
 
