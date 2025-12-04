@@ -43,105 +43,110 @@
 
 <body>
 
-<header>
-    <?php include "includes/header.php" ?>
-</header>
+    <header>
+        <?php include "includes/header.php" ?>
+    </header>
 
-<div class="frame">
+    <div class="frame">
 
-    <div class="top-buttons">
+        <div class="top-buttons">
 
-        <!-- PLAY -->
-        <button id="readPage" class="icon-btn" title="Voorlezen">
-            <i class="fa-solid fa-play"></i>
-        </button>
+            <!-- PLAY -->
+            <button id="readPage" class="icon-btn" title="Voorlezen">
+                <i class="fa-solid fa-play"></i>
+            </button>
 
-        <!-- PAUSE -->
-        <button id="pauseRead" class="icon-btn" title="Pauzeer">
-            <i class="fa-solid fa-pause"></i>
-        </button>
+            <!-- PAUSE -->
+            <button id="pauseRead" class="icon-btn" title="Pauzeer">
+                <i class="fa-solid fa-pause"></i>
+            </button>
 
-        <!-- STOP -->
-        <button id="stopRead" class="icon-btn" title="Stop">
-            <i class="fa-solid fa-stop"></i>
-        </button>
+            <!-- STOP -->
+            <button id="stopRead" class="icon-btn" title="Stop">
+                <i class="fa-solid fa-stop"></i>
+            </button>
 
-        <!-- HERSTART -->
-        <button id="restartRead" class="icon-btn" title="Opnieuw voorlezen">
-            <i class="fa-solid fa-reply-all"></i>
-        </button>
+            <!-- HERSTART -->
+            <button id="restartRead" class="icon-btn" title="Opnieuw voorlezen">
+                <i class="fa-solid fa-reply-all"></i>
+            </button>
 
-    </div>
+        </div>
 
-    <h1 class="title">PANORAMA VAN UTRECHT</h1>
+        <h1 class="title">PANORAMA VAN UTRECHT</h1>
 
-    <div class="icon-block">
-        <h2 class="icon-heading">Hoe werkt het?</h2>
+        <div class="icon-block">
+            <h2 class="icon-heading">Hoe werkt het?</h2>
 
-        <div class="icon-row">
-            <div class="icon-item">
-                <img src="./assets/img-voorkant/zoekbalkje.png" alt="Zoekicoon">
-                <p>Zoekbalk gebruiken om plaatsen te vinden</p>
+            <div class="icon-row">
+                <div class="icon-item">
+                    <img src="./assets/img-voorkant/zoekbalkje.png" alt="Zoekicoon">
+                    <p>Zoekbalk gebruiken om plaatsen te vinden</p>
+                </div>
+
+                <div class="icon-item">
+                    <img src="./assets/img-voorkant/handje.png" alt="Hotspoticoon">
+                    <p>Klik op de hotspots</p>
+                </div>
+
+                <div class="icon-item">
+                    <img src="./assets/img-voorkant/pijltjes.png" alt="Pijltjesicoon">
+                    <p>Sleep om te verplaatsen</p>
+                </div>
             </div>
+        </div>
 
-            <div class="icon-item">
-                <img src="./assets/img-voorkant/handje.png" alt="Hotspoticoon">
-                <p>Klik op de hotspots</p>
-            </div>
+        <div class="buttons">
 
-            <div class="icon-item">
-                <img src="./assets/img-voorkant/pijltjes.png" alt="Pijltjesicoon">
-                <p>Sleep om te verplaatsen</p>
-            </div>
+            <a href="archiefbreed.php">
+                <button class="button" onclick="startPanorama()">Start Panorama</button>
+            </a>
+
+            <button class="button" onclick="toonDetails()">Bekijk Details</button>
         </div>
     </div>
 
-    <div class="buttons">
-        <button class="button" onclick="startPanorama()">Start Panorama</button>
-        <button class="button" onclick="toonDetails()">Bekijk Details</button>
-    </div>
-</div>
+    <footer>
+        <?php include "includes/footer.php" ?>
+    </footer>
 
-<footer>
-    <?php include "includes/footer.php" ?>
-</footer>
+    <script src="./assets/js/app.js"></script>
 
-<script src="./assets/js/app.js"></script>
+    <script>
+        let utterance = new SpeechSynthesisUtterance();
+        utterance.lang = 'nl-NL';
 
-<script>
-    let utterance = new SpeechSynthesisUtterance();
-    utterance.lang = 'nl-NL';
+        const readBtn = document.getElementById('readPage');
+        const pauseBtn = document.getElementById('pauseRead');
+        const stopBtn = document.getElementById('stopRead');
+        const restartBtn = document.getElementById('restartRead');
 
-    const readBtn = document.getElementById('readPage');
-    const pauseBtn = document.getElementById('pauseRead');
-    const stopBtn = document.getElementById('stopRead');
-    const restartBtn = document.getElementById('restartRead');
+        // Alleen de inhoud binnen .frame voorlezen
+        function getReadableText() {
+            return document.querySelector('.frame').innerText;
+        }
 
-    // Alleen de inhoud binnen .frame voorlezen
-    function getReadableText() {
-        return document.querySelector('.frame').innerText;
-    }
+        readBtn.addEventListener('click', () => {
+            speechSynthesis.cancel();
+            utterance.text = getReadableText();
+            speechSynthesis.speak(utterance);
+        });
 
-    readBtn.addEventListener('click', () => {
-        speechSynthesis.cancel();
-        utterance.text = getReadableText();
-        speechSynthesis.speak(utterance);
-    });
+        pauseBtn.addEventListener('click', () => {
+            speechSynthesis.pause();
+        });
 
-    pauseBtn.addEventListener('click', () => {
-        speechSynthesis.pause();
-    });
+        stopBtn.addEventListener('click', () => {
+            speechSynthesis.cancel();
+        });
 
-    stopBtn.addEventListener('click', () => {
-        speechSynthesis.cancel();
-    });
-
-    restartBtn.addEventListener('click', () => {
-        speechSynthesis.cancel();
-        utterance.text = getReadableText();
-        speechSynthesis.speak(utterance);
-    });
-</script>
+        restartBtn.addEventListener('click', () => {
+            speechSynthesis.cancel();
+            utterance.text = getReadableText();
+            speechSynthesis.speak(utterance);
+        });
+    </script>
 
 </body>
+
 </html>

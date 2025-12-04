@@ -281,7 +281,6 @@
         <nav>
             <a href="startscherm.php"> Startscherm</a>
             <a href="archiefbreed.php"> Panorama</a>
-            <a href="spel.php"> Spel</a>
             <a href="colofon.php"> Colofon</a>
 
             <div class="dropdown">
