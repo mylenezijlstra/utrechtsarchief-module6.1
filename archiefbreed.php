@@ -67,7 +67,12 @@ require_once './includes/db.php';
           echo '<div class="image-wrapper">';
           echo '<img src="./assets/img/' . $row['filename'] . '" alt="Panorama ' . $count . '">';
 
-          if ($row['pos_top'] !== null && $row['pos_left'] !== null) {
+          if ($count == 21) { // Specifieke hotspot voor foto 21
+            // Maak een vaste hotspot die linkt naar spel.php
+            echo '<div class="hotspot" style="top:50px; left:50px;">'; // Positie naar wens aanpassen
+            echo '<a href="spel.php" class="hotspot-link">•</a>';
+            echo '</div>';
+          } elseif ($row['pos_top'] !== null && $row['pos_left'] !== null) {
 
             echo '<div class="hotspot" style="top:' . (int)$row['pos_top'] . 'px; left:' . (int)$row['pos_left'] . 'px;">•';
 
@@ -75,20 +80,19 @@ require_once './includes/db.php';
 
               // Verborgen tekst voor voorlezen
               echo '<div class="hotspot-text" id="text-' . $count . '">'
-                . htmlspecialchars($row['description']) .
+                . htmlspecialchars($row['description']) . 
                 '</div>';
 
-             // Infobox inclusief voorleesicons
-echo '<div class="info-box">
-  <div class="hotspot-toolbar" data-id="' . $count . '">
-      <button class="hotspot-btn read"><i class="fa-solid fa-play"></i></button>
-      <button class="hotspot-btn pause"><i class="fa-solid fa-pause"></i></button>
-      <button class="hotspot-btn play"><i class="fa-solid fa-stop"></i></button>
-      <button class="hotspot-btn stop"><i class="fa-solid fa-reply-all"></i></button>
-  </div>
-  <strong>Beschrijving:</strong><br>' . htmlspecialchars($row['description']) . '
-</div>';
-
+              // Infobox inclusief voorleesicons
+              echo '<div class="info-box">
+                <div class="hotspot-toolbar" data-id="' . $count . '">
+                    <button class="hotspot-btn read"><i class="fa-solid fa-play"></i></button>
+                    <button class="hotspot-btn pause"><i class="fa-solid fa-pause"></i></button>
+                    <button class="hotspot-btn play"><i class="fa-solid fa-stop"></i></button>
+                    <button class="hotspot-btn stop"><i class="fa-solid fa-reply-all"></i></button>
+                </div>
+                <strong>Beschrijving:</strong><br>' . htmlspecialchars($row['description']) . '
+              </div>';
             }
 
             echo '</div>';
