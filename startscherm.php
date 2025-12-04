@@ -2,13 +2,11 @@
 ?>
 <!DOCTYPE html>
 <html lang="nl">
-
 <head>
     <meta charset="UTF-8">
     <title>Panorama Utrecht – 1859 Stijl</title>
     <link rel="stylesheet" href="./assets/css/startscherm.css">
 </head>
-
 <body>
     <div class="frame">
         <div class="top-buttons">
@@ -45,6 +43,69 @@
             <button class="button" onclick="toonDetails()">Bekijk Details</button>
         </div>
     </div>
-    <script src="./assets/js/app.js"></script>
+
+    <script>
+      const translations = {
+        nl: {
+          title: "PANORAMA VAN UTRECHT",
+          subtitle: "Hoe werkt het?",
+          icon1: "Zoekbalk gebruiken om plaatsen te vinden",
+          icon2: "Klik op de hotspots",
+          icon3: "Sleep om te verplaatsen",
+          start: "Start Panorama",
+          details: "Bekijk Details"
+        },
+        en: {
+          title: "PANORAMA OF UTRECHT",
+          subtitle: "How does it work?",
+          icon1: "Use the search bar to find places",
+          icon2: "Click on the hotspots",
+          icon3: "Drag to move around",
+          start: "Start Panorama",
+          details: "View Details"
+        }
+      };
+
+      // Helper om cookie te lezen
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+      }
+
+      // Bepaal huidige taal: eerst cookie, dan localStorage, anders NL
+      let currentLang = getCookie("lang") || localStorage.getItem("lang") || "nl";
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem("lang", lang);
+        document.cookie = "lang=" + lang + "; path=/";
+
+        document.querySelector(".title").textContent = translations[lang].title;
+        document.querySelector(".icon-heading").textContent = translations[lang].subtitle;
+        document.querySelectorAll(".icon-item p")[0].textContent = translations[lang].icon1;
+        document.querySelectorAll(".icon-item p")[1].textContent = translations[lang].icon2;
+        document.querySelectorAll(".icon-item p")[2].textContent = translations[lang].icon3;
+        document.querySelectorAll(".button")[0].textContent = translations[lang].start;
+        document.querySelectorAll(".button")[1].textContent = translations[lang].details;
+
+        document.documentElement.lang = lang;
+      }
+
+      // Event listeners voor taal-knoppen
+      document.getElementById("btn-nl").addEventListener("click", () => setLanguage("nl"));
+      document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
+
+      // Zet taal bij laden
+      setLanguage(currentLang);
+
+      function startPanorama() {
+        window.location.href = "archiefbreed.php";
+      }
+
+      function toonDetails() {
+        alert(currentLang === "en" ? "Here come hotspots and extra info." : "Hier komen hotspots en extra uitleg.");
+      }
+    </script>
 </body>
 </html>
