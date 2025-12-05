@@ -1,7 +1,7 @@
 <?php 
 $servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "";
 $dbname = "utrechtsarchief";
 
 // Maak verbinding met de database

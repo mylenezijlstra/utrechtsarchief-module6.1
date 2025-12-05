@@ -19,54 +19,99 @@ function toPercent($value, $total) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panorama</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
+
+  <!-- Voeg Font Awesome toe via de CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <style>
+    .hotspot-toolbar {
+      display: none;
+      /* Maak de toolbar verborgen */
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .hotspot-btn {
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      /* Geen achtergrondkleur */
+      color: #000;
+      /* Zwarte kleur voor de iconen */
+      padding: 6px;
+    }
+
+    .hotspot-text {
+      display: none;
+    }
+
+    .hotspot.open .hotspot-toolbar {
+      display: flex;
+      /* Toon de toolbar wanneer de hotspot open is */
+    }
+  </style>
 </head>
+
 <body>
+
+  <header>
+    <?php include "includes/header.php"; ?>
+  </header>
+
   <main>
     <div class="panorama-frame">
       <div class="panorama">
+
         <?php
-        $result = $conn->query("
-            SELECT p.filename, h.pos_top, h.pos_left, h.description_nl, h.description_en
-            FROM panorama p
-            LEFT JOIN hotspots h 
-              ON CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED) = h.image_id
-            ORDER BY CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED)
-        ");
+        $result = $conn->query("SELECT p.filename, h.pos_top, h.pos_left, h.description
+                              FROM panorama p
+                              LEFT JOIN hotspots h 
+                                ON CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED) = h.image_id
+                              ORDER BY CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED)");
 
         $count = 1;
         while ($row = $result->fetch_assoc()) {
-          $desc = ($lang === 'en') ? ($row['description_en'] ?? '') : ($row['description_nl'] ?? '');
 
-          // originele afbeelding afmetingen ophalen
-          $imgPath = './assets/img/' . $row['filename'];
-          $size = @getimagesize($imgPath);
-          $imgWidth = $size[0] ?? 0;
-          $imgHeight = $size[1] ?? 0;
+          echo '<div class="image-wrapper">';
+          echo '<img src="./assets/img/' . $row['filename'] . '" alt="Panorama ' . $count . '">';
 
-          // pixelwaarden omzetten naar percentages
-          $topPercent = toPercent($row['pos_top'], $imgHeight);
-          $leftPercent = toPercent($row['pos_left'], $imgWidth);
+          if ($count == 21) { // Specifieke hotspot voor foto 21
+            // Maak een vaste hotspot die linkt naar spel.php
+            echo '<div class="hotspot" style="top:50px; left:50px;">'; // Positie naar wens aanpassen
+            echo '<a href="spel.php" class="hotspot-link">•</a>';
+            echo '</div>';
+          } elseif ($row['pos_top'] !== null && $row['pos_left'] !== null) {
 
-          // wrapper met CSS-variabelen
-          echo '<div class="image-wrapper" style="--hotspot-top:' . $topPercent . '%; --hotspot-left:' . $leftPercent . '%;">';
-          echo '<img src="' . $imgPath . '" alt="Panorama ' . $count . '">';
+            echo '<div class="hotspot" style="top:' . (int)$row['pos_top'] . 'px; left:' . (int)$row['pos_left'] . 'px;">•';
 
-          if ($topPercent !== null && $leftPercent !== null) {
-            // Hotspot (positie via CSS-variabelen)
-            echo '<div class="hotspot">•</div>';
+            if (!empty($row['description'])) {
 
-            if (!empty($desc)) {
-              // Info-box (positie via CSS-variabelen)
-              echo '<div class="info-box">';
-              echo '<strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . htmlspecialchars($desc);
-              echo '</div>';
+              // Verborgen tekst voor voorlezen
+              echo '<div class="hotspot-text" id="text-' . $count . '">'
+                . htmlspecialchars($row['description']) . 
+                '</div>';
+
+              // Infobox inclusief voorleesicons
+              echo '<div class="info-box">
+                <div class="hotspot-toolbar" data-id="' . $count . '">
+                    <button class="hotspot-btn read"><i class="fa-solid fa-play"></i></button>
+                    <button class="hotspot-btn pause"><i class="fa-solid fa-pause"></i></button>
+                    <button class="hotspot-btn play"><i class="fa-solid fa-stop"></i></button>
+                    <button class="hotspot-btn stop"><i class="fa-solid fa-reply-all"></i></button>
+                </div>
+                <strong>Beschrijving:</strong><br>' . htmlspecialchars($row['description']) . '
+              </div>';
             }
+
+            echo '</div>';
           }
 
-          echo '</div>'; // sluit image-wrapper
+          echo '</div>';
           $count++;
         }
         ?>
+
       </div>
 
 <!-- Mini-map onderin (alle 33 afbeeldingen uit DB) -->
@@ -86,7 +131,57 @@ function toPercent($value, $total) {
 </div>
 
     </div>
+
+    <footer>
+      <?php include "includes/footer.php"; ?>
+    </footer>
+
   </main>
+
   <script src="./assets/js/panorama.js"></script>
+
+  <script>
+    // Voorlezen voor ALLE hotspots
+    let utterance = null;
+
+    document.querySelectorAll('.hotspot').forEach(hotspot => {
+
+      const id = hotspot.getAttribute('data-id');
+      const textBlock = document.getElementById('text-' + id);
+      const toolbar = hotspot.querySelector('.hotspot-toolbar');
+
+      const readBtn = toolbar.querySelector('.read');
+      const pauseBtn = toolbar.querySelector('.pause');
+      const playBtn = toolbar.querySelector('.play');
+      const stopBtn = toolbar.querySelector('.stop');
+
+      // Als hotspot wordt aangeklikt, wordt de toolbar zichtbaar
+      hotspot.addEventListener('click', () => {
+        hotspot.classList.toggle('open');
+
+        // Voorlezen functionaliteit
+        readBtn.addEventListener('click', () => {
+          speechSynthesis.cancel();
+          utterance = new SpeechSynthesisUtterance(textBlock.innerText);
+          utterance.lang = 'nl-NL';
+          speechSynthesis.speak(utterance);
+        });
+
+        pauseBtn.addEventListener('click', () => {
+          if (utterance) speechSynthesis.pause();
+        });
+
+        playBtn.addEventListener('click', () => {
+          if (utterance) speechSynthesis.resume();
+        });
+
+        stopBtn.addEventListener('click', () => {
+          speechSynthesis.cancel();
+        });
+      });
+    });
+  </script>
+
 </body>
+
 </html>
