@@ -37,54 +37,47 @@ function toPercent($value, $total) {
         while ($row = $result->fetch_assoc()) {
           $desc = ($lang === 'en') ? ($row['description_en'] ?? '') : ($row['description_nl'] ?? '');
 
-          // originele afbeelding afmetingen ophalen
           $imgPath = './assets/img/' . $row['filename'];
           $size = @getimagesize($imgPath);
           $imgWidth = $size[0] ?? 0;
           $imgHeight = $size[1] ?? 0;
 
-          // pixelwaarden omzetten naar percentages
           $topPercent = toPercent($row['pos_top'], $imgHeight);
           $leftPercent = toPercent($row['pos_left'], $imgWidth);
 
-          // wrapper met CSS-variabelen
           echo '<div class="image-wrapper" style="--hotspot-top:' . $topPercent . '%; --hotspot-left:' . $leftPercent . '%;">';
           echo '<img src="' . $imgPath . '" alt="Panorama ' . $count . '">';
 
           if ($topPercent !== null && $leftPercent !== null) {
-            // Hotspot (positie via CSS-variabelen)
             echo '<div class="hotspot">•</div>';
-
             if (!empty($desc)) {
-              // Info-box (positie via CSS-variabelen)
               echo '<div class="info-box">';
               echo '<strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . htmlspecialchars($desc);
               echo '</div>';
             }
           }
 
-          echo '</div>'; // sluit image-wrapper
+          echo '</div>';
           $count++;
         }
         ?>
       </div>
 
-<!-- Mini-map onderin (alle 33 afbeeldingen uit DB) -->
-<div class="mini-map">
-  <?php
-  $miniResult = $conn->query("
-      SELECT filename 
-      FROM panorama 
-      ORDER BY CAST(REPLACE(filename, '.jpg', '') AS UNSIGNED) ASC
-  ");
-  while ($miniRow = $miniResult->fetch_assoc()) {
-    $miniPath = './assets/img/' . $miniRow['filename'];
-    echo '<img src="' . $miniPath . '" alt="Miniatuur panorama" class="mini-thumb">';
-  }
-  ?>
-  <div class="mini-highlight"></div>
-</div>
-
+      <!-- Mini-map onderin -->
+      <div class="mini-map">
+        <?php
+        $miniResult = $conn->query("
+            SELECT filename 
+            FROM panorama 
+            ORDER BY CAST(REPLACE(filename, '.jpg', '') AS UNSIGNED) ASC
+        ");
+        while ($miniRow = $miniResult->fetch_assoc()) {
+          $miniPath = './assets/img/' . $miniRow['filename'];
+          echo '<img src="' . $miniPath . '" alt="Miniatuur panorama" class="mini-thumb">';
+        }
+        ?>
+        <div class="mini-highlight"></div>
+      </div>
     </div>
   </main>
   <script src="./assets/js/panorama.js"></script>
