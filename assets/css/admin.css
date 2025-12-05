@@ -1,158 +1,152 @@
+/* Header */
 .admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f9f1e3;
-    padding: 10px 20px;
-    border-bottom: 2px solid #c4ae8a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f1e3;
+  padding: 10px 20px;
+  border-bottom: 2px solid #c4ae8a;
 }
 
 .logout-btn {
-    background: #e8dbc4;
-    border: 1px solid #8c7455;
-    padding: 6px 10px;
-    text-decoration: none;
-    color: #4b3a26;
+  background: #e8dbc4;
+  border: 1px solid #8c7455;
+  padding: 6px 10px;
+  text-decoration: none;
+  color: #4b3a26;
 }
+.logout-btn:hover { background: #d6c4a5; }
 
-.logout-btn:hover {
-    background: #d6c4a5;
-}
-
+/* Panorama container */
 .panorama-frame {
-    width: 95%;
-    margin: 20px auto;
-    background: #fffaf0;
-    border: 4px double #bda888;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    text-align: center;
+  width: 95%;
+  margin: 20px auto;
+  background: #fffaf0;
+  border: 4px double #bda888;
+  box-shadow: 0 0 25px rgba(0,0,0,0.2);
+  padding: 20px;
 }
 
 .panorama {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+  display: flex;
+  flex-direction: column; /* alles onder elkaar */
+  gap: 30px;
+  align-items: center; /* centreren per blok */
 }
 
+/* Afbeelding wrapper */
 .image-wrapper {
-    position: relative;
-    display: inline-block;
-    margin: 10px;
-    border: 2px solid #c4ae8a;
-    padding: 10px;
-    background: #fffaf0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: block;
+  margin: 10px 0;
+  border: 2px solid #c4ae8a;
+  padding: 10px;
+  background: #fffaf0;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  max-width: 1200px; /* vergroot van 400/600 naar 800px */
 }
 
 .image-wrapper img {
-    max-width: 100%;
-    height: auto;
-    display: block;
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
-.hotspot {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: #c44;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: bold;
-    font-size: 14px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.3);
-  }
-  
-  .info-box {
-    position: absolute;
-    background: #fffaf0;
-    border: 2px solid #c4ae8a;
-    padding: 12px;
-    width: 370px; /* groter vakje */
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    display: none;
-    z-index: 10;
-    border-radius: 6px;
-  }
-  
-  .info-box textarea {
-    width: 100%;
-    min-height: 100px;
-    border: 1px solid #c4ae8a;
-    font-family: "Georgia", serif;
-    padding: 8px;
-    resize: vertical;
-    box-sizing: border-box;
-  }
 
+/* Hotspots */
+.hotspot {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 13px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  z-index: 15;
+}
+.hotspot-desc { background:#8c7455; }   /* bruin */
+.hotspot-remark { background:#cc3333; } /* rood */
+.hotspot-extra { background:#3366cc; }  /* blauw */
+
+/* Info-box direct onder het bolletje */
+.hotspot + .info-box {
+  position: absolute;
+  top: calc(50% + 3px); /* zet hem net onder het bolletje */
+  left: 45%;
+  transform: translateX(-50%);
+  background: #fffaf0;
+  border: 2px solid #c4ae8a;
+  padding: 10px;
+  width: 300px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  display: none;
+  border-radius: 6px;
+  z-index: 20;
+}
+
+
+/* Info-box textarea */
+.info-box textarea {
+  width: 100%;
+  min-height: 80px;
+  border: 1px solid #c4ae8a;
+  font-family: "Georgia", serif;
+  padding: 8px;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
 
 /* Opslaan-knop */
-.hotspot .info-box .save-desc {
-    background: #e8dbc4;
-    border: 1px solid #8c7455;
-    padding: 6px 10px;
-    margin-top: 6px;
-    cursor: pointer;
-    font-family: "Georgia", serif;
+.save-desc {
+  background: #e8dbc4;
+  border: 1px solid #8c7455;
+  padding: 6px 10px;
+  margin-top: 6px;
+  cursor: pointer;
+  font-family: "Georgia", serif;
 }
-
-.hotspot .info-box .save-desc:hover {
-    background: #d6c4a5;
-}
+.save-desc:hover { background:#d6c4a5; }
 
 /* Statusmelding */
-.hotspot .info-box .save-status {
-    display: block;
-    margin-top: 5px;
-    font-size: 13px;
-    color: #6b5334;
+.save-status {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  color: #6b5334;
 }
 
+/* User form styling */
 .user-form {
-    max-width: 400px;
-    margin: 30px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    background: #fffaf0;
-    border: 2px solid #c4ae8a;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .user-form label {
-    font-weight: bold;
-    color: #4b3a26;
-  }
-  
-  .user-form input {
-    padding: 8px;
-    border: 1px solid #c4ae8a;
-    border-radius: 4px;
-  }
-  
-  .user-form button {
-    background: #8c7455;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 15px;
-  }
-  
-  .user-form button:hover {
-    background: #6b5334;
-  }
-  
-  .status-msg {
-    text-align: center;
-    font-weight: bold;
-    margin: 15px;
-  }
-  
+  max-width: 400px;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: #fffaf0;
+  border: 2px solid #c4ae8a;
+  padding: 20px;
+  border-radius: 8px;
+}
+.user-form label { font-weight: bold; color:#4b3a26; }
+.user-form input {
+  padding: 8px;
+  border: 1px solid #c4ae8a;
+  border-radius: 4px;
+}
+.user-form button {
+  background:#8c7455;
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:15px;
+}
+.user-form button:hover { background:#6b5334; }
+.status-msg { text-align:center; font-weight:bold; margin:15px; }
