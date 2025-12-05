@@ -45,7 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
     else img.addEventListener('load', apply, { once: true });
 
     // herbereken bij resize
-    window.addEventListener('resize', apply);
+    const onResize = () => apply();
+    window.addEventListener('resize', onResize);
+
+    // cleanup reference (optioneel) - niet strikt nodig hier, maar netjes
+    wrapper._panoramaResizeHandler = onResize;
   }
 
   // initialiseer voor elke wrapper
@@ -59,7 +63,17 @@ document.addEventListener('DOMContentLoaded', () => {
     h.setAttribute('aria-expanded','false');
   });
 
-  // klik/toggle handler
+  // Helper: sluit alle info-boxes binnen een wrapper
+  function closeAllBoxes(wrapper) {
+    wrapper.querySelectorAll('.info-box').forEach(b => {
+      b.setAttribute('hidden','');
+      b.classList.remove('show');
+    });
+    // zet aria-expanded false op alle hotspots in wrapper
+    wrapper.querySelectorAll('.hotspot').forEach(h => h.setAttribute('aria-expanded','false'));
+  }
+
+  // klik/toggle handler (verbeterd zodat tweede klik sluit)
   document.addEventListener('click', (e) => {
     const hotspot = e.target.closest('.hotspot');
     if (!hotspot) return;
@@ -70,24 +84,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const box = wrapper.querySelector('#' + CSS.escape(targetId));
     if (!box) return;
 
-    wrapper.querySelectorAll('.info-box').forEach(b => { b.setAttribute('hidden',''); b.classList.remove('show'); });
-    if (box.hasAttribute('hidden')) {
-      box.removeAttribute('hidden'); box.classList.add('show'); hotspot.setAttribute('aria-expanded','true');
+    // bepaal of de doelbox nu zichtbaar is (voordat we andere verbergen)
+    const wasVisible = !box.hasAttribute('hidden') && box.classList.contains('show');
+
+    // verberg alle boxes in deze wrapper
+    closeAllBoxes(wrapper);
+
+    // toggle: als het eerder niet zichtbaar was, toon het; anders blijft alles gesloten
+    if (!wasVisible) {
+      box.removeAttribute('hidden');
+      box.classList.add('show');
+      hotspot.setAttribute('aria-expanded','true');
+      // focus op eerste focusbaar element in box voor toegankelijkheid
+      const focusable = box.querySelector('button, [tabindex], input, textarea, a');
+      if (focusable) focusable.focus();
     } else {
-      box.setAttribute('hidden',''); box.classList.remove('show'); hotspot.setAttribute('aria-expanded','false');
+      hotspot.setAttribute('aria-expanded','false');
     }
   });
 
-  // keyboard support
+  // sluit box bij klik buiten (per wrapper)
+  document.addEventListener('click', (e) => {
+    // als klik niet binnen een image-wrapper plaatsvond, sluit alle open boxes op de pagina
+    const wrapper = e.target.closest('.image-wrapper');
+    if (!wrapper) {
+      document.querySelectorAll('.image-wrapper').forEach(w => closeAllBoxes(w));
+      return;
+    }
+    // als klik binnen wrapper maar niet op hotspot of info-box, sluit boxes in die wrapper
+    const isHotspot = !!e.target.closest('.hotspot');
+    const isBox = !!e.target.closest('.info-box');
+    if (!isHotspot && !isBox) closeAllBoxes(wrapper);
+  }, true);
+
+  // keyboard support: Enter of Space activeert hotspot; Escape sluit open box
   document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    const active = document.activeElement;
-    if (!active) return;
-    const hotspot = active.closest ? active.closest('.hotspot') : null;
-    if (!hotspot) return;
-    e.preventDefault();
-    hotspot.click();
+    if (e.key === 'Enter' || e.key === ' ') {
+      const active = document.activeElement;
+      if (!active) return;
+      const hotspot = active.closest ? active.closest('.hotspot') : null;
+      if (!hotspot) return;
+      e.preventDefault();
+      hotspot.click();
+    } else if (e.key === 'Escape') {
+      // sluit alle open boxes op Escape
+      document.querySelectorAll('.image-wrapper').forEach(w => closeAllBoxes(w));
+    }
   });
 
+  // optionele console log
   console.log('panorama.js initialized. Hotspots:', document.querySelectorAll('.hotspot').length);
 });
