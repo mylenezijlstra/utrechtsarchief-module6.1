@@ -73,35 +73,23 @@ function toPercent($value, $total) {
         $count = 1;
         while ($row = $result->fetch_assoc()) {
 
-          echo '<div class="image-wrapper">';
-          echo '<img src="./assets/img/' . $row['filename'] . '" alt="Panorama ' . $count . '">';
+          $imgPath = './assets/img/' . $row['filename'];
+          $size = @getimagesize($imgPath);
+          $imgWidth = $size[0] ?? 0;
+          $imgHeight = $size[1] ?? 0;
 
-          if ($count == 21) { // Specifieke hotspot voor foto 21
-            // Maak een vaste hotspot die linkt naar spel.php
-            echo '<div class="hotspot" style="top:50px; left:50px;">'; // Positie naar wens aanpassen
-            echo '<a href="spel.php" class="hotspot-link">•</a>';
-            echo '</div>';
-          } elseif ($row['pos_top'] !== null && $row['pos_left'] !== null) {
+          $topPercent = toPercent($row['pos_top'], $imgHeight);
+          $leftPercent = toPercent($row['pos_left'], $imgWidth);
 
-            echo '<div class="hotspot" style="top:' . (int)$row['pos_top'] . 'px; left:' . (int)$row['pos_left'] . 'px;">•';
+          echo '<div class="image-wrapper" style="--hotspot-top:' . $topPercent . '%; --hotspot-left:' . $leftPercent . '%;">';
+          echo '<img src="' . $imgPath . '" alt="Panorama ' . $count . '">';
 
-            if (!empty($row['description'])) {
-
-              // Verborgen tekst voor voorlezen
-              echo '<div class="hotspot-text" id="text-' . $count . '">'
-                . htmlspecialchars($row['description']) . 
-                '</div>';
-
-              // Infobox inclusief voorleesicons
-              echo '<div class="info-box">
-                <div class="hotspot-toolbar" data-id="' . $count . '">
-                    <button class="hotspot-btn read"><i class="fa-solid fa-play"></i></button>
-                    <button class="hotspot-btn pause"><i class="fa-solid fa-pause"></i></button>
-                    <button class="hotspot-btn play"><i class="fa-solid fa-stop"></i></button>
-                    <button class="hotspot-btn stop"><i class="fa-solid fa-reply-all"></i></button>
-                </div>
-                <strong>Beschrijving:</strong><br>' . htmlspecialchars($row['description']) . '
-              </div>';
+          if ($topPercent !== null && $leftPercent !== null) {
+            echo '<div class="hotspot">•</div>';
+            if (!empty($desc)) {
+              echo '<div class="info-box">';
+              echo '<strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . htmlspecialchars($desc);
+              echo '</div>';
             }
 
             echo '</div>';
@@ -114,22 +102,21 @@ function toPercent($value, $total) {
 
       </div>
 
-<!-- Mini-map onderin (alle 33 afbeeldingen uit DB) -->
-<div class="mini-map">
-  <?php
-  $miniResult = $conn->query("
-      SELECT filename 
-      FROM panorama 
-      ORDER BY CAST(REPLACE(filename, '.jpg', '') AS UNSIGNED) ASC
-  ");
-  while ($miniRow = $miniResult->fetch_assoc()) {
-    $miniPath = './assets/img/' . $miniRow['filename'];
-    echo '<img src="' . $miniPath . '" alt="Miniatuur panorama" class="mini-thumb">';
-  }
-  ?>
-  <div class="mini-highlight"></div>
-</div>
-
+      <!-- Mini-map onderin -->
+      <div class="mini-map">
+        <?php
+        $miniResult = $conn->query("
+            SELECT filename 
+            FROM panorama 
+            ORDER BY CAST(REPLACE(filename, '.jpg', '') AS UNSIGNED) ASC
+        ");
+        while ($miniRow = $miniResult->fetch_assoc()) {
+          $miniPath = './assets/img/' . $miniRow['filename'];
+          echo '<img src="' . $miniPath . '" alt="Miniatuur panorama" class="mini-thumb">';
+        }
+        ?>
+        <div class="mini-highlight"></div>
+      </div>
     </div>
 
     <footer>
