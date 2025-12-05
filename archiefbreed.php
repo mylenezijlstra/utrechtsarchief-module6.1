@@ -64,7 +64,7 @@ function toPercent($value, $total) {
       <div class="panorama">
 
         <?php
-        $result = $conn->query("SELECT p.filename, h.pos_top, h.pos_left, h.description
+        $result = $conn->query("SELECT p.filename, h.pos_top, h.pos_left, h.description_nl
                               FROM panorama p
                               LEFT JOIN hotspots h 
                                 ON CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED) = h.image_id
@@ -77,6 +77,7 @@ function toPercent($value, $total) {
           $size = @getimagesize($imgPath);
           $imgWidth = $size[0] ?? 0;
           $imgHeight = $size[1] ?? 0;
+          $desc = $row['description_nl'];
 
           $topPercent = toPercent($row['pos_top'], $imgHeight);
           $leftPercent = toPercent($row['pos_left'], $imgWidth);
@@ -85,7 +86,7 @@ function toPercent($value, $total) {
           echo '<img src="' . $imgPath . '" alt="Panorama ' . $count . '">';
 
           if ($topPercent !== null && $leftPercent !== null) {
-            echo '<div class="hotspot">•</div>';
+            echo '<div class="hotspot">•';
             if (!empty($desc)) {
               echo '<div class="info-box">';
               echo '<strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . htmlspecialchars($desc);
@@ -129,41 +130,46 @@ function toPercent($value, $total) {
 
   <script>
     // Voorlezen voor ALLE hotspots
-    let utterance = null;
 
-    document.querySelectorAll('.hotspot').forEach(hotspot => {
+    document.addEventListener("DOMContentLoaded",function(){
 
-      const id = hotspot.getAttribute('data-id');
-      const textBlock = document.getElementById('text-' + id);
-      const toolbar = hotspot.querySelector('.hotspot-toolbar');
+      
+      let utterance = null;
 
-      const readBtn = toolbar.querySelector('.read');
-      const pauseBtn = toolbar.querySelector('.pause');
-      const playBtn = toolbar.querySelector('.play');
-      const stopBtn = toolbar.querySelector('.stop');
+      document.querySelectorAll('.hotspot').forEach(hotspot => {
 
-      // Als hotspot wordt aangeklikt, wordt de toolbar zichtbaar
-      hotspot.addEventListener('click', () => {
-        hotspot.classList.toggle('open');
+        const id = hotspot.getAttribute('data-id');
+        const textBlock = document.getElementById('text-' + id);
+        const toolbar = hotspot.querySelector('.hotspot-toolbar');
 
-        // Voorlezen functionaliteit
-        readBtn.addEventListener('click', () => {
-          speechSynthesis.cancel();
-          utterance = new SpeechSynthesisUtterance(textBlock.innerText);
-          utterance.lang = 'nl-NL';
-          speechSynthesis.speak(utterance);
-        });
+        const readBtn = toolbar.querySelector('.read');
+        const pauseBtn = toolbar.querySelector('.pause');
+        const playBtn = toolbar.querySelector('.play');
+        const stopBtn = toolbar.querySelector('.stop');
 
-        pauseBtn.addEventListener('click', () => {
-          if (utterance) speechSynthesis.pause();
-        });
+        // Als hotspot wordt aangeklikt, wordt de toolbar zichtbaar
+        hotspot.addEventListener('click', () => {
+          hotspot.classList.toggle('open');
 
-        playBtn.addEventListener('click', () => {
-          if (utterance) speechSynthesis.resume();
-        });
+          // Voorlezen functionaliteit
+          readBtn.addEventListener('click', () => {
+            speechSynthesis.cancel();
+            utterance = new SpeechSynthesisUtterance(textBlock.innerText);
+            utterance.lang = 'nl-NL';
+            speechSynthesis.speak(utterance);
+          });
 
-        stopBtn.addEventListener('click', () => {
-          speechSynthesis.cancel();
+          pauseBtn.addEventListener('click', () => {
+            if (utterance) speechSynthesis.pause();
+          });
+
+          playBtn.addEventListener('click', () => {
+            if (utterance) speechSynthesis.resume();
+          });
+
+          stopBtn.addEventListener('click', () => {
+            speechSynthesis.cancel();
+          });
         });
       });
     });
