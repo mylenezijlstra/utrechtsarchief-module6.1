@@ -19,23 +19,59 @@ function toPercent($value, $total) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panorama</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
+
+  <!-- Voeg Font Awesome toe via de CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <style>
+    .hotspot-toolbar {
+      display: none;
+      /* Maak de toolbar verborgen */
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .hotspot-btn {
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      /* Geen achtergrondkleur */
+      color: #000;
+      /* Zwarte kleur voor de iconen */
+      padding: 6px;
+    }
+
+    .hotspot-text {
+      display: none;
+    }
+
+    .hotspot.open .hotspot-toolbar {
+      display: flex;
+      /* Toon de toolbar wanneer de hotspot open is */
+    }
+  </style>
 </head>
+
 <body>
+
+  <header>
+    <?php include "includes/header.php"; ?>
+  </header>
+
   <main>
     <div class="panorama-frame">
       <div class="panorama">
+
         <?php
-        $result = $conn->query("
-            SELECT p.filename, h.pos_top, h.pos_left, h.description_nl, h.description_en
-            FROM panorama p
-            LEFT JOIN hotspots h 
-              ON CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED) = h.image_id
-            ORDER BY CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED)
-        ");
+        $result = $conn->query("SELECT p.filename, h.pos_top, h.pos_left, h.description
+                              FROM panorama p
+                              LEFT JOIN hotspots h 
+                                ON CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED) = h.image_id
+                              ORDER BY CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED)");
 
         $count = 1;
         while ($row = $result->fetch_assoc()) {
-          $desc = ($lang === 'en') ? ($row['description_en'] ?? '') : ($row['description_nl'] ?? '');
 
           $imgPath = './assets/img/' . $row['filename'];
           $size = @getimagesize($imgPath);
@@ -55,12 +91,15 @@ function toPercent($value, $total) {
               echo '<strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . htmlspecialchars($desc);
               echo '</div>';
             }
+
+            echo '</div>';
           }
 
           echo '</div>';
           $count++;
         }
         ?>
+
       </div>
 
       <!-- Mini-map onderin -->
@@ -79,7 +118,57 @@ function toPercent($value, $total) {
         <div class="mini-highlight"></div>
       </div>
     </div>
+
+    <footer>
+      <?php include "includes/footer.php"; ?>
+    </footer>
+
   </main>
+
   <script src="./assets/js/panorama.js"></script>
+
+  <script>
+    // Voorlezen voor ALLE hotspots
+    let utterance = null;
+
+    document.querySelectorAll('.hotspot').forEach(hotspot => {
+
+      const id = hotspot.getAttribute('data-id');
+      const textBlock = document.getElementById('text-' + id);
+      const toolbar = hotspot.querySelector('.hotspot-toolbar');
+
+      const readBtn = toolbar.querySelector('.read');
+      const pauseBtn = toolbar.querySelector('.pause');
+      const playBtn = toolbar.querySelector('.play');
+      const stopBtn = toolbar.querySelector('.stop');
+
+      // Als hotspot wordt aangeklikt, wordt de toolbar zichtbaar
+      hotspot.addEventListener('click', () => {
+        hotspot.classList.toggle('open');
+
+        // Voorlezen functionaliteit
+        readBtn.addEventListener('click', () => {
+          speechSynthesis.cancel();
+          utterance = new SpeechSynthesisUtterance(textBlock.innerText);
+          utterance.lang = 'nl-NL';
+          speechSynthesis.speak(utterance);
+        });
+
+        pauseBtn.addEventListener('click', () => {
+          if (utterance) speechSynthesis.pause();
+        });
+
+        playBtn.addEventListener('click', () => {
+          if (utterance) speechSynthesis.resume();
+        });
+
+        stopBtn.addEventListener('click', () => {
+          speechSynthesis.cancel();
+        });
+      });
+    });
+  </script>
+
 </body>
+
 </html>
