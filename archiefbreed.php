@@ -1,10 +1,19 @@
 <?php
 require_once './includes/db.php';
+
+// taalkeuze ophalen
+$lang = $_COOKIE['lang'] ?? 'nl';
+
+// functie om pixelwaarden naar percentages om te zetten
+function toPercent($value, $total) {
+    if ($total > 0 && $value !== null && $value !== '') {
+        return round(($value / $total) * 100, 2);
+    }
+    return null;
+}
 ?>
-
 <!DOCTYPE html>
-<html lang="nl">
-
+<html lang="<?php echo $lang; ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,6 +113,23 @@ require_once './includes/db.php';
         ?>
 
       </div>
+
+<!-- Mini-map onderin (alle 33 afbeeldingen uit DB) -->
+<div class="mini-map">
+  <?php
+  $miniResult = $conn->query("
+      SELECT filename 
+      FROM panorama 
+      ORDER BY CAST(REPLACE(filename, '.jpg', '') AS UNSIGNED) ASC
+  ");
+  while ($miniRow = $miniResult->fetch_assoc()) {
+    $miniPath = './assets/img/' . $miniRow['filename'];
+    echo '<img src="' . $miniPath . '" alt="Miniatuur panorama" class="mini-thumb">';
+  }
+  ?>
+  <div class="mini-highlight"></div>
+</div>
+
     </div>
 
     <footer>

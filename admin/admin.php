@@ -11,7 +11,6 @@ include 'db.php';
 
 $files = glob(__DIR__ . "/../assets/img/*.jpg");
 
-// Sorteer numeriek op bestandsnaam (1,2,3,...)
 function imgIndex($path) {
     return intval(pathinfo(basename($path), PATHINFO_FILENAME));
 }
@@ -40,11 +39,11 @@ usort($files, function($a, $b) {
     <div class="panorama">
       <?php foreach ($files as $file):
         $idx = imgIndex($file);
-        $stmt = $conn->prepare("SELECT pos_top, pos_left, description FROM hotspots WHERE image_id=?");
+        $stmt = $conn->prepare("SELECT pos_top, pos_left, description_nl, description_en FROM hotspots WHERE image_id=?");
         $stmt->bind_param("i", $idx);
         $stmt->execute();
         $result = $stmt->get_result();
-        $spot = $result->fetch_assoc() ?: ['pos_top'=>20,'pos_left'=>20,'description'=>''];
+        $spot = $result->fetch_assoc() ?: ['pos_top'=>20,'pos_left'=>20,'description_nl'=>'','description_en'=>''];
       ?>
         <div class="image-wrapper" data-id="<?php echo $idx; ?>">
           <img src="<?php echo "/utrechtsarchief-module6.1/assets/img/" . basename($file); ?>" alt="Panorama <?php echo $idx; ?>">
@@ -54,7 +53,12 @@ usort($files, function($a, $b) {
           
           <!-- Info-box los van hotspot -->
           <div class="info-box" style="top:<?php echo (int)$spot['pos_top']+30; ?>px; left:<?php echo (int)$spot['pos_left']; ?>px;">
-            <textarea class="info-text"><?php echo htmlspecialchars($spot['description']); ?></textarea>
+            <label>Nederlands:</label>
+            <textarea class="info-text-nl"><?php echo htmlspecialchars($spot['description_nl'] ?? ''); ?></textarea>
+            
+            <label>English:</label>
+            <textarea class="info-text-en"><?php echo htmlspecialchars($spot['description_en'] ?? ''); ?></textarea>
+            
             <button class="save-desc">Opslaan</button>
             <span class="save-status"></span>
           </div>

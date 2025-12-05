@@ -112,3 +112,47 @@
     font-size: 13px;
     color: #6b5334;
 }
+
+.user-form {
+    max-width: 400px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #fffaf0;
+    border: 2px solid #c4ae8a;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .user-form label {
+    font-weight: bold;
+    color: #4b3a26;
+  }
+  
+  .user-form input {
+    padding: 8px;
+    border: 1px solid #c4ae8a;
+    border-radius: 4px;
+  }
+  
+  .user-form button {
+    background: #8c7455;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  
+  .user-form button:hover {
+    background: #6b5334;
+  }
+  
+  .status-msg {
+    text-align: center;
+    font-weight: bold;
+    margin: 15px;
+  }
+  

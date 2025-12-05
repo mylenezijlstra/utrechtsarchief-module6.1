@@ -2,7 +2,6 @@
 ?>
 <!DOCTYPE html>
 <html lang="nl">
-
 <head>
     <meta charset="UTF-8">
     <title>Panorama Utrecht – 1859 Stijl</title>
@@ -40,7 +39,6 @@
         }
     </style>
 </head>
-
 <body>
 
     <header>
