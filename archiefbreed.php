@@ -64,7 +64,7 @@ function toPercent($value, $total) {
       <div class="panorama">
 
         <?php
-        $result = $conn->query("SELECT p.filename, h.pos_top, h.pos_left, h.description_nl
+        $result = $conn->query("SELECT p.filename, h.pos_top, h.pos_left, h.description
                               FROM panorama p
                               LEFT JOIN hotspots h 
                                 ON CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED) = h.image_id

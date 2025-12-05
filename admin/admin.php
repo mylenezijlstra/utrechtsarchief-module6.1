@@ -37,11 +37,10 @@ usort($files, function($a, $b) {
 
   <div class="panorama-frame">
     <div class="panorama">
-      <?php 
-      foreach ($files as $file):
+      <?php foreach ($files as $file):
         $idx = imgIndex($file);
         $stmt = $conn->prepare("SELECT pos_top, pos_left, description_nl, description_en FROM hotspots WHERE image_id=?");
-        $stmt->bind_param("s", $idx);
+        $stmt->bind_param("i", $idx);
         $stmt->execute();
         $result = $stmt->get_result();
         $spot = $result->fetch_assoc() ?: ['pos_top'=>20,'pos_left'=>20,'description_nl'=>'','description_en'=>''];
