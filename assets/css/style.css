@@ -22,13 +22,6 @@
   width: 98%;
   max-width: 2200px;
   margin: 40px auto;
-  transform: none;
-  inset: auto;
-  max-height: none;
-  width: 98%;
-  max-width: 2200px;
-  max-height: calc(100vh - 40px);
-  margin: 0;
   background: var(--frame-bg);
   border: 4px double var(--frame-border);
   box-shadow: 0 12px 40px rgba(0,0,0,0.14);
@@ -36,7 +29,7 @@
   border-radius: var(--frame-radius);
   box-sizing: border-box;
   overflow: hidden;
-  z-index: 10; /* ← ENIGE AANPASSING */
+  z-index: 10;
 }
 
 /* Panorama rij */
@@ -77,7 +70,7 @@
   -webkit-user-drag: none;
 }
 
-/* Hotspot styling (NIET aangepast) */
+/* Hotspot styling */
 .hotspot {
   position: absolute;
   top: var(--hotspot-top, 50%);
@@ -107,12 +100,12 @@
   transform: translate(-50%, -100%) rotate(315deg) scale(1.03);
 }
 
-/* Info-box: positie wordt door JS op de box gezet (geen vaste fallback) */
+/* Info-box: dynamisch positie via JS */
 .info-box {
   position: absolute;
-  left: var(--hotspot-left);
-  top: var(--hotspot-top);
-  transform: translate(-50%, calc(-100% - var(--info-offset) - 12px));
+  left: 0;
+  top: 0;
+  transform: translate(-50%, 0);
   min-width: var(--info-min-width);
   max-width: var(--info-max-width);
   background: #f9f1e3;
@@ -123,50 +116,29 @@
   text-align: left;
   box-shadow: 0 12px 30px rgba(0,0,0,0.16);
   border-radius: 10px;
-  z-index: 1000;
+  z-index: 100000; /* Altijd boven hotspots */
   pointer-events: auto;
   display: none;
   max-height: calc(40vh);
   overflow: auto;
 }
-.info-box.show { display: block; }
 
-/* Pijl (caret) die naar beneden wijst */
+/* Pijl (caret) */
 .info-box::before {
   content: "";
   position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
   width: 14px;
   height: 14px;
   background: #f9f1e3;
   border-right: 2px solid #c4ae8a;
   border-bottom: 2px solid #c4ae8a;
-  z-index: -1;
+  transform: rotate(45deg);
+  left: 50%;
 }
 
-/* Leesbaarheid */
-.info-box label { display:block; font-weight:600; margin-top:6px; margin-bottom:4px; font-size:14px; color:#3f2f1f; }
-.info-box textarea, .info-box input[type="text"] {
-  width:100%;
-  box-sizing:border-box;
-  padding:8px;
-  border:1px solid #e0d6c2;
-  border-radius:6px;
-  background:#fff;
-  color:#333;
-  font-size:14px;
-  resize:vertical;
-}
+.info-box.show { display: block; }
 
-/* Zorg dat de info-box niet buiten viewport valt (horizontaal) */
-.image-wrapper { overflow: visible; }
-
-/* -------------------------
-   Mini-map: full-width, scrollable track
-   ------------------------- */
-
+/* Mini-map */
 .mini-map {
   position: fixed;
   left: 0;
@@ -213,6 +185,7 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
+
 .mini-map .mini-track img.mini-thumb:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 18px rgba(0,0,0,0.14);
@@ -267,5 +240,3 @@
 
 .hidden { display: none !important; }
 .center { display: flex; align-items: center; justify-content: center; }
-
-
