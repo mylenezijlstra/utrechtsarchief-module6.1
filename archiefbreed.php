@@ -114,5 +114,53 @@ $result = $conn->query("
   </main>
 
   <script src="./assets/js/panorama.js"></script>
+
+  <script>
+    // Voorlezen voor ALLE hotspots
+
+    document.addEventListener("DOMContentLoaded",function(){
+
+      
+      let utterance = null;
+
+      document.querySelectorAll('.hotspot').forEach(hotspot => {
+
+        const id = hotspot.getAttribute('data-id');
+        const textBlock = document.getElementById('text-' + id);
+        const toolbar = hotspot.querySelector('.hotspot-toolbar');
+
+        const readBtn = toolbar.querySelector('.read');
+        const pauseBtn = toolbar.querySelector('.pause');
+        const playBtn = toolbar.querySelector('.play');
+        const stopBtn = toolbar.querySelector('.stop');
+
+        // Als hotspot wordt aangeklikt, wordt de toolbar zichtbaar
+        hotspot.addEventListener('click', () => {
+          hotspot.classList.toggle('open');
+
+          // Voorlezen functionaliteit
+          readBtn.addEventListener('click', () => {
+            speechSynthesis.cancel();
+            utterance = new SpeechSynthesisUtterance(textBlock.innerText);
+            utterance.lang = 'nl-NL';
+            speechSynthesis.speak(utterance);
+          });
+
+          pauseBtn.addEventListener('click', () => {
+            if (utterance) speechSynthesis.pause();
+          });
+
+          playBtn.addEventListener('click', () => {
+            if (utterance) speechSynthesis.resume();
+          });
+
+          stopBtn.addEventListener('click', () => {
+            speechSynthesis.cancel();
+          });
+        });
+      });
+    });
+  </script>
+
 </body>
 </html>

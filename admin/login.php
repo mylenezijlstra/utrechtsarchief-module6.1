@@ -41,6 +41,108 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <title>Login</title>
   <link rel="stylesheet" href="/utrechtsarchief-module6.1/assets/css/admin.css" />
+
+  <style>
+
+/* VOLLEDIGE PAGINA */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;      /* verticaal centreren */
+    justify-content: center;  /* horizontaal centreren */
+    overflow: hidden;
+    position: relative;
+}
+
+/* ACHTERGRONDAFBEELDING MET BLUR */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("/utrechtsarchief-module6.1/assets/img/2.jpg") center/cover no-repeat;
+    filter: blur(6px) brightness(0.55); /* wazig + donkerder */
+    z-index: -1;
+}
+
+/* LOGIN BOX */
+.login-box {
+    width: 360px;
+    padding: 35px 30px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(4px);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    border-top: 6px solid #bda888;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* TITEL */
+.login-box h2 {
+    margin-bottom: 25px;
+    text-align: center;
+    color: #2d2d2d;
+    font-size: 24px;
+}
+
+/* INPUTS */
+.login-box input {
+    width: 100%;
+    padding: 13px;
+    margin: 12px 0;
+    border: 1px solid #cccccc;
+    border-radius: 8px; /* mooie ronde hoeken */
+    font-size: 15px;
+    background: #fafafa;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.login-box input:focus {
+    background: #ffffff;
+    border-color: #bda888;
+    outline: none;
+}
+
+/* BUTTON */
+.login-box button {
+    width: 100%;
+    padding: 13px;
+    background: #a79478ff;
+    border: none;
+    border-radius: 8px; /* ronde knoppen */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.25s ease;
+}
+
+.login-box button:hover {
+    background: #bda888;
+}
+
+/* ERROR */
+.error {
+    margin-top: 15px;
+    text-align: center;
+    color: #bda888;
+    font-weight: bold;
+}
+
+/* ANIMATIE */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+  </style>
 </head>
 <body>
   <div class="login-box">
