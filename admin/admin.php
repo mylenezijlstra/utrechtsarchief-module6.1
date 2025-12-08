@@ -21,11 +21,6 @@ usort($files, function($a, $b){ return imgIndex($a) <=> imgIndex($b); });
   <meta charset="utf-8">
   <title>Panorama Admin</title>
   <link rel="stylesheet" href="/utrechtsarchief-module6.1/assets/css/admin.css">
-  <style>
-    .save-status{margin-left:8px;font-size:13px}
-    .controls{margin-top:8px}
-    .add-extra{background:#2b7a78;color:#fff;border:none;padding:8px 10px;border-radius:4px;cursor:pointer}
-  </style>
 </head>
 <body>
   <header class="admin-header">

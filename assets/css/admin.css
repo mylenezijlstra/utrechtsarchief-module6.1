@@ -43,7 +43,7 @@
   padding: 10px;
   background: #fffaf0;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  max-width: 1200px; /* vergroot van 400/600 naar 800px */
+  max-width: 1600px; /* vergroot van 400/600 naar 800px */
 }
 
 .image-wrapper img {
@@ -51,7 +51,9 @@
   height: auto;
   display: block;
 }
-
+.save-status{margin-left:8px;font-size:13px}
+.controls{margin-top:8px}
+.add-extra{background:#2b7a78;color:#fff;border:none;padding:8px 10px;border-radius:4px;cursor:pointer}
 
 /* Hotspots */
 .hotspot {
@@ -91,6 +93,23 @@
 
 
 /* Info-box textarea */
+
+/* Zorg dat info-box absolute posities gebruikt en horizontaal centreert */
+.info-box {
+  position: absolute;
+  left: 0;    /* wordt overschreven door inline style.left in JS */
+  top: 0;     /* wordt overschreven door inline style.top in JS */
+  transform: translateX(-50%); /* centreer horizontaal op inline left */
+  background: #fffaf0;
+  border: 2px solid #c4ae8a;
+  padding: 10px;
+  width: 300px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  display: none;
+  border-radius: 6px;
+  z-index: 20;
+}
+
 .info-box textarea {
   width: 100%;
   min-height: 80px;

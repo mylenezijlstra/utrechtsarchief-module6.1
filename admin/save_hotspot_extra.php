@@ -42,14 +42,27 @@ try {
         if (empty($data['extra_id'])) throw new Exception('Missing extra_id for update');
         $extra_id = (int)$data['extra_id'];
 
-        $pos_top  = (isset($data['pos_top']) && $data['pos_top'] !== '') ? (int)$data['pos_top'] : null;
-        $pos_left = (isset($data['pos_left']) && $data['pos_left'] !== '') ? (int)$data['pos_left'] : null;
-        $info_nl = isset($data['info_nl']) ? $data['info_nl'] : (isset($data['extra_info_nl']) ? $data['extra_info_nl'] : null);
-        $info_en = isset($data['info_en']) ? $data['info_en'] : (isset($data['extra_info_en']) ? $data['extra_info_en'] : null);
-        $image   = isset($data['image']) ? $data['image'] : (isset($data['extra_image']) ? $data['extra_image'] : null);
+        // Gebruik array_key_exists om te detecteren of veld expliciet is meegegeven.
+        // Als veld ontbreekt: laat het als NULL zodat COALESCE de oude waarde behoudt.
+        $pos_top  = array_key_exists('pos_top', $data) && $data['pos_top'] !== '' ? (int)$data['pos_top'] : null;
+        $pos_left = array_key_exists('pos_left', $data) && $data['pos_left'] !== '' ? (int)$data['pos_left'] : null;
+        $info_nl  = array_key_exists('info_nl', $data) ? $data['info_nl'] : (array_key_exists('extra_info_nl', $data) ? $data['extra_info_nl'] : null);
+        $info_en  = array_key_exists('info_en', $data) ? $data['info_en'] : (array_key_exists('extra_info_en', $data) ? $data['extra_info_en'] : null);
+        $image    = array_key_exists('image', $data) ? $data['image'] : (array_key_exists('extra_image', $data) ? $data['extra_image'] : null);
 
-        $stmt = $conn->prepare("UPDATE hotspot_extra SET pos_top = ?, pos_left = ?, info_nl = ?, info_en = ?, image = ? WHERE id = ? AND hotspot_id = ?");
+        // Gebruik COALESCE zodat NULL parameters de bestaande DB-waarde behouden
+        $stmt = $conn->prepare("
+            UPDATE hotspot_extra
+            SET pos_top = COALESCE(?, pos_top),
+                pos_left = COALESCE(?, pos_left),
+                info_nl = COALESCE(?, info_nl),
+                info_en = COALESCE(?, info_en),
+                image = COALESCE(?, image)
+            WHERE id = ? AND hotspot_id = ?
+        ");
         if (!$stmt) throw new Exception($conn->error);
+
+        // volgorde bind_param: pos_top, pos_left, info_nl, info_en, image, extra_id, hotspot_id
         $stmt->bind_param("iisssii", $pos_top, $pos_left, $info_nl, $info_en, $image, $extra_id, $hotspot_id);
         if (!$stmt->execute()) {
             $response['error'] = $stmt->error;

@@ -1,4 +1,5 @@
-// script.js - beheer hotspots + extra hotspots (drag, touch, save, add, delete)
+// assets/js/script.js
+// Volledige, bijgewerkte client‑script voor admin: drag, touch, add, update, delete, en positionering van info-box onder hotspot.
 
 const TYPE_LABELS = { desc: 'Beschrijving', remark: 'Opmerking', extra: 'Extra info' };
 
@@ -27,9 +28,16 @@ async function apiCall(url, payload) {
     return { success: false, error: err.message || 'Network error' };
   }
 }
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
+
+/* ---------------- helper: lees huidige px-positie van een hotspot ---------------- */
+function getHotspotPxPos(hot) {
+  if (!hot) return { top: null, left: null };
+  // inline style heeft prioriteit (drag), anders data-attributes (server-saved)
+  const topRaw = hot.style.top || hot.getAttribute('data-pos-top') || '';
+  const leftRaw = hot.style.left || hot.getAttribute('data-pos-left') || '';
+  const top = topRaw ? Math.round(parseFloat(String(topRaw).replace('px',''))) : null;
+  const left = leftRaw ? Math.round(parseFloat(String(leftRaw).replace('px',''))) : null;
+  return { top, left };
 }
 
 /* ---------------- drag & touch utility ---------------- */
@@ -137,7 +145,7 @@ function initWrapper(wrapper) {
       if (res.success) showStatus(wrapper, '✔ Positie opgeslagen', 'green'); else showStatus(wrapper, '❌ Fout', 'red');
     });
 
-    // save button inside box
+    // save button inside box (zorg dat positie meegestuurd wordt)
     if (box) {
       const saveBtn = box.querySelector('.save-extra');
       if (saveBtn) {
@@ -145,7 +153,8 @@ function initWrapper(wrapper) {
           const info_nl = box.querySelector('.extra-info-nl')?.value || '';
           const info_en = box.querySelector('.extra-info-en')?.value || '';
           const image = box.querySelector('.extra-image')?.value || '';
-          const payload = { action: 'update', hotspot_id: Number(wrapper.dataset.id), extra_id: Number(extraId), info_nl, info_en, image };
+          const pos = getHotspotPxPos(hot);
+          const payload = { action: 'update', hotspot_id: Number(wrapper.dataset.id), extra_id: Number(extraId), info_nl, info_en, image, pos_top: pos.top, pos_left: pos.left };
           showStatus(wrapper, 'Opslaan extra...', 'black', 0);
           const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', payload);
           if (res.success) showStatus(wrapper, '✔ Extra opgeslagen', 'green'); else showStatus(wrapper, '❌ Fout', 'red');
@@ -165,7 +174,7 @@ function initWrapper(wrapper) {
     }
   });
 
-  // save buttons for desc/remark
+  // save buttons for desc/remark (stuur positie mee)
   wrapper.querySelectorAll('.save-hotspot').forEach(btn => {
     btn.addEventListener('click', async () => {
       const type = btn.dataset.type;
@@ -173,9 +182,17 @@ function initWrapper(wrapper) {
       if (type === 'desc') {
         payload.description_nl = q(wrapper, '.info-text-nl')?.value || '';
         payload.description_en = q(wrapper, '.info-text-en')?.value || '';
+        const hot = wrapper.querySelector('.hotspot-desc');
+        const pos = getHotspotPxPos(hot);
+        if (pos.top !== null) payload.desc_top = pos.top;
+        if (pos.left !== null) payload.desc_left = pos.left;
       } else if (type === 'remark') {
         payload.remark_nl = q(wrapper, '.remark-nl')?.value || '';
         payload.remark_en = q(wrapper, '.remark-en')?.value || '';
+        const hot = wrapper.querySelector('.hotspot-remark');
+        const pos = getHotspotPxPos(hot);
+        if (pos.top !== null) payload.remark_top = pos.top;
+        if (pos.left !== null) payload.remark_left = pos.left;
       }
       showStatus(wrapper, 'Opslaan...', 'black', 0);
       const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot.php', payload);
@@ -218,7 +235,7 @@ function initWrapper(wrapper) {
       panel.appendChild(hot);
       panel.appendChild(box);
 
-      // draggable (position saved on save)
+      // draggable (positie saved on save)
       makeDraggable(hot, wrapper, () => { /* no auto-save for unsaved extra */ });
 
       // cancel
@@ -229,8 +246,9 @@ function initWrapper(wrapper) {
         const info_nl = box.querySelector('.extra-info-nl').value || '';
         const info_en = box.querySelector('.extra-info-en').value || '';
         const image = box.querySelector('.extra-image').value || '';
-        const pos_top = Math.round(parseFloat(hot.style.top) || 0);
-        const pos_left = Math.round(parseFloat(hot.style.left) || 0);
+        const pos = getHotspotPxPos(hot);
+        const pos_top = pos.top ?? defaultTop;
+        const pos_left = pos.left ?? defaultLeft;
         const payload = { action: 'add', hotspot_id: Number(wrapper.dataset.id), pos_top, pos_left, info_nl, info_en, image };
         showStatus(wrapper, 'Opslaan extra...', 'black', 0);
         const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', payload);
@@ -250,13 +268,17 @@ function initWrapper(wrapper) {
           controls.innerHTML = '';
           controls.appendChild(saveBtn);
           controls.appendChild(delBtn);
-          controls.appendChild(document.createElement('span')).className = 'save-status';
+          const statusSpan = document.createElement('span');
+          statusSpan.className = 'save-status';
+          controls.appendChild(statusSpan);
+
           // attach handlers
           saveBtn.addEventListener('click', async () => {
             const info_nl2 = box.querySelector('.extra-info-nl').value || '';
             const info_en2 = box.querySelector('.extra-info-en').value || '';
             const image2 = box.querySelector('.extra-image').value || '';
-            const payload2 = { action: 'update', hotspot_id: Number(wrapper.dataset.id), extra_id: Number(res.insert_id), info_nl: info_nl2, info_en: info_en2, image: image2 };
+            const pos2 = getHotspotPxPos(hot);
+            const payload2 = { action: 'update', hotspot_id: Number(wrapper.dataset.id), extra_id: Number(res.insert_id), info_nl: info_nl2, info_en: info_en2, image: image2, pos_top: pos2.top, pos_left: pos2.left };
             showStatus(wrapper, 'Opslaan extra...', 'black', 0);
             const r2 = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', payload2);
             if (r2.success) showStatus(wrapper, '✔ Extra opgeslagen', 'green'); else showStatus(wrapper, '❌ Fout', 'red');
@@ -275,29 +297,51 @@ function initWrapper(wrapper) {
   }
 }
 
-/* ---------------- toggle info-boxes for desc/remark ---------------- */
+/* ---------------- toggle info-boxes: positioneer box direct onder hotspot ---------------- */
 document.addEventListener('click', (e) => {
   const hot = e.target.closest('.hotspot');
   if (!hot) return;
   const wrapper = hot.closest('.image-wrapper');
   if (!wrapper) return;
 
+  // helper: zet box precies onder hotspot (px-waarden)
+  function placeBoxUnderHotspot(hotEl, boxEl) {
+    if (!hotEl || !boxEl) return;
+    const wrapRect = wrapper.getBoundingClientRect();
+    const hotRect = hotEl.getBoundingClientRect();
+    const hotCenterX = hotRect.left + hotRect.width / 2;
+    const topPx = Math.round(hotRect.bottom - wrapRect.top + 6); // 6px marge
+    const leftPx = Math.round(hotCenterX - wrapRect.left);
+    boxEl.style.left = leftPx + 'px';
+    boxEl.style.top = topPx + 'px';
+    boxEl.style.display = 'block';
+  }
+
+  // sluit alle andere boxes in deze wrapper
+  wrapper.querySelectorAll('.info-box').forEach(b => b.style.display = 'none');
+
   if (hot.classList.contains('hotspot-extra')) {
-    // try to find matching info-extra by data-extra-id or adjacent node
     const extraId = hot.dataset.extraId || hot.getAttribute('data-extra-id');
     let box = null;
     if (extraId) box = wrapper.querySelector(`.info-extra[data-extra-id="${extraId}"]`);
     if (!box) box = hot.nextElementSibling && hot.nextElementSibling.classList.contains('info-extra') ? hot.nextElementSibling : wrapper.querySelector('.info-extra');
-    if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    if (box) {
+      if (box.style.display === 'block') box.style.display = 'none';
+      else placeBoxUnderHotspot(hot, box);
+    }
     return;
   }
 
   if (hot.classList.contains('hotspot-desc')) {
     const box = wrapper.querySelector('.info-desc');
-    if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    if (!box) return;
+    if (box.style.display === 'block') box.style.display = 'none';
+    else placeBoxUnderHotspot(hot, box);
   } else if (hot.classList.contains('hotspot-remark')) {
     const box = wrapper.querySelector('.info-remark');
-    if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    if (!box) return;
+    if (box.style.display === 'block') box.style.display = 'none';
+    else placeBoxUnderHotspot(hot, box);
   }
 });
 
