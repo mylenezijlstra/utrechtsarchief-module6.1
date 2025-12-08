@@ -2,16 +2,15 @@
 require_once './includes/db.php';
 $lang = $_COOKIE['lang'] ?? 'nl';
 
-/**
- * Veilige helper: zet null altijd om naar een lege string
- */
 function h($v) {
     return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
 }
-
 function safeInt($v) {
     return ($v === null || $v === '') ? '' : (int)$v;
 }
+
+// Zet hier je projectmap base
+$BASE = '/utrechtsarchief-module6.1';
 
 $result = $conn->query("
     SELECT p.filename,
@@ -32,6 +31,22 @@ $result = $conn->query("
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Panorama</title>
   <link rel="stylesheet" href="./assets/css/style.css">
+  <style>
+    .info-box .info-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .info-box .info-text {
+      flex: 1;
+    }
+    .info-box .info-image img {
+      max-width: 150px;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+  </style>
 </head>
 <body>
   <?php include './includes/header.php'; ?>
@@ -44,7 +59,7 @@ $result = $conn->query("
           $filename = $row['filename'];
           if (empty($filename)) continue;
           $imageId = (int) str_replace('.jpg', '', $filename);
-          $imgPath = './assets/img/' . $filename;
+          $imgPath = $BASE . '/assets/img/' . $filename;
 
           echo '<div class="image-wrapper" data-id="' . h($imageId) . '">';
           echo '<img src="' . h($imgPath) . '" alt="Panorama ' . h($imageId) . '">';
@@ -56,7 +71,9 @@ $result = $conn->query("
             $descId = "desc-" . $imageId;
             $desc = ($lang === 'en') ? $row['description_en'] : $row['description_nl'];
             echo '<div class="hotspot hotspot-desc" data-target="' . h($descId) . '" data-pos-top="' . h($descTopPx) . '" data-pos-left="' . h($descLeftPx) . '">●</div>';
-            echo '<div class="info-box" id="' . h($descId) . '" hidden><strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . h($desc) . '</div>';
+            echo '<div class="info-box" id="' . h($descId) . '" hidden>';
+            echo '<div class="info-content"><div class="info-text"><strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . h($desc) . '</div></div>';
+            echo '</div>';
           }
 
           // Opmerking
@@ -66,7 +83,9 @@ $result = $conn->query("
             $remarkId = "remark-" . $imageId;
             $remark = ($lang === 'en') ? $row['remark_en'] : $row['remark_nl'];
             echo '<div class="hotspot hotspot-remark" data-target="' . h($remarkId) . '" data-pos-top="' . h($remarkTopPx) . '" data-pos-left="' . h($remarkLeftPx) . '">●</div>';
-            echo '<div class="info-box" id="' . h($remarkId) . '" hidden><strong>' . ($lang === 'en' ? 'Remark:' : 'Opmerking:') . '</strong><br>' . h($remark) . '</div>';
+            echo '<div class="info-box" id="' . h($remarkId) . '" hidden>';
+            echo '<div class="info-content"><div class="info-text"><strong>' . ($lang === 'en' ? 'Remark:' : 'Opmerking:') . '</strong><br>' . h($remark) . '</div></div>';
+            echo '</div>';
           }
 
           // Extra hotspots
@@ -82,11 +101,15 @@ $result = $conn->query("
                 $extraId = "extra-" . $imageId . "-" . (int)$extra['id'];
                 $extraInfo = ($lang === 'en') ? $extra['info_en'] : $extra['info_nl'];
                 echo '<div class="hotspot hotspot-extra" data-target="' . h($extraId) . '" data-pos-top="' . h($extraTopPx) . '" data-pos-left="' . h($extraLeftPx) . '">●</div>';
-                echo '<div class="info-box" id="' . h($extraId) . '" hidden><strong>' . ($lang === 'en' ? 'Additional info:' : 'Aanvullende info:') . '</strong><br>' . h($extraInfo) . '</div>';
+                echo '<div class="info-box" id="' . h($extraId) . '" hidden>';
+                echo '<div class="info-content">';
+                echo '<div class="info-text"><strong>' . ($lang === 'en' ? 'Additional info:' : 'Aanvullende info:') . '</strong><br>' . h($extraInfo) . '</div>';
                 if (!empty($extra['image'])) {
-                  $extraImg = './assets/img/' . $extra['image'];
-                  echo '<img src="' . h($extraImg) . '" alt="Extra afbeelding" class="extra-img">';
+                  $extraImg = $BASE . '/admin/assets/img/' . $extra['image'];
+                  echo '<div class="info-image"><img src="' . h($extraImg) . '" alt="Extra afbeelding"></div>';
                 }
+                echo '</div>'; // info-content
+                echo '</div>'; // info-box
               }
             }
             $stmtExtra->close();
@@ -98,17 +121,17 @@ $result = $conn->query("
       </div>
     </div>
 
-    <!-- Mini-map buiten de frame -->
+    <!-- Mini-map -->
     <div class="mini-map" aria-hidden="false">
       <div class="mini-inner">
         <div class="mini-track" aria-hidden="true">
           <div class="mini-highlight"></div>
         </div>
+      </div>
     </div>
   </main>
 
   <script src="./assets/js/panorama.js"></script>
-
   <?php include './includes/footer.php'; ?>
 </body>
 </html>
