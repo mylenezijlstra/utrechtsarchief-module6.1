@@ -112,10 +112,74 @@ $row = $result->fetch_assoc();
         button:hover {
             background: #a00025;
         }
+
+        nav {
+            display: flex;
+            gap: 12px;
+        }
+
+        nav a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            background-color: #d6c3a3;
+            /* zachte zandkleur */
+            color: #4b3a26;
+            /* donkerbruine tekst */
+            border-radius: 6px;
+            /* afgeronde hoeken */
+            border: 1px solid #bfa68c;
+            /* subtiele rand */
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        nav a:hover {
+            background-color: #cbb694;
+            /* iets donkerder bij hover */
+            border-color: #a89172;
+            color: #3f2f1f;
+        }
+
+        /* Header */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f1e3;
+            padding: 10px 20px;
+            border-bottom: 2px solid #c4ae8a;
+        }
+
+        .logout-btn {
+            background: #e8dbc4;
+            border: 1px solid #8c7455;
+            padding: 6px 10px;
+            text-decoration: none;
+            color: #4b3a26;
+        }
+
+        .logout-btn:hover {
+            background: #d6c4a5;
+        }
     </style>
 </head>
 
 <body>
+
+    <header class="admin-header">
+        <div>
+            <h2>Hotspots beheren</h2>
+            <div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div>
+        </div>
+        <nav>
+            <a href="/utrechtsarchief-module6.1/admin/admin.php">Hotspots</a>
+            <a href="/utrechtsarchief-module6.1/admin/colofonadmin.php">Colofon</a>
+            <a href="/utrechtsarchief-module6.1/admin/logout.php">Logout</a>
+        </nav>
+    </header>
+
     <main class="page">
         <article class="card">
             <h1>Colofon bewerken</h1>

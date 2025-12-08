@@ -26,6 +26,8 @@ usort($files, function($a, $b){ return imgIndex($a) <=> imgIndex($b); });
   <header class="admin-header">
     <div><h2>Hotspots beheren</h2><div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div></div>
     <nav>
+      <a href="/utrechtsarchief-module6.1/admin/admin.php">Hotspots</a>
+      <a href="/utrechtsarchief-module6.1/admin/colofonadmin.php">Colofon</a>
       <a href="/utrechtsarchief-module6.1/admin/logout.php">Logout</a>
     </nav>
   </header>
