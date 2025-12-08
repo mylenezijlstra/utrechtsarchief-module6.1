@@ -1,8 +1,11 @@
 // assets/js/panorama.js
+// Publieke panorama viewer: hotspots positioneren op basis van data-pos-* (px),
+// info-boxen onder hotspots plaatsen en full-width, scrollbare mini-map.
+
 document.addEventListener('DOMContentLoaded', () => {
 
   /* -------------------------
-     Helpers: bereken & zet hotspots
+     Helpers: update hotspots per wrapper
      ------------------------- */
   function updateHotspotsForWrapper(wrapper) {
     const img = wrapper.querySelector('img');
@@ -22,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // bereken percentage t.o.v. weergegeven afbeelding afmetingen
           const topPct = (rawTop / imgHeight) * 100;
           const leftPct = (rawLeft / imgWidth) * 100;
+          // zet CSS custom properties zodat bestaande CSS positioning werkt
           h.style.setProperty('--hotspot-top', topPct + '%');
           h.style.setProperty('--hotspot-left', leftPct + '%');
           h.style.display = 'flex';
@@ -54,7 +58,35 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* -------------------------
-     Kopieer hotspot CSS-variabelen naar de info-box
+     Plaats info-box precies onder hotspot (px-positie binnen wrapper)
+     ------------------------- */
+  function placeBoxUnderHotspot(hotEl, boxEl) {
+    if (!hotEl || !boxEl) return;
+    const wrapper = hotEl.closest('.image-wrapper');
+    if (!wrapper) return;
+
+    const wrapRect = wrapper.getBoundingClientRect();
+    const hotRect = hotEl.getBoundingClientRect();
+
+    // center x van hotspot
+    const hotCenterX = hotRect.left + hotRect.width / 2;
+    // top net onder hotspot (hotRect.bottom relatief aan wrapper)
+    const topPx = Math.round(hotRect.bottom - wrapRect.top + 8); // kleine marge
+    // center box horizontaal op hotspot center
+    const leftPx = Math.round(hotCenterX - wrapRect.left);
+
+    // gebruik inline styles zodat CSS transform translateX(-50%) centreert
+    boxEl.style.left = leftPx + 'px';
+    boxEl.style.top = topPx + 'px';
+
+    // als box heeft caret onderkant, zorg dat caret zichtbaar; laat CSS ::before ongewijzigd
+    boxEl.style.display = 'block';
+    boxEl.classList.add('show');
+    boxEl.hidden = false;
+  }
+
+  /* -------------------------
+     Kopieer positie van hotspot naar box (fallback)
      ------------------------- */
   function copyHotspotVarsToBox(hotspot, box) {
     if (!hotspot || !box) return;
@@ -64,11 +96,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const left = cs.getPropertyValue('--hotspot-left').trim();
     const top  = cs.getPropertyValue('--hotspot-top').trim();
 
-    if (left) box.style.setProperty('--hotspot-left', left);
-    if (top)  box.style.setProperty('--hotspot-top', top);
+    if (left && top) {
+      // zet box CSS vars zodat bestaande CSS kan positioneren (oude fallback)
+      box.style.setProperty('--hotspot-left', left);
+      box.style.setProperty('--hotspot-top', top);
+      return;
+    }
 
     // fallback: als geen CSS vars, gebruik dataset px -> bereken %
-    if ((!left || !top) && hotspot.dataset.posTop && hotspot.dataset.posLeft) {
+    if (hotspot.dataset.posTop && hotspot.dataset.posLeft) {
       const wrapper = hotspot.closest('.image-wrapper');
       const img = wrapper ? wrapper.querySelector('img') : null;
       if (img) {
@@ -78,15 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isNaN(rawTop) && !isNaN(rawLeft) && rect.width > 0 && rect.height > 0) {
           box.style.setProperty('--hotspot-left', (rawLeft / rect.width * 100) + '%');
           box.style.setProperty('--hotspot-top', (rawTop / rect.height * 100) + '%');
+          return;
         }
       }
     }
 
-    // laatste fallback: als box nog geen vars heeft, zet center
-    const finalLeft = box.style.getPropertyValue('--hotspot-left') || '';
-    const finalTop  = box.style.getPropertyValue('--hotspot-top') || '';
-    if (!finalLeft) box.style.setProperty('--hotspot-left', '50%');
-    if (!finalTop)  box.style.setProperty('--hotspot-top', '50%');
+    // laatste fallback: center
+    box.style.setProperty('--hotspot-left', '50%');
+    box.style.setProperty('--hotspot-top', '50%');
   }
 
   /* -------------------------
@@ -94,8 +129,12 @@ document.addEventListener('DOMContentLoaded', () => {
      ------------------------- */
   function closeAllBoxes(wrapper) {
     wrapper.querySelectorAll('.info-box').forEach(b => {
-      b.hidden = true;
+      b.style.display = 'none';
       b.classList.remove('show');
+      b.hidden = true;
+      // clear inline left/top to avoid stale positions
+      b.style.left = '';
+      b.style.top = '';
     });
     wrapper.querySelectorAll('.hotspot').forEach(h => h.setAttribute('aria-expanded', 'false'));
   }
@@ -104,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
      Init per wrapper
      ------------------------- */
   function initWrapper(wrapper) {
-    // bereken hotspots
     updateHotspotsForWrapper(wrapper);
 
     // focusable & aria
@@ -120,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.image-wrapper').forEach(initWrapper);
 
   /* -------------------------
-     Klik / toggle handler
+     Klik / toggle handler: plaats box onder hotspot
      ------------------------- */
   document.addEventListener('click', (e) => {
     const hotspot = e.target.closest('.hotspot');
@@ -128,39 +166,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = hotspot.closest('.image-wrapper');
     if (!wrapper) return;
 
-    const targetId = hotspot.dataset.target;
-    if (!targetId) return;
+    // sluit alle boxes in deze wrapper
+    closeAllBoxes(wrapper);
 
-    // zoek box: id match of data-extra-id match
-    let box = wrapper.querySelector('#' + CSS.escape(targetId));
+    // zoek box: id match via data-target of data-target attribute
+    const targetId = hotspot.dataset.target || hotspot.getAttribute('data-target');
+    let box = null;
+    if (targetId) box = wrapper.querySelector('#' + CSS.escape(targetId));
     if (!box) {
-      // fallback: find info-box with matching data-extra-id
+      // fallback: find info-box with matching data-extra-id (for admin-like markup)
       const extraId = hotspot.dataset.extraId || hotspot.getAttribute('data-extra-id');
       if (extraId) {
         box = Array.from(wrapper.querySelectorAll('.info-box')).find(b => String(b.dataset.extraId || b.getAttribute('data-extra-id')) === String(extraId));
       }
     }
+    if (!box) {
+      // last fallback: nearest .info-box sibling
+      box = hotspot.nextElementSibling && hotspot.nextElementSibling.classList.contains('info-box') ? hotspot.nextElementSibling : null;
+    }
     if (!box) return;
 
-    const wasVisible = !box.hidden && box.classList.contains('show');
+    // plaats box onder hotspot (px-positie)
+    placeBoxUnderHotspot(hotspot, box);
+    hotspot.setAttribute('aria-expanded', 'true');
 
-    // sluit alle boxes in deze wrapper
-    closeAllBoxes(wrapper);
-
-    if (!wasVisible) {
-      // kopieer positie van hotspot naar box zodat box precies onder die hotspot opent
-      copyHotspotVarsToBox(hotspot, box);
-
-      box.hidden = false;
-      box.classList.add('show');
-      hotspot.setAttribute('aria-expanded', 'true');
-
-      // focus op eerste focusbaar element in box
-      const focusable = box.querySelector('button, [tabindex], input, textarea, a');
-      if (focusable) focusable.focus();
-    } else {
-      hotspot.setAttribute('aria-expanded', 'false');
-    }
+    // focus op eerste focusbaar element in box
+    const focusable = box.querySelector('button, [tabindex], input, textarea, a');
+    if (focusable) focusable.focus();
   });
 
   /* -------------------------
@@ -196,27 +228,51 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* -------------------------
-     Mini-map: vullen en sync
+     Mini-map: vullen en sync (full-width, scrollable track)
      ------------------------- */
   function populateAndInitMiniMap() {
     const panorama = document.querySelector('.panorama');
     const mini = document.querySelector('.mini-map');
     if (!panorama || !mini) return;
 
-    // Zorg dat mini-track bestaat
-    let track = mini.querySelector('.mini-track');
+    // Zorg inner en track bestaan
+    let inner = mini.querySelector('.mini-inner');
+    if (!inner) {
+      inner = document.createElement('div');
+      inner.className = 'mini-inner';
+      // verplaats bestaande children (zoals mini-highlight) in inner als nodig
+      while (mini.firstChild) inner.appendChild(mini.firstChild);
+      mini.appendChild(inner);
+    }
+
+    let track = inner.querySelector('.mini-track');
     if (!track) {
       track = document.createElement('div');
       track.className = 'mini-track';
-      mini.insertBefore(track, mini.firstChild);
+      // verplaats highlight indien aanwezig
+      const existingHighlight = inner.querySelector('.mini-highlight');
+      if (existingHighlight) track.appendChild(existingHighlight);
+      inner.insertBefore(track, inner.firstChild);
     }
 
-    // Clear bestaande thumbnails (veilig herladen)
-    track.innerHTML = '';
+    // Clear bestaande thumbnails (behoud highlight)
+    let highlight = track.querySelector('.mini-highlight');
+    if (!highlight) {
+      highlight = document.createElement('div');
+      highlight.className = 'mini-highlight';
+      track.appendChild(highlight);
+    }
+    Array.from(track.querySelectorAll('img.mini-thumb')).forEach(n => n.remove());
+
     const wrappers = Array.from(panorama.querySelectorAll('.image-wrapper'));
     if (wrappers.length === 0) return;
 
-    // Maak thumbnails (kleine img elementen) en voeg data-index toe
+    // thumbnail breedte (in px) uit CSS variabele of fallback
+    const css = getComputedStyle(document.documentElement);
+    const thumbWidthStr = css.getPropertyValue('--mini-thumb-width') || '140px';
+    const thumbWidth = parseInt(thumbWidthStr, 10) || 140;
+
+    // Maak thumbnails en voeg data-index toe
     wrappers.forEach((wrap, idx) => {
       const img = wrap.querySelector('img');
       if (!img) return;
@@ -225,14 +281,11 @@ document.addEventListener('DOMContentLoaded', () => {
       thumb.src = img.src;
       thumb.alt = 'thumb ' + (idx + 1);
       thumb.dataset.index = idx;
-      thumb.style.width = (100 / wrappers.length) + '%';
+      thumb.style.flex = `0 0 ${thumbWidth}px`;
+      thumb.style.width = `${thumbWidth}px`;
       thumb.style.height = '100%';
       thumb.style.objectFit = 'cover';
-      thumb.style.display = 'inline-block';
       thumb.style.cursor = 'pointer';
-      thumb.style.opacity = '0.9';
-      thumb.style.borderRadius = '4px';
-      thumb.style.marginRight = '4px';
       thumb.addEventListener('click', () => {
         const target = wrappers[idx];
         if (!target) return;
@@ -244,14 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
       track.appendChild(thumb);
     });
 
-    // Zorg dat highlight bestaat
-    let highlight = mini.querySelector('.mini-highlight');
-    if (!highlight) {
-      highlight = document.createElement('div');
-      highlight.className = 'mini-highlight';
-      track.appendChild(highlight);
-    }
-
+    // Update highlight positie/width op basis van panorama scroll
     function updateHighlight() {
       const totalW = panorama.scrollWidth;
       const viewW = panorama.clientWidth;
@@ -264,15 +310,28 @@ document.addEventListener('DOMContentLoaded', () => {
       highlight.style.width = widthPct + '%';
     }
 
+    // Update thumbnail selection and ensure visible thumb when panorama scrolls
     function updateThumbSelection() {
       const panRect = panorama.getBoundingClientRect();
-      wrappers.forEach((wrap, idx) => {
-        const thumb = track.querySelector('img[data-index="' + idx + '"]');
-        if (!thumb) return;
+      const thumbs = Array.from(track.querySelectorAll('img.mini-thumb'));
+      thumbs.forEach((thumb, idx) => {
+        const wrap = wrappers[idx];
+        if (!wrap) return;
         const rect = wrap.getBoundingClientRect();
         const mid = rect.left + rect.width / 2;
-        if (mid >= panRect.left && mid <= panRect.right) thumb.style.outline = '2px solid rgba(43,122,120,0.9)';
-        else thumb.style.outline = 'none';
+        if (mid >= panRect.left && mid <= panRect.right) {
+          thumb.style.outline = '2px solid rgba(43,122,120,0.9)';
+          // scroll thumb into view inside track if needed
+          const thumbRect = thumb.getBoundingClientRect();
+          const trackRect = track.getBoundingClientRect();
+          if (thumbRect.left < trackRect.left + 8) {
+            track.scrollBy({ left: thumbRect.left - trackRect.left - 8, behavior: 'smooth' });
+          } else if (thumbRect.right > trackRect.right - 8) {
+            track.scrollBy({ left: thumbRect.right - trackRect.right + 8, behavior: 'smooth' });
+          }
+        } else {
+          thumb.style.outline = 'none';
+        }
       });
     }
 
@@ -287,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
       else img.addEventListener('load', () => { loaded++; updateHighlight(); updateThumbSelection(); });
     });
 
-    setTimeout(() => { updateHighlight(); updateThumbSelection(); }, 120);
+    setTimeout(() => { updateHighlight(); updateThumbSelection(); }, 150);
   }
 
   populateAndInitMiniMap();

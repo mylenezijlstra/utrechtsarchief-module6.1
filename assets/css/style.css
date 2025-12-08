@@ -9,11 +9,11 @@
   --info-min-width: 240px;
   --info-max-width: 420px;
 
-  /* Mini-map grootte en thumb hoogte/breedte */
-  --mini-width: 360px;
+  /* Mini-map instellingen */
+  --mini-thumb-width: 140px;
+  --mini-thumb-gap: 10px;
   --mini-height: 120px;
-  --mini-thumb-width: 120px; /* vaste breedte per thumbnail */
-  --mini-thumb-gap: 8px;
+  --mini-padding: 12px;
 }
 
 /* Frame: fixed en gecentreerd */
@@ -73,7 +73,7 @@
   -webkit-user-drag: none;
 }
 
-/* Hotspot styling (ongewijzigd t.o.v. jouw voorkeur) */
+/* Hotspot styling (NIET aangepast) */
 .hotspot {
   position: absolute;
   top: var(--hotspot-top, 50%);
@@ -160,51 +160,53 @@
 .image-wrapper { overflow: visible; }
 
 /* -------------------------
-   Mini-map (grotere thumbnails)
+   Mini-map: full-width, scrollable track
    ------------------------- */
+
+/* container: full width, met padding en optionele max-width */
 .mini-map {
   position: fixed;
-  right: 18px;
-  bottom: 18px;
-  width: var(--mini-width);
-  height: var(--mini-height);
-  background: rgba(255,255,255,0.98);
-  border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-  border-radius: 8px;
-  padding: 10px;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  padding: 0 var(--mini-padding);
   box-sizing: border-box;
   z-index: 11000;
+  pointer-events: auto;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: 12px;
-  color: #333;
+  align-items: center;
 }
 
-/* track bevat thumbnails; horizontaal scrollbaar als er meer thumbs zijn */
+/* inner wrapper houdt content binnen dezelfde max-width als panorama-frame (optioneel) */
+.mini-map .mini-inner {
+  width: 100%;
+  max-width: 2200px;
+  box-sizing: border-box;
+}
+
+/* track is full width of inner and horizontally scrollable */
 .mini-map .mini-track {
   position: relative;
   width: 100%;
-  height: calc(var(--mini-height) - 36px); /* laat ruimte voor label */
+  height: var(--mini-height);
   background: linear-gradient(90deg, #e9e6dd 0%, #f6f3ee 100%);
   border-radius: 8px;
   overflow-x: auto;
   overflow-y: hidden;
-  display:flex;
+  display: flex;
   gap: var(--mini-thumb-gap);
-  align-items:center;
-  padding:6px;
-  box-sizing:border-box;
+  align-items: center;
+  padding: 8px;
+  box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
 }
 
-/* thumbnails: vaste breedte en volledige hoogte van track */
+/* thumbnails: vaste breedte en hoogte, scrollbaar binnen track */
 .mini-map .mini-track img.mini-thumb {
-  height: 100%;
   flex: 0 0 var(--mini-thumb-width);
   width: var(--mini-thumb-width);
+  height: calc(var(--mini-height) - 16px);
   object-fit: cover;
   border-radius: 6px;
   cursor: pointer;
@@ -216,13 +218,13 @@
   box-shadow: 0 8px 18px rgba(0,0,0,0.14);
 }
 
-/* highlight die de zichtbare viewport representeert */
+/* highlight die de zichtbare viewport representeert (absolute binnen track) */
 .mini-map .mini-highlight {
   position: absolute;
-  top: 6px;
-  left: 6px;
-  height: calc(var(--mini-height) - 48px);
-  width: 20%;
+  top: 8px;
+  height: calc(var(--mini-height) - 16px);
+  left: 0;
+  width: 10%;
   background: rgba(43,122,120,0.18);
   border: 1px solid rgba(43,122,120,0.6);
   border-radius: 6px;
@@ -232,8 +234,8 @@
   z-index: 2;
 }
 
-/* label onder de track */
-.mini-map .mini-label { margin-top:8px; font-size:11px; color:#666; }
+/* label onder de track (optioneel) */
+.mini-map .mini-label { margin-top:6px; font-size:11px; color:#666; text-align:center; }
 
 /* Responsive tweaks */
 @media (max-width: 1200px) {
@@ -242,7 +244,7 @@
 }
 
 @media (max-width: 900px) {
-  :root { --hotspot-size: 34px; --info-min-width: 160px; --info-max-width: 60vw; --info-offset: 8px; --mini-width: 220px; --mini-height: 80px; --mini-thumb-width: 80px; }
+  :root { --hotspot-size: 34px; --info-min-width: 160px; --info-max-width: 60vw; --info-offset: 8px; --mini-thumb-width: 96px; --mini-height: 80px; }
   .panorama-frame { position: static; transform: none; width:100%; max-width:100%; margin:12px 0; max-height:none; overflow:visible; }
   .image-wrapper { min-width:92vw; width:92vw; height:auto; }
   .info-box {
@@ -259,8 +261,10 @@
     border-left: 2px solid #c4ae8a;
     border-top: 2px solid #c4ae8a;
   }
-  .mini-map { right: 12px; bottom: 12px; width: var(--mini-width); height: var(--mini-height); padding:6px; }
-  .mini-map .mini-track { height: calc(var(--mini-height) - 36px); }
+  .mini-map { bottom: 8px; padding: 0 8px; }
+  .mini-map .mini-track { height: var(--mini-height); padding:6px; }
+  .mini-map .mini-track img.mini-thumb { height: calc(var(--mini-height) - 12px); }
+  .mini-map .mini-highlight { top: 6px; height: calc(var(--mini-height) - 12px); }
 }
 
 /* Utilities */
