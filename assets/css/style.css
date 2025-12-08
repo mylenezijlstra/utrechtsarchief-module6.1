@@ -263,6 +263,9 @@
   .mini-map .mini-track { height: calc(var(--mini-height) - 36px); }
 }
 
-/* Utilities */
-.hidden { display: none !important; }
-.center { display: flex; align-items: center; justify-content: center; }
+/* 🖥️ Grote schermen */
+@media (min-width: 1601px) {
+  .image-wrapper img {
+    height: 700px;
+  }
+}
