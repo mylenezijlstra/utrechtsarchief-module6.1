@@ -24,8 +24,13 @@ usort($files, function($a, $b){ return imgIndex($a) <=> imgIndex($b); });
 </head>
 <body>
   <header class="admin-header">
-    <div><h2>Hotspots beheren</h2><div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div></div>
+    <div>
+      <h2>Hotspots beheren</h2>
+      <div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></div>
+    </div>
     <nav>
+      <!-- Link terug naar admin overzicht toegevoegd -->
+      <a href="/utrechtsarchief-module6.1/admin/users.php">Admin toevoegen</a>
       <a href="/utrechtsarchief-module6.1/admin/logout.php">Logout</a>
     </nav>
   </header>

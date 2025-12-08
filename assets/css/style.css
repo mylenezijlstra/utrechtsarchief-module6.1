@@ -9,30 +9,54 @@
   --info-min-width: 240px;
   --info-max-width: 420px;
 
-  /* Mini-map instellingen */
   --mini-thumb-width: 140px;
   --mini-thumb-gap: 10px;
   --mini-height: 120px;
   --mini-padding: 12px;
+  --mini-gap: 20px;
+  --frame-gap-top: 40px;
 }
 
-/* Frame: fixed en gecentreerd */
+/* Basis: pagina moet scrollbaar zijn */
+html, body {
+  height: auto;
+  min-height: 100%;
+  padding-top: 60px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+}
+
+/* Header boven panorama houden */
+header, .site-header {
+  position: relative;
+  z-index: 110;
+}
+
 .panorama-frame {
-  position: fixed;
-  inset: 50% auto auto 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   width: 98%;
   max-width: 2200px;
-  max-height: calc(100vh - 40px);
-  margin: 0;
+  margin: 20px auto 40px auto;
   background: var(--frame-bg);
   border: 4px double var(--frame-border);
   box-shadow: 0 12px 40px rgba(0,0,0,0.14);
   padding: var(--frame-padding);
   border-radius: var(--frame-radius);
   box-sizing: border-box;
-  overflow: hidden;
-  z-index: 9999;
+  overflow: visible;
+  z-index: 100;
+}
+
+/* Optioneel: fixed op desktop wanneer class .fixed-desktop aanwezig is */
+.panorama-frame.fixed-desktop {
+  position: fixed;
+  top: calc(50% + var(--frame-gap-top));
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: calc(100vh - 160px);
+  overflow: visible;
+  z-index: 100;
 }
 
 /* Panorama rij */
@@ -46,34 +70,37 @@
   height: calc(100% - 24px);
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 
-/* Panel */
+/* Image wrapper */
 .image-wrapper {
   position: relative;
   flex: 0 0 auto;
   width: min(95vw, 1800px);
-  min-width: 1000px;
+  min-width: 600px;
   max-width: 1800px;
   height: 100%;
   box-sizing: border-box;
   background: transparent;
   border-radius: 4px;
+  z-index: 10;
 }
-
-/* Afbeelding */
 .image-wrapper img {
   display: block;
-  max-width: 100%;
+  width: 100%;
+  height: auto;
   max-height: calc(100vh - 2 * var(--frame-padding) - 80px);
   object-fit: contain;
   margin: 0 auto;
   border-radius: 4px;
   user-select: none;
   -webkit-user-drag: none;
+  position: relative;
+  z-index: 10;
 }
 
-/* Hotspot styling (NIET aangepast) */
+/* Hotspots */
 .hotspot {
   position: absolute;
   top: var(--hotspot-top, 50%);
@@ -86,7 +113,7 @@
   border-radius: 50% 50% 50% 0;
   box-shadow: 0 8px 20px rgba(0,0,0,0.22);
   cursor: pointer;
-  z-index: 10000;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,15 +122,13 @@
   font-size: 18px;
   pointer-events: auto;
 }
-
-.hotspot:focus,
-.hotspot:hover {
+.hotspot:focus, .hotspot:hover {
   outline: none;
   box-shadow: 0 10px 26px rgba(0,0,0,0.28);
   transform: translate(-50%, -100%) rotate(315deg) scale(1.03);
 }
 
-/* Info-box: positie wordt door JS op de box gezet (geen vaste fallback) */
+/* Info-box */
 .info-box {
   position: absolute;
   left: var(--hotspot-left);
@@ -119,7 +144,7 @@
   text-align: left;
   box-shadow: 0 12px 30px rgba(0,0,0,0.16);
   border-radius: 10px;
-  z-index: 1000;
+  z-index: 120;
   pointer-events: auto;
   display: none;
   max-height: calc(40vh);
@@ -127,145 +152,33 @@
 }
 .info-box.show { display: block; }
 
-/* Pijl (caret) die naar beneden wijst */
-.info-box::before {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 14px;
-  height: 14px;
-  background: #f9f1e3;
-  border-right: 2px solid #c4ae8a;
-  border-bottom: 2px solid #c4ae8a;
-  z-index: -1;
-}
-
-/* Leesbaarheid */
-.info-box label { display:block; font-weight:600; margin-top:6px; margin-bottom:4px; font-size:14px; color:#3f2f1f; }
-.info-box textarea, .info-box input[type="text"] {
-  width:100%;
-  box-sizing:border-box;
-  padding:8px;
-  border:1px solid #e0d6c2;
-  border-radius:6px;
-  background:#fff;
-  color:#333;
-  font-size:14px;
-  resize:vertical;
-}
-
-/* Zorg dat de info-box niet buiten viewport valt (horizontaal) */
-.image-wrapper { overflow: visible; }
-
-/* -------------------------
-   Mini-map: full-width, scrollable track
-   ------------------------- */
-
-/* container: full width, met padding en optionele max-width */
+/* Mini-map */
 .mini-map {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 12px;
-  padding: 0 var(--mini-padding);
+  position: relative; /* ← was absolute */
+  width: calc(100% - (var(--mini-padding) * 2));
+  max-width: 2200px;
+  height: var(--mini-height);
+  margin: var(--mini-gap) auto 20px auto; /* ← extra ruimte onderaan */
+  padding: 6px var(--mini-padding);
   box-sizing: border-box;
-  z-index: 11000;
+  z-index: 95;
   pointer-events: auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: transparent;
+  border: 2px solid rgba(43,122,120,0.12);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-/* inner wrapper houdt content binnen dezelfde max-width als panorama-frame (optioneel) */
-.mini-map .mini-inner {
-  width: 100%;
-  max-width: 2200px;
-  box-sizing: border-box;
-}
 
-/* track is full width of inner and horizontally scrollable */
-.mini-map .mini-track {
-  position: relative;
-  width: 100%;
-  height: var(--mini-height);
-  background: linear-gradient(90deg, #e9e6dd 0%, #f6f3ee 100%);
-  border-radius: 8px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  display: flex;
-  gap: var(--mini-thumb-gap);
-  align-items: center;
-  padding: 8px;
-  box-sizing: border-box;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* thumbnails: vaste breedte en hoogte, scrollbaar binnen track */
-.mini-map .mini-track img.mini-thumb {
-  flex: 0 0 var(--mini-thumb-width);
-  width: var(--mini-thumb-width);
-  height: calc(var(--mini-height) - 16px);
-  object-fit: cover;
-  border-radius: 6px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  transition: transform 120ms ease, box-shadow 120ms ease;
-}
-.mini-map .mini-track img.mini-thumb:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.14);
-}
-
-/* highlight die de zichtbare viewport representeert (absolute binnen track) */
-.mini-map .mini-highlight {
-  position: absolute;
-  top: 8px;
-  height: calc(var(--mini-height) - 16px);
-  left: 0;
-  width: 10%;
-  background: rgba(43,122,120,0.18);
-  border: 1px solid rgba(43,122,120,0.6);
-  border-radius: 6px;
-  box-sizing: border-box;
-  transition: left 160ms linear, width 160ms linear;
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* label onder de track (optioneel) */
-.mini-map .mini-label { margin-top:6px; font-size:11px; color:#666; text-align:center; }
-
-/* Responsive tweaks */
-@media (max-width: 1200px) {
-  :root { --hotspot-size: 40px; --hotspot-border: 3px; --info-min-width: 220px; --info-max-width: 360px; }
-  .info-box { font-size: 14px; padding: 10px; max-height: calc(45vh); }
-}
-
-@media (max-width: 900px) {
-  :root { --hotspot-size: 34px; --info-min-width: 160px; --info-max-width: 60vw; --info-offset: 8px; --mini-thumb-width: 96px; --mini-height: 80px; }
-  .panorama-frame { position: static; transform: none; width:100%; max-width:100%; margin:12px 0; max-height:none; overflow:visible; }
-  .image-wrapper { min-width:92vw; width:92vw; height:auto; }
-  .info-box {
-    top: calc(var(--hotspot-top, 50%) + 56px);
-    transform: translateX(-50%);
-    max-height: 50vh;
-  }
-  .info-box::before {
-    bottom: auto;
-    top: -8px;
-    transform: translateX(-50%) rotate(45deg);
-    border-right: 0;
-    border-bottom: 0;
-    border-left: 2px solid #c4ae8a;
-    border-top: 2px solid #c4ae8a;
-  }
-  .mini-map { bottom: 8px; padding: 0 8px; }
-  .mini-map .mini-track { height: var(--mini-height); padding:6px; }
-  .mini-map .mini-track img.mini-thumb { height: calc(var(--mini-height) - 12px); }
-  .mini-map .mini-highlight { top: 6px; height: calc(var(--mini-height) - 12px); }
-}
+.mini-map .mini-inner { width: 100%; max-width: 2200px; box-sizing: border-box; }
+.mini-map .mini-track { position: relative; width: 100%; height: var(--mini-height); background: linear-gradient(90deg,#e9e6dd 0%,#f6f3ee 100%); border-radius:6px; overflow-x:auto; overflow-y:hidden; display:flex; gap:var(--mini-thumb-gap); align-items:center; padding:8px; box-sizing:border-box; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; touch-action: pan-x; overscroll-behavior: contain; }
+.mini-map .mini-track img.mini-thumb { flex:0 0 var(--mini-thumb-width); width:var(--mini-thumb-width); height:calc(var(--mini-height) - 16px); object-fit:cover; border-radius:6px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.08); transition: transform 120ms ease, box-shadow 120ms ease; scroll-snap-align:center; touch-action:none; z-index:20; }
+.mini-map .mini-highlight { position:absolute; top:8px; height:calc(var(--mini-height) - 16px); left:50%; transform:translateX(-50%); width:calc(var(--mini-thumb-width) + var(--mini-thumb-gap)); background:rgba(43,122,120,0.18); border:1px solid rgba(43,122,120,0.6); border-radius:6px; box-sizing:border-box; transition:left 120ms linear, width 120ms linear; pointer-events:none; z-index:20; }
 
 /* Utilities */
 .hidden { display: none !important; }
