@@ -170,7 +170,7 @@ $row = $result->fetch_assoc();
 
     <header class="admin-header">
         <div>
-            <h2>Hotspots beheren</h2>
+            <h2>Colofon beheren</h2>
             <div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div>
         </div>
         <nav>
