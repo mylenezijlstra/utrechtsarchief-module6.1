@@ -13,7 +13,6 @@ function imgIndex($path) {
     return intval(pathinfo(basename($path), PATHINFO_FILENAME));
 }
 usort($files, function($a, $b){ return imgIndex($a) <=> imgIndex($b); });
-
 ?>
 <!doctype html>
 <html lang="nl">
