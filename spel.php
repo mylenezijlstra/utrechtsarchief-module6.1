@@ -122,7 +122,7 @@
     const pieceSize = () => SIZE / N();
 
     let img = new Image();
-    img.src = 'assets/img/puzzelfoto.jpg';
+    img.src = 'assets/imgpuzzel/puzzelfoto.jpg';
 
     let pieces = [];
     let solved = false;
