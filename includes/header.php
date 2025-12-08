@@ -1,337 +1,167 @@
 <!doctype html>
 <html lang="nl">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Het Utrechts Archief header</title>
-    <style>
-        /* CSS uit jouw header, nu als los stylesheet */
-        body {
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-            margin: 0;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Het Utrechts Archief header</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      margin: 0;
+    }
+    header {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 70px;
+      z-index: 1000;
+      background: #fff;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 1rem;
+      box-sizing: border-box;
+    }
+    .logo { position: relative; width: 120px; height: 70px; display: flex; align-items: center; justify-content: center; }
+    .logo img { position: absolute; bottom: -40px; height: 95px; transition: all .25s ease; }
+    .logo.shrink img { height: 60px; bottom: 0; }
 
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            background: #fff;
-            height: 70px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 1rem;
-            box-sizing: border-box;
-            overflow: visible;
-            /* belangrijk: logo mag uitsteken */
-        }
+    nav { display: flex; gap: 1.2rem; font-size: 1.05rem; }
+    nav a { text-decoration: none; color: #000; font-weight: 500; }
 
-        .logo {
-            position: relative;
-            width: 120px;
-            /* vaste ruimte voor ALLE formaten logo */
-            height: 70px;
-            /* zelfde hoogte als header */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .menu-toggle { display: none; }
 
-        .logo img {
-            position: absolute;
-            bottom: -40px;
-            /* laat logo onder header uitsteken */
-            height: 95px;
-            transition: all .25s ease;
-        }
+    /* Zoekveld direct achter icoon */
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .search-icon {
+      height: 40px;
+      cursor: pointer;
+    }
+    #searchInput {
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #searchBtn {
+      padding: 6px 12px;
+      background: #288074;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #searchBtn:hover { background: #288062; }
 
-        .logo.shrink img {
-            height: 60px;
-            bottom: -0px;
-        }
-
-        nav {
-            display: flex;
-            gap: 1.2rem;
-            font-size: 1.05rem;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #000;
-            font-weight: 500;
-        }
-
-        nav a i {
-            font-style: italic;
-            color: #444;
-        }
-
-        .search-btn {
-
-            border-radius: 2px;
-            display: flex;
-            align-items: flex-end;
-            ;
-            justify-content: center;
-        }
-
-        .search-btn img {
-            height: 55px;
-            /* groter icoon */
-        }
-
-        header {
-            position: fixed;
-            top: 0;
-            /* zet hem tegen de bovenkant */
-            left: 0;
-            width: 100%;
-            /* laat hem de hele breedte nemen */
-            z-index: 1000;
-            /* zodat hij boven andere elementen blijft */
-        }
-
-        /* Positioneer de dropdown binnen je nav */
-        nav .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        /* Stijl van de knop “› Over ons” */
-        nav .dropbtn {
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 0 10px;
-            text-decoration: none;
-            font: inherit;
-            font-weight: 500;
-
-        }
-
-        /* Dropdown stijl */
-        nav .dropdown-content {
-            display: none;
-            position: absolute;
-            background: white;
-            border: 1px solid #ddd;
-            padding: 15px 20px;
-            min-width: 220px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-        }
-
-        /* Links in dropdown */
-        nav .dropdown-content a {
-            display: block;
-            padding: 6px 0;
-            color: black;
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        nav .dropdown-content a:hover {
-            text-decoration: underline;
-        }
-
-        /* Dropdown openen bij hover */
-        nav .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-
-        .menu-toggle {
-            display: none;
-        }
-
-        /* Tablet (iPad) */
-        @media (max-width: 1024px) {
-
-            header {
-                flex-direction: row;
-                justify-content: space-between;
-
-            }
-
-            header nav {
-                display: none;
-                /* verberg menu standaard */
-                flex-direction: column;
-                width: 100%;
-                background: #f9f9f9;
-                padding: 10px;
-                margin-bottom: -300px;
-
-            }
-
-            header nav.active {
-                display: flex;
-                /* toon menu bij klik */
-            }
-
-            .menu-toggle {
-                display: block;
-                cursor: pointer;
-                font-size: 1.5rem;
-            }
-
-            .search-btn {
-                display: none;
-                /* verberg zoekknop op kleine schermen */
-
-            }
-
-            .logo img {
-                height: 95px;
-                /* kleiner logo */
-                bottom: -35px;
-                /* minder uitsteken */
-
-            }
-
-            .logo.shrink img {
-                height: 70px;
-                /* nog kleiner bij scroll */
-                bottom: 0px;
-
-            }
-        }
-
-        /* Telefoon */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: row;
-                justify-content: space-between;
-
-            }
-
-            header nav {
-                display: none;
-                /* verberg menu standaard */
-                flex-direction: column;
-                width: 100%;
-                background: #f9f9f9;
-                padding: 10px;
-                margin-bottom: -300px;
-            }
-
-            header nav.active {
-                display: flex;
-                /* toon menu bij klik */
-            }
-
-            .menu-toggle {
-                display: block;
-                cursor: pointer;
-                font-size: 1.5rem;
-            }
-
-            .search-btn {
-                display: none;
-                /* verberg zoekknop op kleine schermen */
-
-            }
-
-            .logo img {
-                height: 65px;
-                /* kleiner logo */
-                bottom: -15px;
-                /* minder uitsteken */
-
-            }
-
-            .logo.shrink img {
-                height: 50px;
-                /* nog kleiner bij scroll */
-                bottom: 15px;
-
-            }
-
-        }
-
-        #btn-en,
-        #btn-nl {
-            all: unset;
-            /* haalt alle standaard button-styling weg */
-           
-            /* maakt de tekst dikgedrukt */
-            cursor: pointer;
-            /* blijft klikbaar */
-            font-style: italic;  
-        }
-    </style>
+    /* Highlight bij zoeken */
+    .image-wrapper.highlight { outline: 4px solid orange; transition: outline 0.4s ease; }
+  </style>
 </head>
-
 <body>
-    <header>
+  <header>
+    <!-- Zoekcontainer -->
+    <div class="search-container">
+      <img src="./assets/img/searchicon.png" alt="Zoeken" class="search-icon" />
+      <input type="text" id="searchInput" placeholder="Zoek plaatsnaam..." />
+      <button id="searchBtn">Zoek</button>
+    </div>
 
+    <div class="menu-toggle">☰</div>
 
+    <nav>
+      <a href="startscherm.php">Startscherm</a>
+      <a href="archiefbreed.php">Leporello</a>
+      <a href="colofon.php">Colofon</a>
+      <a href="https://hetutrechtsarchief.nl/contact">Contact</a>
+      <button id="btn-en">English</button>
+      <button id="btn-nl">Nederlands</button>
+    </nav>
 
-        <a class="search-btn" href="/zoeken">
-            <img src="./assets/img/searchicon.png" alt="Zoeken" />
-        </a>
+    <a class="logo" href="/">
+      <img id="mainlogo" src="./assets/img/logoklein.png" alt="Het Utrechts Archief Logo" />
+    </a>
+  </header>
 
-        <div class="menu-toggle">☰</div>
+  <script>
+    // Logo kleiner maken bij scroll
+    const logo = document.querySelector('.logo');
+    const img = document.getElementById('mainlogo');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        logo.classList.add('shrink');
+        img.src = './assets/img/logoklein.png';
+      } else {
+        logo.classList.remove('shrink');
+        img.src = './assets/img/logogroot.png';
+      }
+    });
 
-        <nav>
-            <a href="startscherm.php"> Startscherm</a>
-            <a href="archiefbreed.php"> Leporello</a>
-            <a href="colofon.php"> Colofon</a>
+    // Menu toggle
+    const toggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('header nav');
+    toggle.addEventListener('click', () => nav.classList.toggle('active'));
 
-            <div class="dropdown">
-                <button class="dropbtn">› Over ons</button>
+// Zoekindex (plaatsnamen koppelen aan panorama-id)
+const searchIndex = {
+  1: "Titelblad Panorama van Utrecht",
+  2: "Wittevrouwenbrug Wittevrouwenstraat Utrecht",
+  3: "Wolvenplein gevangenis Wolvenburg Utrecht",
+  4: "Plompetorengracht Noorderkade Begijnebolwerk Utrecht",
+  5: "Begijnebolwerk Utrecht",
+  6: "Begijnebolwerk Van Asch van Wijckskade Utrecht",
+  7: "Van Asch van Wijckskade Weerdbrug Noorderkade Utrecht",
+  8: "Noorderkade Nieuwekade Paardenveld Utrecht",
+  9: "Paardenveld molen De Meiboom Wasch- en Badinrichting Utrecht",
+  10: "Catharijnebrug Catharijnekade Vredenburg Utrecht",
+  11: "Vredenburg Rijnkade koperpletterij Utrecht",
+  12: "Willemsbrug Rijnkade Willemsplantsoen Utrecht",
+  13: "Singelplantsoen Mariaplaats Domtoren Utrecht",
+  14: "Singelplantsoen Zeven Steegjes Utrecht",
+  15: "Singelplantsoen Bartholomeusgasthuis Utrecht",
+  16: "Singelplantsoen Geertekerk houtvlot Utrecht",
+  17: "Singelplantsoen Springweg Sterrenburg Bijlhouwerstoren Utrecht",
+  18: "Singelplantsoen bastion Sterrenburg Bijlhouwerstoren Utrecht",
+  19: "Tolsteegbrug Ledig Erf bastion Manenburg Utrecht",
+  20: "Singelplantsoen Nicolaikerk St.-Agnietenklooster Centraal Museum Utrecht",
+  21: "Singelplantsoen Fundatie van Renswoude Agnietenstraat Utrecht",
+  22: "Singelplantsoen Nieuwegracht Servaasabdij Utrecht",
+  23: "Singelplantsoen bastion Zonnenburg Meteorologisch Instituut Sterrenwacht Utrecht",
+  24: "Singelplantsoen bastion Lepelenburg Utrecht",
+  25: "Singelplantsoen Servaasbolwerk Leeuwenberchgasthuis Utrecht",
+  26: "Maliebrug Maliebarrière bolwerk Lepelenburg Utrecht",
+  27: "Bolwerk Lepelenburg huis Lievendaal Utrecht",
+  28: "Bolwerk Lepelenburg particuliere tuinen Utrecht",
+  29: "Singelplantsoen Herenstraat Hieronymusplantsoen Utrecht",
+  30: "Singelplantsoen Kromme Nieuwegracht Hieronymuskapel Utrecht",
+  31: "Lucasbrug Lucasbolwerk Suikerhuis Utrecht",
+  32: "Lucasbolwerk Suikerhuis Utrecht",
+  33: "Singelplantsoen Wittevrouwenbrug Utrecht"
+};
 
-                <div class="dropdown-content">
-                    <a href="https://hetutrechtsarchief.nl/over-ons/archief-overdragen">Archief overdragen</a>
-                    <a href="https://hetutrechtsarchief.nl/over-ons/missie">Beleid</a>
-                    <a href="https://hetutrechtsarchief.nl/over-ons/projecten">Projecten</a>
-                    <a href="https://hetutrechtsarchief.nl/over-ons/nieuws">Nieuws</a>
-                    <a href="https://hetutrechtsarchief.nl/over-ons/medewerkers">Medewerkers</a>
-                    <a href="https://hetutrechtsarchief.nl/over-ons/vacatures">Vacatures</a>
-                    <a href="https://hetutrechtsarchief.nl/over-ons/word-vriend">Word vriend</a>
-                    <a href="https://hetutrechtsarchief.nl/over-ons/toegankelijkheid">Toegankelijkheid</a>
-                    <a href="https://hetutrechtsarchief.nl/over-ons/heeft-u-een-klacht">Heeft u een klacht?</a>
-                </div>
-            </div>
+    // Zoekactie
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      if (!query) return;
 
+      let foundPage = null;
+      for (const [page, place] of Object.entries(searchIndex)) {
+        if (place.toLowerCase().includes(query)) {
+          foundPage = page;
+          break;
+        }
+      }
 
-            <a href="https://hetutrechtsarchief.nl/contact"> Contact</a>
-            <button id="btn-en">English</button>
-            <button id="btn-nl">Nederlands</button>
-        </nav>
-
-        <a class="logo" href="/">
-            <img id="mainlogo" src="./assets/img/logoklein.png" alt="Het Utrechts Archief Logo" />
-        </a>
-    </header>
-
-    <script>
-        // Logo kleiner maken bij scroll
-        const logo = document.querySelector('.logo');
-        const img = document.getElementById('mainlogo');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 20) {
-                logo.classList.add('shrink');
-                img.src = './assets/img/logoklein.png';
-            } else {
-                logo.classList.remove('shrink');
-                img.src = './assets/img/logogroot.png';
-            }
-        });
-
-
-        const toggle = document.querySelector('.menu-toggle');
-        const nav = document.querySelector('header nav');
-
-        toggle.addEventListener('click', () => {
-            nav.classList.toggle('active');
-        });
-    </script>
+      if (foundPage) {
+        const target = document.querySelector(`.image-wrapper[data-id="${foundPage}"]`);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.classList.add('highlight');
+          setTimeout(() => target.classList.remove('highlight'), 2000);
+        }
+      } else {
+        alert("Geen resultaat gevonden");
+      }
+    });
+  </script>
 </body>
-
 </html>
