@@ -1,129 +1,116 @@
 <?php
 require_once './includes/db.php';
-
-// taalkeuze ophalen
 $lang = $_COOKIE['lang'] ?? 'nl';
 
-// functie om pixelwaarden naar percentages om te zetten
-function toPercent($value, $total) {
-    if ($total > 0 && $value !== null && $value !== '') {
-        return round(($value / $total) * 100, 2);
-    }
-    return null;
+// Helper: zet px -> integer (maar we sturen nu px als data-attributes)
+function safeInt($v) {
+    return ($v === null || $v === '') ? '' : (int)$v;
 }
+
+$result = $conn->query("
+    SELECT p.filename,
+           h.pos_top, h.pos_left,
+           h.description_nl, h.description_en,
+           h.remark_top, h.remark_left,
+           h.remark_nl, h.remark_en
+    FROM panorama p
+    LEFT JOIN hotspots h 
+      ON CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED) = h.image_id
+    ORDER BY CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED)
+");
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<html lang="<?php echo htmlspecialchars($lang); ?>">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
   <title>Panorama</title>
-  <link rel="stylesheet" href="./assets/css/style.css" />
-
-  <!-- Voeg Font Awesome toe via de CDN -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-  <style>
-    .hotspot-toolbar {
-      display: none;
-      /* Maak de toolbar verborgen */
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .hotspot-btn {
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      background: none;
-      /* Geen achtergrondkleur */
-      color: #000;
-      /* Zwarte kleur voor de iconen */
-      padding: 6px;
-    }
-
-    .hotspot-text {
-      display: none;
-    }
-
-    .hotspot.open .hotspot-toolbar {
-      display: flex;
-      /* Toon de toolbar wanneer de hotspot open is */
-    }
-  </style>
+  <link rel="stylesheet" href="./assets/css/style.css">
 </head>
-
 <body>
-
-  <header>
-    <?php include "includes/header.php"; ?>
-  </header>
-
   <main>
     <div class="panorama-frame">
       <div class="panorama">
-
         <?php
-        $result = $conn->query("SELECT p.filename, h.pos_top, h.pos_left, h.description_nl
-                              FROM panorama p
-                              LEFT JOIN hotspots h 
-                                ON CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED) = h.image_id
-                              ORDER BY CAST(REPLACE(p.filename, '.jpg', '') AS UNSIGNED)");
-
-        $count = 1;
+        // We gebruiken imageId (uit bestandsnaam) als unieke identifier per paneel
         while ($row = $result->fetch_assoc()) {
+          $filename = $row['filename'];
+          $imageId = (int) str_replace('.jpg', '', $filename);
+          $imgPath = './assets/img/' . $filename;
 
-          $imgPath = './assets/img/' . $row['filename'];
-          $size = @getimagesize($imgPath);
-          $imgWidth = $size[0] ?? 0;
-          $imgHeight = $size[1] ?? 0;
-          $desc = $row['description_nl'];
+          echo '<div class="image-wrapper" data-id="' . htmlspecialchars($imageId) . '">';
+          echo '<img src="' . htmlspecialchars($imgPath) . '" alt="Panorama ' . htmlspecialchars($imageId) . '">';
 
-          $topPercent = toPercent($row['pos_top'], $imgHeight);
-          $leftPercent = toPercent($row['pos_left'], $imgWidth);
-
-          echo '<div class="image-wrapper" style="--hotspot-top:' . $topPercent . '%; --hotspot-left:' . $leftPercent . '%;">';
-          echo '<img src="' . $imgPath . '" alt="Panorama ' . $count . '">';
-
-          if ($topPercent !== null && $leftPercent !== null) {
-            echo '<div class="hotspot">•';
+          // Beschrijving-hotspot (stuur ruwe px-waarden als data-attributes)
+          $descTopPx = safeInt($row['pos_top']);
+          $descLeftPx = safeInt($row['pos_left']);
+          if ($descTopPx !== '' && $descLeftPx !== '') {
+            $descId = "desc-" . $imageId;
+            echo '<div class="hotspot hotspot-desc" data-target="' . htmlspecialchars($descId) . '" data-pos-top="' . htmlspecialchars($descTopPx) . '" data-pos-left="' . htmlspecialchars($descLeftPx) . '" style="--hotspot-top:0%; --hotspot-left:0%;">●</div>';
+            $desc = ($lang === 'en') ? $row['description_en'] : $row['description_nl'];
             if (!empty($desc)) {
-              echo '<div class="info-box">';
-              echo '<strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . htmlspecialchars($desc);
-              echo '</div>';
+              echo '<div class="info-box" id="' . htmlspecialchars($descId) . '" hidden><strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . htmlspecialchars($desc) . '</div>';
+            } else {
+              echo '<div class="info-box" id="' . htmlspecialchars($descId) . '" hidden><strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br></div>';
             }
-
-            echo '</div>';
           }
 
-          echo '</div>';
-          $count++;
+          // Opmerking-hotspot
+          $remarkTopPx = safeInt($row['remark_top']);
+          $remarkLeftPx = safeInt($row['remark_left']);
+          if ($remarkTopPx !== '' && $remarkLeftPx !== '') {
+            $remarkId = "remark-" . $imageId;
+            echo '<div class="hotspot hotspot-remark" data-target="' . htmlspecialchars($remarkId) . '" data-pos-top="' . htmlspecialchars($remarkTopPx) . '" data-pos-left="' . htmlspecialchars($remarkLeftPx) . '" style="--hotspot-top:0%; --hotspot-left:0%;">●</div>';
+            $remark = ($lang === 'en') ? $row['remark_en'] : $row['remark_nl'];
+            if (!empty($remark)) {
+              echo '<div class="info-box" id="' . htmlspecialchars($remarkId) . '" hidden><strong>' . ($lang === 'en' ? 'Remark:' : 'Opmerking:') . '</strong><br>' . htmlspecialchars($remark) . '</div>';
+            } else {
+              echo '<div class="info-box" id="' . htmlspecialchars($remarkId) . '" hidden><strong>' . ($lang === 'en' ? 'Remark:' : 'Opmerking:') . '</strong><br></div>';
+            }
+          }
+
+          // Extra hotspots uit aparte tabel (optioneel)
+          $stmtExtra = $conn->prepare("SELECT id, pos_top, pos_left, info_nl, info_en, image FROM hotspot_extra WHERE hotspot_id = ?");
+          if ($stmtExtra) {
+            $stmtExtra->bind_param("i", $imageId);
+            $stmtExtra->execute();
+            $extraRes = $stmtExtra->get_result();
+            while ($extra = $extraRes->fetch_assoc()) {
+              $extraTopPx = safeInt($extra['pos_top']);
+              $extraLeftPx = safeInt($extra['pos_left']);
+              if ($extraTopPx !== '' && $extraLeftPx !== '') {
+                $extraId = "extra-" . $imageId . "-" . (int)$extra['id'];
+                echo '<div class="hotspot hotspot-extra" data-target="' . htmlspecialchars($extraId) . '" data-pos-top="' . htmlspecialchars($extraTopPx) . '" data-pos-left="' . htmlspecialchars($extraLeftPx) . '" style="--hotspot-top:0%; --hotspot-left:0%;">●</div>';
+                $extraInfo = ($lang === 'en') ? $extra['info_en'] : $extra['info_nl'];
+                if (!empty($extraInfo)) {
+                  echo '<div class="info-box" id="' . htmlspecialchars($extraId) . '" hidden><strong>' . ($lang === 'en' ? 'Additional info:' : 'Aanvullende info:') . '</strong><br>' . htmlspecialchars($extraInfo) . '</div>';
+                } else {
+                  echo '<div class="info-box" id="' . htmlspecialchars($extraId) . '" hidden><strong>' . ($lang === 'en' ? 'Additional info:' : 'Aanvullende info:') . '</strong><br></div>';
+                }
+                if (!empty($extra['image'])) {
+                  $extraImg = './assets/img/' . $extra['image'];
+                  echo '<img src="' . htmlspecialchars($extraImg) . '" alt="Extra afbeelding" class="extra-img">';
+                }
+              }
+            }
+            $stmtExtra->close();
+          }
+
+          echo '</div>'; // einde image-wrapper
         }
         ?>
-
-      </div>
-
-      <!-- Mini-map onderin -->
-      <div class="mini-map">
-        <?php
-        $miniResult = $conn->query("
-            SELECT filename 
-            FROM panorama 
-            ORDER BY CAST(REPLACE(filename, '.jpg', '') AS UNSIGNED) ASC
-        ");
-        while ($miniRow = $miniResult->fetch_assoc()) {
-          $miniPath = './assets/img/' . $miniRow['filename'];
-          echo '<img src="' . $miniPath . '" alt="Miniatuur panorama" class="mini-thumb">';
-        }
-        ?>
-        <div class="mini-highlight"></div>
       </div>
     </div>
 
-    <footer>
-      <?php include "includes/footer.php"; ?>
-    </footer>
-
+    <!-- Mini-map: structuur voor JS (JS vult thumbnails en highlight) -->
+    <div class="mini-map" aria-hidden="false">
+      <div class="mini-inner">
+        <div class="mini-track" aria-hidden="true">
+          <div class="mini-highlight"></div>
+          <!-- thumbnails worden dynamisch toegevoegd door panorama.js -->
+        </div>
+        <div class="mini-label">Overzicht</div>
+      </div>
+    </div>
   </main>
 
   <script src="./assets/js/panorama.js"></script>
@@ -176,5 +163,4 @@ function toPercent($value, $total) {
   </script>
 
 </body>
-
 </html>
