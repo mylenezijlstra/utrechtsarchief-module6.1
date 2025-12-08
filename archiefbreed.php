@@ -3,8 +3,9 @@ require_once './includes/db.php';
 $lang = $_COOKIE['lang'] ?? 'nl';
 
 // Helper: zet px -> integer (maar we sturen nu px als data-attributes)
-function safeInt($v) {
-    return ($v === null || $v === '') ? '' : (int)$v;
+function safeInt($v)
+{
+  return ($v === null || $v === '') ? '' : (int)$v;
 }
 
 $result = $conn->query("
@@ -21,12 +22,17 @@ $result = $conn->query("
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars($lang); ?>">
+
 <head>
   <meta charset="utf-8">
   <title>Panorama</title>
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
+
 <body>
+  <header>
+    <?php include "includes/header.php" ?>
+  </header>
   <main>
     <div class="panorama-frame">
       <div class="panorama">
@@ -118,9 +124,9 @@ $result = $conn->query("
   <script>
     // Voorlezen voor ALLE hotspots
 
-    document.addEventListener("DOMContentLoaded",function(){
+    document.addEventListener("DOMContentLoaded", function() {
 
-      
+
       let utterance = null;
 
       document.querySelectorAll('.hotspot').forEach(hotspot => {
@@ -162,5 +168,11 @@ $result = $conn->query("
     });
   </script>
 
+
+  <footer>
+    <?php include "includes/footer.php" ?>
+  </footer>
+
 </body>
+
 </html>
