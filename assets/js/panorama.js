@@ -1,6 +1,7 @@
 document.querySelectorAll('.hotspot').forEach(hotspot => {
   
   hotspot.addEventListener('click', () => {
+    console.log(hotspot.closest('.image-wrapper'));
     const wrapper = hotspot.closest('.image-wrapper');
     const infoBox = wrapper.querySelector('.info-box');
     if (infoBox) {

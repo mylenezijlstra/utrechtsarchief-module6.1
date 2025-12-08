@@ -129,7 +129,7 @@
     let emptyCell = { row: 0, col: 0 };
 
     img.onload = () => {
-      initPuzzle();
+      initPuzzle(); 
       shufflePuzzle();
       drawPuzzle();
     };
