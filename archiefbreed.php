@@ -8,6 +8,9 @@ function h($v) {
 function safeInt($v) {
     return ($v === null || $v === '') ? '' : (int)$v;
 }
+function t($nl, $en, $lang) {
+    return $lang === 'en' ? $en : $nl;
+}
 
 // Zet hier je projectmap base
 $BASE = '/utrechtsarchief-module6.1';
@@ -29,7 +32,7 @@ $result = $conn->query("
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Panorama</title>
+  <title><?php echo t("Panorama","Panorama",$lang); ?></title>
   <link rel="stylesheet" href="./assets/css/style.css">
   <style>
     .info-box .info-content {
@@ -37,9 +40,7 @@ $result = $conn->query("
       align-items: flex-start;
       gap: 12px;
     }
-    .info-box .info-text {
-      flex: 1;
-    }
+    .info-box .info-text { flex: 1; }
     .info-box .info-image img {
       max-width: 150px;
       height: auto;
@@ -70,9 +71,9 @@ $result = $conn->query("
           if ($descTopPx !== '' && $descLeftPx !== '') {
             $descId = "desc-" . $imageId;
             $desc = ($lang === 'en') ? $row['description_en'] : $row['description_nl'];
-            echo '<div class="hotspot hotspot-desc" data-target="' . h($descId) . '" data-pos-top="' . h($descTopPx) . '" data-pos-left="' . h($descLeftPx) . '">●</div>';
+            echo '<div class="hotspot hotspot-desc" data-target="' . h($descId) . '" style="top:' . h($descTopPx) . 'px; left:' . h($descLeftPx) . 'px;">●</div>';
             echo '<div class="info-box" id="' . h($descId) . '" hidden>';
-            echo '<div class="info-content"><div class="info-text"><strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . h($desc) . '</div></div>';
+            echo '<div class="info-content"><div class="info-text"><strong>' . t("Beschrijving:","Description:",$lang) . '</strong><br>' . h($desc) . '</div></div>';
             echo '</div>';
           }
 
@@ -82,9 +83,9 @@ $result = $conn->query("
           if ($remarkTopPx !== '' && $remarkLeftPx !== '') {
             $remarkId = "remark-" . $imageId;
             $remark = ($lang === 'en') ? $row['remark_en'] : $row['remark_nl'];
-            echo '<div class="hotspot hotspot-remark" data-target="' . h($remarkId) . '" data-pos-top="' . h($remarkTopPx) . '" data-pos-left="' . h($remarkLeftPx) . '">●</div>';
+            echo '<div class="hotspot hotspot-remark" data-target="' . h($remarkId) . '" style="top:' . h($remarkTopPx) . 'px; left:' . h($remarkLeftPx) . 'px;">●</div>';
             echo '<div class="info-box" id="' . h($remarkId) . '" hidden>';
-            echo '<div class="info-content"><div class="info-text"><strong>' . ($lang === 'en' ? 'Remark:' : 'Opmerking:') . '</strong><br>' . h($remark) . '</div></div>';
+            echo '<div class="info-content"><div class="info-text"><strong>' . t("Opmerking:","Remark:",$lang) . '</strong><br>' . h($remark) . '</div></div>';
             echo '</div>';
           }
 
@@ -100,13 +101,13 @@ $result = $conn->query("
               if ($extraTopPx !== '' && $extraLeftPx !== '') {
                 $extraId = "extra-" . $imageId . "-" . (int)$extra['id'];
                 $extraInfo = ($lang === 'en') ? $extra['info_en'] : $extra['info_nl'];
-                echo '<div class="hotspot hotspot-extra" data-target="' . h($extraId) . '" data-pos-top="' . h($extraTopPx) . '" data-pos-left="' . h($extraLeftPx) . '">●</div>';
+                echo '<div class="hotspot hotspot-extra" data-target="' . h($extraId) . '" style="top:' . h($extraTopPx) . 'px; left:' . h($extraLeftPx) . 'px;">●</div>';
                 echo '<div class="info-box" id="' . h($extraId) . '" hidden>';
                 echo '<div class="info-content">';
-                echo '<div class="info-text"><strong>' . ($lang === 'en' ? 'Additional info:' : 'Aanvullende info:') . '</strong><br>' . h($extraInfo) . '</div>';
+                echo '<div class="info-text"><strong>' . t("Aanvullende info:","Additional info:",$lang) . '</strong><br>' . h($extraInfo) . '</div>';
                 if (!empty($extra['image'])) {
                   $extraImg = $BASE . '/admin/assets/img/' . $extra['image'];
-                  echo '<div class="info-image"><img src="' . h($extraImg) . '" alt="Extra afbeelding"></div>';
+                  echo '<div class="info-image"><img src="' . h($extraImg) . '" alt="' . t("Extra afbeelding","Extra image",$lang) . '"></div>';
                 }
                 echo '</div>'; // info-content
                 echo '</div>'; // info-box

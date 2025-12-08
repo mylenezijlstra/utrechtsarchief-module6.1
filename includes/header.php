@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="<?php echo $_COOKIE['lang'] ?? 'nl'; ?>">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -101,42 +101,52 @@
     const nav = document.querySelector('header nav');
     toggle.addEventListener('click', () => nav.classList.toggle('active'));
 
-// Zoekindex (plaatsnamen koppelen aan panorama-id)
-const searchIndex = {
-  1: "Titelblad Panorama van Utrecht",
-  2: "Wittevrouwenbrug Wittevrouwenstraat Utrecht",
-  3: "Wolvenplein gevangenis Wolvenburg Utrecht",
-  4: "Plompetorengracht Noorderkade Begijnebolwerk Utrecht",
-  5: "Begijnebolwerk Utrecht",
-  6: "Begijnebolwerk Van Asch van Wijckskade Utrecht",
-  7: "Van Asch van Wijckskade Weerdbrug Noorderkade Utrecht",
-  8: "Noorderkade Nieuwekade Paardenveld Utrecht",
-  9: "Paardenveld molen De Meiboom Wasch- en Badinrichting Utrecht",
-  10: "Catharijnebrug Catharijnekade Vredenburg Utrecht",
-  11: "Vredenburg Rijnkade koperpletterij Utrecht",
-  12: "Willemsbrug Rijnkade Willemsplantsoen Utrecht",
-  13: "Singelplantsoen Mariaplaats Domtoren Utrecht",
-  14: "Singelplantsoen Zeven Steegjes Utrecht",
-  15: "Singelplantsoen Bartholomeusgasthuis Utrecht",
-  16: "Singelplantsoen Geertekerk houtvlot Utrecht",
-  17: "Singelplantsoen Springweg Sterrenburg Bijlhouwerstoren Utrecht",
-  18: "Singelplantsoen bastion Sterrenburg Bijlhouwerstoren Utrecht",
-  19: "Tolsteegbrug Ledig Erf bastion Manenburg Utrecht",
-  20: "Singelplantsoen Nicolaikerk St.-Agnietenklooster Centraal Museum Utrecht",
-  21: "Singelplantsoen Fundatie van Renswoude Agnietenstraat Utrecht",
-  22: "Singelplantsoen Nieuwegracht Servaasabdij Utrecht",
-  23: "Singelplantsoen bastion Zonnenburg Meteorologisch Instituut Sterrenwacht Utrecht",
-  24: "Singelplantsoen bastion Lepelenburg Utrecht",
-  25: "Singelplantsoen Servaasbolwerk Leeuwenberchgasthuis Utrecht",
-  26: "Maliebrug Maliebarrière bolwerk Lepelenburg Utrecht",
-  27: "Bolwerk Lepelenburg huis Lievendaal Utrecht",
-  28: "Bolwerk Lepelenburg particuliere tuinen Utrecht",
-  29: "Singelplantsoen Herenstraat Hieronymusplantsoen Utrecht",
-  30: "Singelplantsoen Kromme Nieuwegracht Hieronymuskapel Utrecht",
-  31: "Lucasbrug Lucasbolwerk Suikerhuis Utrecht",
-  32: "Lucasbolwerk Suikerhuis Utrecht",
-  33: "Singelplantsoen Wittevrouwenbrug Utrecht"
-};
+    // Taalkeuze cookie zetten
+    document.getElementById('btn-en').addEventListener('click', () => {
+      document.cookie = "lang=en; path=/";
+      location.reload();
+    });
+    document.getElementById('btn-nl').addEventListener('click', () => {
+      document.cookie = "lang=nl; path=/";
+      location.reload();
+    });
+
+    // Zoekindex (plaatsnamen koppelen aan panorama-id)
+    const searchIndex = {
+      1: "Titelblad Panorama van Utrecht",
+      2: "Wittevrouwenbrug Wittevrouwenstraat Utrecht",
+      3: "Wolvenplein gevangenis Wolvenburg Utrecht",
+      4: "Plompetorengracht Noorderkade Begijnebolwerk Utrecht",
+      5: "Begijnebolwerk Utrecht",
+      6: "Begijnebolwerk Van Asch van Wijckskade Utrecht",
+      7: "Van Asch van Wijckskade Weerdbrug Noorderkade Utrecht",
+      8: "Noorderkade Nieuwekade Paardenveld Utrecht",
+      9: "Paardenveld molen De Meiboom Wasch- en Badinrichting Utrecht",
+      10: "Catharijnebrug Catharijnekade Vredenburg Utrecht",
+      11: "Vredenburg Rijnkade koperpletterij Utrecht",
+      12: "Willemsbrug Rijnkade Willemsplantsoen Utrecht",
+      13: "Singelplantsoen Mariaplaats Domtoren Utrecht",
+      14: "Singelplantsoen Zeven Steegjes Utrecht",
+      15: "Singelplantsoen Bartholomeusgasthuis Utrecht",
+      16: "Singelplantsoen Geertekerk houtvlot Utrecht",
+      17: "Singelplantsoen Springweg Sterrenburg Bijlhouwerstoren Utrecht",
+      18: "Singelplantsoen bastion Sterrenburg Bijlhouwerstoren Utrecht",
+      19: "Tolsteegbrug Ledig Erf bastion Manenburg Utrecht",
+      20: "Singelplantsoen Nicolaikerk St.-Agnietenklooster Centraal Museum Utrecht",
+      21: "Singelplantsoen Fundatie van Renswoude Agnietenstraat Utrecht",
+      22: "Singelplantsoen Nieuwegracht Servaasabdij Utrecht",
+      23: "Singelplantsoen bastion Zonnenburg Meteorologisch Instituut Sterrenwacht Utrecht",
+      24: "Singelplantsoen bastion Lepelenburg Utrecht",
+      25: "Singelplantsoen Servaasbolwerk Leeuwenberchgasthuis Utrecht",
+      26: "Maliebrug Maliebarrière bolwerk Lepelenburg Utrecht",
+      27: "Bolwerk Lepelenburg huis Lievendaal Utrecht",
+      28: "Bolwerk Lepelenburg particuliere tuinen Utrecht",
+      29: "Singelplantsoen Herenstraat Hieronymusplantsoen Utrecht",
+      30: "Singelplantsoen Kromme Nieuwegracht Hieronymuskapel Utrecht",
+      31: "Lucasbrug Lucasbolwerk Suikerhuis Utrecht",
+      32: "Lucasbolwerk Suikerhuis Utrecht",
+      33: "Singelplantsoen Wittevrouwenbrug Utrecht"
+    };
 
     // Zoekactie
     document.getElementById('searchBtn').addEventListener('click', () => {
