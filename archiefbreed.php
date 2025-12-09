@@ -85,9 +85,7 @@ $result = $conn->query("
             echo '<div class="hotspot hotspot-desc" data-target="' . h($descId) . '" 
           style="top:' . h($descTopPx) . 'px; left:' . h($descLeftPx) . 'px;">●</div>';
 
-            echo '<div class="info-box" id="' . h($descId) . '" hidden>
-            <strong>' . t("Beschrijving:", "Description:", $lang) . '</strong><br>' . h($desc) . '
-          </div>';
+            echo '<div class="info-box" id="' . h($descId) . '" hidden>' . h($desc) . '</div>';
           }
 
           // ★ Remark hotspot – CORRECT HERSTELD
@@ -100,9 +98,7 @@ $result = $conn->query("
             echo '<div class="hotspot hotspot-remark" data-target="' . h($remarkId) . '"
           style="top:' . h($remarkTopPx) . 'px; left:' . h($remarkLeftPx) . 'px;">●</div>';
 
-            echo '<div class="info-box" id="' . h($remarkId) . '" hidden>
-            <strong>' . t("Opmerking:", "Remark:", $lang) . '</strong><br>' . h($remark) . '
-          </div>';
+            echo '<div class="info-box" id="' . h($remarkId) . '" hidden>' . h($remark) . '</div>';
           }
 
           // ★ EXTRA HOTSPOTS (blijft hetzelfde, maar nu binnen de while!)
@@ -125,10 +121,9 @@ $result = $conn->query("
               style="top:' . h($extraTopPx) . 'px; left:' . h($extraLeftPx) . 'px;">●</div>';
 
                 echo '<div class="info-box" id="' . h($extraId) . '" hidden>
-                <div class="info-content">
-                  <div class="info-text">
-                    <strong>' . t("Aanvullende info:", "Additional info:", $lang) . '</strong><br>' . h($extraInfo) . '
-                  </div>';
+  <div class="info-content">
+    <div class="info-text">' . h($extraInfo) . '</div>';
+
 
                 if (!empty($extra['image'])) {
                   $extraImg = $BASE . '/admin/assets/img/' . $extra['image'];

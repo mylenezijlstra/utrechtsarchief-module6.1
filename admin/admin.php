@@ -45,7 +45,6 @@ usort($files, function ($a, $b) {
       <?php foreach ($files as $file):
         $idx = imgIndex($file);
 
-        // Haal hoofd-hotspot
         $spot = [
           'pos_top' => 20,
           'pos_left' => 20,
@@ -69,7 +68,6 @@ usort($files, function ($a, $b) {
           $stmt->close();
         }
 
-        // Haal alle extra hotspots
         $extras = [];
         $stmt2 = $conn->prepare("SELECT id, pos_top, pos_left, info_nl, info_en, image FROM hotspot_extra WHERE hotspot_id = ?");
         if ($stmt2) {
@@ -89,54 +87,47 @@ usort($files, function ($a, $b) {
             <?php $safeFile = '/utrechtsarchief-module6.1/assets/img/' . rawurlencode(basename($file)); ?>
             <img src="<?php echo $safeFile; ?>" alt="Panorama <?php echo $idx; ?>">
 
-            <!-- Beschrijving-hotspot -->
-            <div class="hotspot hotspot-desc" style="top:<?php echo (int)$spot['pos_top']; ?>px; left:<?php echo (int)$spot['pos_left']; ?>px;">D</div>
+            <!-- Hoofd-hotspot -->
+            <div class="hotspot hotspot-desc" style="top:<?php echo (int)$spot['pos_top']; ?>px; left:<?php echo (int)$spot['pos_left']; ?>px;">i</div>
             <div class="info-box info-desc" style="display:none;">
-
               <label>Beschrijving (NL)</label>
               <textarea class="info-text-nl" rows="3"><?php echo htmlspecialchars($spot['description_nl'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
               <label>Beschrijving (EN)</label>
               <textarea class="info-text-en" rows="3"><?php echo htmlspecialchars($spot['description_en'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
               <div class="controls">
                 <button class="save-hotspot" data-type="desc">Opslaan</button>
-                <!-- Verwijderknop hoofd-hotspot -->
                 <form method="post" action="/utrechtsarchief-module6.1/admin/delete_hotspot.php" onsubmit="return confirm('Hoofd-hotspot van afbeelding <?php echo $idx; ?> verwijderen?');" style="display:inline;">
                   <input type="hidden" name="image_id" value="<?php echo $idx; ?>">
                   <button type="submit" class="delete-extra">Verwijderen</button>
                 </form>
-
                 <span class="save-status"></span>
               </div>
             </div>
 
             <!-- Opmerking-hotspot -->
             <?php if ($spot['remark_top'] !== null && $spot['remark_left'] !== null): ?>
-              <div class="hotspot hotspot-remark" style="top:<?php echo (int)$spot['remark_top']; ?>px; left:<?php echo (int)$spot['remark_left']; ?>px;">R</div>
+              <div class="hotspot hotspot-remark" style="top:<?php echo (int)$spot['remark_top']; ?>px; left:<?php echo (int)$spot['remark_left']; ?>px;">i</div>
               <div class="info-box info-remark" style="display:none;">
-
                 <label>Opmerking (NL)</label>
                 <textarea class="remark-nl" rows="3"><?php echo htmlspecialchars($spot['remark_nl'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
                 <label>Opmerking (EN)</label>
                 <textarea class="remark-en" rows="3"><?php echo htmlspecialchars($spot['remark_en'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
                 <div class="controls">
                   <button class="save-hotspot" data-type="remark">Opslaan</button>
-                  <!-- Verwijderknop hoofd-hotspot -->
                   <form method="post" action="/utrechtsarchief-module6.1/admin/delete_hotspot.php" onsubmit="return confirm('Hoofd-hotspot van afbeelding <?php echo $idx; ?> verwijderen?');" style="display:inline;">
                     <input type="hidden" name="image_id" value="<?php echo $idx; ?>">
                     <button type="submit" class="delete-extra">Verwijderen</button>
                   </form>
-
                   <span class="save-status"></span>
                 </div>
               </div>
             <?php endif; ?>
 
-            <!-- Bestaande extra hotspots -->
+            <!-- Extra hotspots -->
             <?php foreach ($extras as $ex): ?>
               <div class="hotspot hotspot-extra" data-extra-id="<?php echo (int)$ex['id']; ?>"
-                style="top:<?php echo (int)$ex['pos_top']; ?>px; left:<?php echo (int)$ex['pos_left']; ?>px;">E</div>
+                style="top:<?php echo (int)$ex['pos_top']; ?>px; left:<?php echo (int)$ex['pos_left']; ?>px;">i</div>
               <div class="info-box info-extra" style="display:none;">
-
                 <label>Aanvullende info (NL)</label>
                 <textarea class="extra-info-nl" rows="3"><?php echo htmlspecialchars($ex['info_nl'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
                 <label>Additional info (EN)</label>
@@ -155,7 +146,6 @@ usort($files, function ($a, $b) {
                 </div>
               </div>
             <?php endforeach; ?>
-
           </div>
 
           <div style="margin-top:8px;display:flex;gap:8px;align-items:center">

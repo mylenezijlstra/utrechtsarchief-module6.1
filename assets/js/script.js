@@ -233,7 +233,7 @@ function initWrapper(wrapper) {
       // nieuwe hotspot + box
       const hot = document.createElement('div');
       hot.className = 'hotspot hotspot-extra';
-      hot.textContent = 'E';
+      hot.textContent = 'i';
       hot.style.top = defaultTop + 'px';
       hot.style.left = defaultLeft + 'px';
 
