@@ -1,3 +1,8 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
 /* Header */
 .admin-header {
   display: flex;
@@ -15,7 +20,10 @@
   text-decoration: none;
   color: #4b3a26;
 }
-.logout-btn:hover { background: #d6c4a5; }
+
+.logout-btn:hover {
+  background: #d6c4a5;
+}
 
 /* Panorama container */
 .panorama-frame {
@@ -23,15 +31,17 @@
   margin: 20px auto;
   background: #fffaf0;
   border: 4px double #bda888;
-  box-shadow: 0 0 25px rgba(0,0,0,0.2);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
   padding: 20px;
 }
 
 .panorama {
   display: flex;
-  flex-direction: column; /* alles onder elkaar */
+  flex-direction: column;
+  /* alles onder elkaar */
   gap: 30px;
-  align-items: center; /* centreren per blok */
+  align-items: center;
+  /* centreren per blok */
 }
 
 /* Afbeelding wrapper */
@@ -42,8 +52,9 @@
   border: 2px solid #c4ae8a;
   padding: 10px;
   background: #fffaf0;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  max-width: 1600px; /* vergroot van 400/600 naar 800px */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 1600px;
+  /* vergroot van 400/600 naar 800px */
 }
 
 .image-wrapper img {
@@ -51,9 +62,24 @@
   height: auto;
   display: block;
 }
-.save-status{margin-left:8px;font-size:13px}
-.controls{margin-top:8px}
-.add-extra{background:#2b7a78;color:#fff;border:none;padding:8px 10px;border-radius:4px;cursor:pointer}
+
+.save-status {
+  margin-left: 8px;
+  font-size: 13px
+}
+
+.controls {
+  margin-top: 8px
+}
+
+.add-extra {
+  background: #2b7a78;
+  color: #fff;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer
+}
 
 /* Hotspots */
 .hotspot {
@@ -68,24 +94,38 @@
   color: #fff;
   font-weight: bold;
   font-size: 13px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   z-index: 15;
 }
-.hotspot-desc { background:#8c7455; }   /* bruin */
-.hotspot-remark { background:#cc3333; } /* rood */
-.hotspot-extra { background:#3366cc; }  /* blauw */
+
+.hotspot-desc {
+  background: #8c7455;
+}
+
+/* bruin */
+.hotspot-remark {
+  background: #cc3333;
+}
+
+/* rood */
+.hotspot-extra {
+  background: #3366cc;
+}
+
+/* blauw */
 
 /* Info-box direct onder het bolletje */
-.hotspot + .info-box {
+.hotspot+.info-box {
   position: absolute;
-  top: calc(50% + 3px); /* zet hem net onder het bolletje */
+  top: calc(50% + 3px);
+  /* zet hem net onder het bolletje */
   left: 45%;
   transform: translateX(-50%);
   background: #fffaf0;
   border: 2px solid #c4ae8a;
   padding: 10px;
   width: 300px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   display: none;
   border-radius: 6px;
   z-index: 20;
@@ -97,14 +137,17 @@
 /* Zorg dat info-box absolute posities gebruikt en horizontaal centreert */
 .info-box {
   position: absolute;
-  left: 0;    /* wordt overschreven door inline style.left in JS */
-  top: 0;     /* wordt overschreven door inline style.top in JS */
-  transform: translateX(-50%); /* centreer horizontaal op inline left */
+  left: 0;
+  /* wordt overschreven door inline style.left in JS */
+  top: 0;
+  /* wordt overschreven door inline style.top in JS */
+  transform: translateX(-50%);
+  /* centreer horizontaal op inline left */
   background: #fffaf0;
   border: 2px solid #c4ae8a;
   padding: 10px;
   width: 300px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   display: none;
   border-radius: 6px;
   z-index: 20;
@@ -130,7 +173,10 @@
   cursor: pointer;
   font-family: "Georgia", serif;
 }
-.save-desc:hover { background:#d6c4a5; }
+
+.save-desc:hover {
+  background: #d6c4a5;
+}
 
 /* Statusmelding */
 .save-status {
@@ -142,48 +188,48 @@
 
 /* User form styling */
 .user-form {
-    max-width: 400px;
-    margin: 30px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    background: #fffaf0;
-    border: 2px solid #c4ae8a;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .user-form label {
-    font-weight: bold;
-    color: #4b3a26;
-  }
-  
-  .user-form input {
-    padding: 8px;
-    border: 1px solid #c4ae8a;
-    border-radius: 4px;
-  }
-  
-  .user-form button {
-    background: #8c7455;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 15px;
-  }
-  
-  .user-form button:hover {
-    background: #6b5334;
-  }
-  
-  .status-msg {
-    text-align: center;
-    font-weight: bold;
-    margin: 15px;
-  }
-  
+  max-width: 400px;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: #fffaf0;
+  border: 2px solid #c4ae8a;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.user-form label {
+  font-weight: bold;
+  color: #4b3a26;
+}
+
+.user-form input {
+  padding: 8px;
+  border: 1px solid #c4ae8a;
+  border-radius: 4px;
+}
+
+.user-form button {
+  background: #8c7455;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.user-form button:hover {
+  background: #6b5334;
+}
+
+.status-msg {
+  text-align: center;
+  font-weight: bold;
+  margin: 15px;
+}
+
 nav {
   display: flex;
   gap: 12px;
@@ -193,19 +239,95 @@ nav a {
   display: inline-block;
   padding: 8px 16px;
   text-decoration: none;
-  background-color: #d6c3a3; /* zachte zandkleur */
-  color: #4b3a26; /* donkerbruine tekst */
-  border-radius: 6px; /* afgeronde hoeken */
-  border: 1px solid #bfa68c; /* subtiele rand */
+  background-color: #d6c3a3;
+  /* zachte zandkleur */
+  color: #4b3a26;
+  /* donkerbruine tekst */
+  border-radius: 6px;
+  /* afgeronde hoeken */
+  border: 1px solid #bfa68c;
+  /* subtiele rand */
   font-weight: 500;
   font-size: 14px;
   transition: all 0.2s ease;
 }
 
 nav a:hover {
-  background-color: #cbb694; /* iets donkerder bij hover */
+  background-color: #cbb694;
+  /* iets donkerder bij hover */
   border-color: #a89172;
   color: #3f2f1f;
 }
 
-  
+/* --- Responsive voor schermen ≤1180px --- */
+@media (max-width: 1180px) {
+
+  /* Header navigatie en titel schalen */
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .admin-header nav {
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Panorama frame en images schalen */
+  .panorama-frame {
+    padding: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .panorama {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .image-wrapper {
+    width: 100%;
+    min-width: 300px;
+    /* minimale breedte van elk frame */
+    overflow-x: auto;
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Hotspots en info-box aanpassen */
+  .hotspot {
+    transform: scale(0.8);
+    /* iets kleiner op kleinere schermen */
+  }
+
+  .info-box {
+    width: 90%;
+    /* smaller info-box */
+    left: 5% !important;
+    /* centreren */
+  }
+
+  /* Buttons en controls stapelen */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .controls button {
+    width: 100%;
+  }
+
+  /* Extra info toevoegen knop aanpassen */
+  .add-extra {
+    width: auto;
+    font-size: 0.9rem;
+  }
+
+}

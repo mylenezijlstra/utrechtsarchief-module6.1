@@ -155,17 +155,34 @@ document.addEventListener('DOMContentLoaded', () => {
       track.appendChild(thumb);
     });
 
-    function updateHighlight() {
-      const totalW = panorama.scrollWidth;
-      const viewW = panorama.clientWidth;
-      const scrollX = panorama.scrollLeft;
-      if (totalW <= 0) return;
-      const ratio = viewW / totalW;
-      const leftPct = (scrollX / totalW) * 100;
-      const widthPct = Math.max(ratio * 100, 2);
-      highlight.style.left = leftPct + '%';
-      highlight.style.width = widthPct + '%';
+   function updateHighlight() {
+  const wrappers = Array.from(panorama.querySelectorAll('.image-wrapper'));
+  const midX = window.innerWidth / 2;
+
+  let active = null;
+  wrappers.forEach(w => {
+    const r = w.getBoundingClientRect();
+    if (r.left <= midX && r.right >= midX) {
+      active = w;
     }
+  });
+
+  if (active) {
+    const index = wrappers.indexOf(active);
+    const thumb = track.querySelector(`.mini-thumb[data-index="${index}"]`);
+    
+    if (thumb) {
+      const r = thumb.getBoundingClientRect();
+      const t = track.getBoundingClientRect();
+
+      highlight.style.left = (r.left - t.left) + "px";
+      highlight.style.top = (r.top - t.top) + "px";
+      highlight.style.width = r.width + "px";
+      highlight.style.height = r.height + "px";
+    }
+  }
+}
+
 
     panorama.addEventListener('scroll', updateHighlight, { passive: true });
     window.addEventListener('resize', updateHighlight);

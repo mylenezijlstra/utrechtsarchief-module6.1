@@ -14,17 +14,21 @@ if ($conn->connect_error) {
 
 // Opslaan van wijzigingen
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title   = $_POST['title'];
-    $content = $_POST['content'];
+    $title   = $_POST['title'] ?? '';
+    $content = $_POST['content'] ?? '';
 
     $stmt = $conn->prepare("INSERT INTO colofon (title, content) VALUES (?, ?)");
     $stmt->bind_param("ss", $title, $content);
-    $stmt->execute();
-    $stmt->close();
 
-    // Na opslaan opnieuw laden zodat de nieuwe tekst zichtbaar is
-    header("Location: colofonadmin.php");
-    exit;
+    if ($stmt->execute()) {
+        // Na opslaan opnieuw laden zodat de nieuwe tekst zichtbaar is
+        header("Location: colofonadmin.php");
+        exit;
+    } else {
+        $error = "Fout bij opslaan: " . $stmt->error;
+    }
+
+    $stmt->close();
 }
 
 // Haal huidige colofon op
@@ -39,6 +43,18 @@ $row = $result->fetch_assoc();
     <title>Admin – Colofon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f1e3;
+            padding: 10px 20px;
+            border-bottom: 2px solid #c4ae8a;
+            font-family: "Georgia", serif;
+            /* toegevoegd */
+        }
+
+
         :root {
             --ua-red: #C4002E;
             --ua-ink: #1A1A1A;
@@ -123,13 +139,9 @@ $row = $result->fetch_assoc();
             padding: 8px 16px;
             text-decoration: none;
             background-color: #d6c3a3;
-            /* zachte zandkleur */
             color: #4b3a26;
-            /* donkerbruine tekst */
             border-radius: 6px;
-            /* afgeronde hoeken */
             border: 1px solid #bfa68c;
-            /* subtiele rand */
             font-weight: 500;
             font-size: 14px;
             transition: all 0.2s ease;
@@ -137,12 +149,10 @@ $row = $result->fetch_assoc();
 
         nav a:hover {
             background-color: #cbb694;
-            /* iets donkerder bij hover */
             border-color: #a89172;
             color: #3f2f1f;
         }
 
-        /* Header */
         .admin-header {
             display: flex;
             justify-content: space-between;
@@ -163,6 +173,14 @@ $row = $result->fetch_assoc();
         .logout-btn:hover {
             background: #d6c4a5;
         }
+
+        .error {
+            background: #ffe0e0;
+            color: #900;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 
@@ -171,9 +189,9 @@ $row = $result->fetch_assoc();
     <header class="admin-header">
         <div>
             <h2>Colofon beheren</h2>
-            <div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div>
         </div>
         <nav>
+            <a href="/utrechtsarchief-module6.1/admin/users.php">Admin toevoegen</a>
             <a href="/utrechtsarchief-module6.1/admin/admin.php">Hotspots</a>
             <a href="/utrechtsarchief-module6.1/admin/colofonadmin.php">Colofon</a>
             <a href="/utrechtsarchief-module6.1/admin/logout.php">Logout</a>
@@ -183,6 +201,11 @@ $row = $result->fetch_assoc();
     <main class="page">
         <article class="card">
             <h1>Colofon bewerken</h1>
+
+            <?php if (!empty($error)): ?>
+                <div class="error"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+
             <form action="colofonadmin.php" method="post">
                 <label for="title">Titel</label>
                 <input type="text" id="title" name="title" value="<?= htmlspecialchars($row['title'] ?? 'Colofon') ?>">
@@ -190,14 +213,11 @@ $row = $result->fetch_assoc();
                 <label for="content">Tekst</label>
                 <textarea id="content" name="content"><?= htmlspecialchars($row['content'] ?? '') ?></textarea>
 
-                <form action="update_colofon.php" method="post">
-                    <!-- velden -->
-                    <button type="submit">Opslaan</button>
-                </form>
-
+                <button type="submit">Opslaan</button>
             </form>
         </article>
     </main>
+
 </body>
 
 </html>

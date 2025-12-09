@@ -59,9 +59,66 @@
       font-weight: 500;
     }
 
+    /* Standaard verbergen op desktop */
+    /* Hamburger-menu standaard */
     .menu-toggle {
       display: none;
+      cursor: pointer;
+      font-size: 1.8rem;
     }
+
+    /* Mobiel menu */
+    @media (max-width: 1180px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  header nav {
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: #fff;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 90%;          /* smaller dan 100% */
+    max-width: 300px;    /* maximale breedte */
+    padding: 1rem 1.5rem; /* padding binnen menu */
+    margin-right: 1rem;   /* afstand van de rechterkant */
+    margin-left: auto;    /* centreert het menu vanaf rechterkant */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;   /* afgeronde hoeken */
+    z-index: 999;
+  }
+
+  header nav.active {
+    display: flex;
+  }
+
+  /* Zoekbalk in menu mobiel */
+  .search-container {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .search-container input {
+    width: 100%;
+  }
+
+  .search-container button {
+    width: 100%;
+  }
+
+  nav a, .lang-btn {
+    width: 100%;
+    text-align: left;
+  }
+}
+
+
+
 
     /* Zoekveld direct achter icoon */
     .search-container {
@@ -126,16 +183,19 @@
 
 <body>
   <header>
-    <!-- Zoekcontainer -->
-    <div class="search-container">
-      <img src="./assets/img/searchicon.png" alt="Zoeken" class="search-icon" />
-      <input type="text" id="searchInput" placeholder="Zoek plaatsnaam..." />
-      <button id="searchBtn">Zoek</button>
-    </div>
 
     <div class="menu-toggle">☰</div>
 
     <nav>
+      <!-- Zoekcontainer -->
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Zoek plaatsnaam..." />
+        <button id="searchBtn">Zoek</button>
+      </div>
+
+
+
+
       <a href="startscherm.php">Start</a>
       <a href="archiefbreed.php">Leporello</a>
       <a href="colofon.php">Colofon</a>

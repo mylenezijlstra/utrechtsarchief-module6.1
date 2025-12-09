@@ -27,6 +27,7 @@ html, body {
   box-sizing: border-box;
 }
 
+
 /* Header boven panorama houden */
 header, .site-header {
   position: relative;
@@ -272,4 +273,27 @@ header, .site-header {
 
 body {
   padding-top: 0px !important;
+}
+
+
+.mini-map {
+  position: relative !important;
+}
+
+.mini-map .mini-highlight {
+  position: absolute;
+  top: 8px;
+  height: calc(var(--mini-height) - 16px);
+  left: 0;
+  width: calc(var(--mini-thumb-width) + var(--mini-thumb-gap));
+  background: rgba(0, 123, 255, 0.2); 
+  border: 2px solid #007BFF;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 30; /* hoger dan thumbnails */
+  transition: left 160ms linear, width 160ms linear;
+}
+
+.mini-map .mini-track img.mini-thumb {
+  z-index: 10; 
 }
