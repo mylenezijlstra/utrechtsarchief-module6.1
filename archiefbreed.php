@@ -60,7 +60,7 @@ $result = $conn->query("
 
 <body>
   <header>
-    <?php include "includes/header.php" ?>
+    <?php include "includes/headerzoekbalk.php" ?>
   </header>
   <main>
     <div class="panorama-frame">

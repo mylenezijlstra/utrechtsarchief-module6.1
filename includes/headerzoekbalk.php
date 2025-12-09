@@ -187,6 +187,11 @@
     <div class="menu-toggle">☰</div>
 
     <nav>
+      <!-- Zoekcontainer -->
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Zoek plaatsnaam..." />
+        <button id="searchBtn">Zoek</button>
+      </div>
 
 
 
