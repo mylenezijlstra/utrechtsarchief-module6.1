@@ -49,9 +49,11 @@ $result = $conn->query("
     }
   </style>
 </head>
-<body>
-  <?php include './includes/header.php'; ?>
 
+<body>
+  <header>
+    <?php include "includes/header.php" ?>
+  </header>
   <main>
     <div class="panorama-frame">
       <div class="panorama">
@@ -65,16 +67,13 @@ $result = $conn->query("
           echo '<div class="image-wrapper" data-id="' . h($imageId) . '">';
           echo '<img src="' . h($imgPath) . '" alt="Panorama ' . h($imageId) . '">';
 
-          // Beschrijving
+          // Beschrijving-hotspot
           $descTopPx = safeInt($row['pos_top']);
           $descLeftPx = safeInt($row['pos_left']);
           if ($descTopPx !== '' && $descLeftPx !== '') {
             $descId = "desc-" . $imageId;
             $desc = ($lang === 'en') ? $row['description_en'] : $row['description_nl'];
-            echo '<div class="hotspot hotspot-desc" data-target="' . h($descId) . '" style="top:' . h($descTopPx) . 'px; left:' . h($descLeftPx) . 'px;">●</div>';
-            echo '<div class="info-box" id="' . h($descId) . '" hidden>';
-            echo '<div class="info-content"><div class="info-text"><strong>' . t("Beschrijving:","Description:",$lang) . '</strong><br>' . h($desc) . '</div></div>';
-            echo '</div>';
+            echo '<div class="info-box" id="' . htmlspecialchars($descId) . '" hidden><strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . htmlspecialchars($desc) . '</div>';
           }
 
           // Opmerking
@@ -90,6 +89,10 @@ $result = $conn->query("
           }
 
           // Extra hotspots
+            echo '<div class="info-box" id="' . htmlspecialchars($remarkId) . '" hidden><strong>' . ($lang === 'en' ? 'Remark:' : 'Opmerking:') . '</strong><br>' . htmlspecialchars($remark) . '</div>';
+          }
+
+          // Extra hotspots uit aparte tabel
           $stmtExtra = $conn->prepare("SELECT id, pos_top, pos_left, info_nl, info_en, image FROM hotspot_extra WHERE hotspot_id = ?");
           if ($stmtExtra) {
             $stmtExtra->bind_param("i", $imageId);
@@ -116,7 +119,12 @@ $result = $conn->query("
             $stmtExtra->close();
           }
 
-          echo '</div>'; // image-wrapper
+          // *** FAKE HOTSPOT VOOR FOTO 21 ***
+          if ($imageId === 21) {
+            echo '<a href="spel.php" class="hotspot hotspot-fake" style="position:absolute; top:40%; left:25%; transform:translate(-50%, -100%) rotate(315deg); width:44px; height:44px; background:#e8dbc4; border:4px solid #8c7455; border-radius:50% 50% 50% 0; display:flex; align-items:center; justify-content:center; color:#6b5334; font-weight:800; font-size:18px; text-decoration:none;">●</a>';
+          }
+
+          echo '</div>'; // einde image-wrapper
         }
         ?>
       </div>
@@ -133,6 +141,10 @@ $result = $conn->query("
   </main>
 
   <script src="./assets/js/panorama.js"></script>
-  <?php include './includes/footer.php'; ?>
+
+  <footer>
+    <?php include "includes/footer.php" ?>
+  </footer>
+
 </body>
 </html>

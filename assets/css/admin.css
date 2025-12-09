@@ -184,5 +184,28 @@
     margin: 15px;
   }
   
+nav {
+  display: flex;
+  gap: 12px;
+}
+
+nav a {
+  display: inline-block;
+  padding: 8px 16px;
+  text-decoration: none;
+  background-color: #d6c3a3; /* zachte zandkleur */
+  color: #4b3a26; /* donkerbruine tekst */
+  border-radius: 6px; /* afgeronde hoeken */
+  border: 1px solid #bfa68c; /* subtiele rand */
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+nav a:hover {
+  background-color: #cbb694; /* iets donkerder bij hover */
+  border-color: #a89172;
+  color: #3f2f1f;
+}
 
   

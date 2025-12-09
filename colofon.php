@@ -233,47 +233,49 @@
     </footer>
 
     <script>
-        const textBlock = document.getElementById('colofonText');
-        const zoomInBtn = document.getElementById('zoomIn');
-        const zoomOutBtn = document.getElementById('zoomOut');
-        const readBtn = document.getElementById('readText');
-        const stopBtn = document.getElementById('stopRead');
-        const playBtn = document.getElementById('play');
-        const pauseBtn = document.getElementById('pause');
+    const textBlock = document.getElementById('colofonText');
+    const zoomInBtn = document.getElementById('zoomIn');
+    const zoomOutBtn = document.getElementById('zoomOut');
+    const readBtn = document.getElementById('readText');
+    const stopBtn = document.getElementById('stopRead');
+    const playBtn = document.getElementById('play');
+    const pauseBtn = document.getElementById('pause');
 
-        let currentSize = 1; // basis = 1rem
-        let utterance;
+    let currentSize = 1; // basis = 1rem
+    let utterance;
 
-        zoomInBtn.addEventListener('click', () => {
-            currentSize += 0.1;
+    zoomInBtn.addEventListener('click', () => {
+        currentSize += 0.1;
+        textBlock.style.fontSize = currentSize + 'rem';
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+        if (currentSize > 0.6) {
+            currentSize -= 0.1;
             textBlock.style.fontSize = currentSize + 'rem';
-        });
+        }
+    });
 
-        zoomOutBtn.addEventListener('click', () => {
-            if (currentSize > 0.6) {
-                currentSize -= 0.1;
-                textBlock.style.fontSize = currentSize + 'rem';
-            }
-        });
+    readBtn.addEventListener('click', () => {
+        speechSynthesis.cancel(); // ← **MOET toegevoegd worden**
+        utterance = new SpeechSynthesisUtterance(textBlock.innerText);
+        utterance.lang = 'nl-NL';
+        speechSynthesis.speak(utterance);
+    });
 
-        readBtn.addEventListener('click', () => {
-            utterance = new SpeechSynthesisUtterance(textBlock.innerText);
-            utterance.lang = 'nl-NL';
-            speechSynthesis.speak(utterance);
-        });
+    stopBtn.addEventListener('click', () => {
+        speechSynthesis.cancel();
+    });
 
-        stopBtn.addEventListener('click', () => {
-            speechSynthesis.cancel();
-        });
+    playBtn.addEventListener('click', () => {
+        if (speechSynthesis.paused) speechSynthesis.resume(); // ← **MOET aangepast worden**
+    });
 
-        playBtn.addEventListener('click', () => {
-            if (utterance) speechSynthesis.resume();
-        });
+    pauseBtn.addEventListener('click', () => {
+        if (utterance) speechSynthesis.pause();
+    });
+</script>
 
-        pauseBtn.addEventListener('click', () => {
-            if (utterance) speechSynthesis.pause();
-        });
-    </script>
 
 </body>
 
