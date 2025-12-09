@@ -297,3 +297,9 @@ body {
 .mini-map .mini-track img.mini-thumb {
   z-index: 10; 
 }
+
+.info-box::before,
+.hotspot::before {
+  content: none !important;
+  display: none !important;
+}
