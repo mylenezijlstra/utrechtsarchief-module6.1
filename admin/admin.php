@@ -13,7 +13,6 @@ function imgIndex($path) {
     return intval(pathinfo(basename($path), PATHINFO_FILENAME));
 }
 usort($files, function($a, $b){ return imgIndex($a) <=> imgIndex($b); });
-
 ?>
 <!doctype html>
 <html lang="nl">
@@ -24,8 +23,12 @@ usort($files, function($a, $b){ return imgIndex($a) <=> imgIndex($b); });
 </head>
 <body>
   <header class="admin-header">
-    <div><h2>Hotspots beheren</h2><div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div></div>
+    <div>
+      <h2>Hotspots beheren</h2>
+      <div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></div>
+    </div>
     <nav>
+      <a href="/utrechtsarchief-module6.1/admin/users.php">Admin toevoegen</a>
       <a href="/utrechtsarchief-module6.1/admin/admin.php">Hotspots</a>
       <a href="/utrechtsarchief-module6.1/admin/colofonadmin.php">Colofon</a>
       <a href="/utrechtsarchief-module6.1/admin/logout.php">Logout</a>
@@ -37,7 +40,7 @@ usort($files, function($a, $b){ return imgIndex($a) <=> imgIndex($b); });
       <?php foreach ($files as $file):
         $idx = imgIndex($file);
 
-        // Haal hoofd-hotspot (één per image_id) - fallback naar defaults
+        // Haal hoofd-hotspot
         $spot = [
           'pos_top'=>20,'pos_left'=>20,
           'description_nl'=>'','description_en'=>'',
@@ -57,7 +60,7 @@ usort($files, function($a, $b){ return imgIndex($a) <=> imgIndex($b); });
           $stmt->close();
         }
 
-        // Haal alle extra hotspots voor deze image (hotspot_extra.hotspot_id = image id)
+        // Haal alle extra hotspots
         $extras = [];
         $stmt2 = $conn->prepare("SELECT id, pos_top, pos_left, info_nl, info_en, image FROM hotspot_extra WHERE hotspot_id = ?");
         if ($stmt2) {
@@ -109,7 +112,12 @@ usort($files, function($a, $b){ return imgIndex($a) <=> imgIndex($b); });
               <label>Additional info (EN)</label>
               <textarea class="extra-info-en" rows="3"><?php echo htmlspecialchars($ex['info_en'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
               <label>Extra afbeelding</label>
-              <input class="extra-image" type="text" value="<?php echo htmlspecialchars($ex['image'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="bestandsnaam.jpg">
+              <input class="extra-image" type="file" accept="image/*">
+              <?php if (!empty($ex['image'])): ?>
+                <div style="margin-top:4px;font-size:12px;color:#555">
+                  Huidig bestand: <?php echo htmlspecialchars($ex['image'], ENT_QUOTES, 'UTF-8'); ?>
+                </div>
+              <?php endif; ?>
               <div class="controls">
                 <button class="save-extra" data-extra-id="<?php echo (int)$ex['id']; ?>">Opslaan</button>
                 <button class="delete-extra" data-extra-id="<?php echo (int)$ex['id']; ?>">Verwijderen</button>

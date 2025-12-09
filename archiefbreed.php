@@ -2,10 +2,18 @@
 require_once './includes/db.php';
 $lang = $_COOKIE['lang'] ?? 'nl';
 
-function safeInt($v)
-{
-  return ($v === null || $v === '') ? '' : (int)$v;
+function h($v) {
+    return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
 }
+function safeInt($v) {
+    return ($v === null || $v === '') ? '' : (int)$v;
+}
+function t($nl, $en, $lang) {
+    return $lang === 'en' ? $en : $nl;
+}
+
+// Zet hier je projectmap base
+$BASE = '/utrechtsarchief-module6.1';
 
 $result = $conn->query("
     SELECT p.filename,
@@ -20,12 +28,26 @@ $result = $conn->query("
 ");
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo htmlspecialchars($lang); ?>">
-
+<html lang="<?php echo h($lang); ?>">
 <head>
   <meta charset="utf-8">
-  <title>Panorama</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><?php echo t("Panorama","Panorama",$lang); ?></title>
   <link rel="stylesheet" href="./assets/css/style.css">
+  <style>
+    .info-box .info-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .info-box .info-text { flex: 1; }
+    .info-box .info-image img {
+      max-width: 150px;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+  </style>
 </head>
 
 <body>
@@ -38,29 +60,35 @@ $result = $conn->query("
         <?php
         while ($row = $result->fetch_assoc()) {
           $filename = $row['filename'];
+          if (empty($filename)) continue;
           $imageId = (int) str_replace('.jpg', '', $filename);
-          $imgPath = './assets/img/' . $filename;
+          $imgPath = $BASE . '/assets/img/' . $filename;
 
-          echo '<div class="image-wrapper" data-id="' . htmlspecialchars($imageId) . '">';
-          echo '<img src="' . htmlspecialchars($imgPath) . '" alt="Panorama ' . htmlspecialchars($imageId) . '">';
+          echo '<div class="image-wrapper" data-id="' . h($imageId) . '">';
+          echo '<img src="' . h($imgPath) . '" alt="Panorama ' . h($imageId) . '">';
 
           // Beschrijving-hotspot
           $descTopPx = safeInt($row['pos_top']);
           $descLeftPx = safeInt($row['pos_left']);
           if ($descTopPx !== '' && $descLeftPx !== '') {
             $descId = "desc-" . $imageId;
-            echo '<div class="hotspot hotspot-desc" data-target="' . htmlspecialchars($descId) . '" data-pos-top="' . htmlspecialchars($descTopPx) . '" data-pos-left="' . htmlspecialchars($descLeftPx) . '" style="--hotspot-top:0%; --hotspot-left:0%;">●</div>';
             $desc = ($lang === 'en') ? $row['description_en'] : $row['description_nl'];
             echo '<div class="info-box" id="' . htmlspecialchars($descId) . '" hidden><strong>' . ($lang === 'en' ? 'Description:' : 'Beschrijving:') . '</strong><br>' . htmlspecialchars($desc) . '</div>';
           }
 
-          // Opmerking-hotspot
+          // Opmerking
           $remarkTopPx = safeInt($row['remark_top']);
           $remarkLeftPx = safeInt($row['remark_left']);
           if ($remarkTopPx !== '' && $remarkLeftPx !== '') {
             $remarkId = "remark-" . $imageId;
-            echo '<div class="hotspot hotspot-remark" data-target="' . htmlspecialchars($remarkId) . '" data-pos-top="' . htmlspecialchars($remarkTopPx) . '" data-pos-left="' . htmlspecialchars($remarkLeftPx) . '" style="--hotspot-top:0%; --hotspot-left:0%;">●</div>';
             $remark = ($lang === 'en') ? $row['remark_en'] : $row['remark_nl'];
+            echo '<div class="hotspot hotspot-remark" data-target="' . h($remarkId) . '" style="top:' . h($remarkTopPx) . 'px; left:' . h($remarkLeftPx) . 'px;">●</div>';
+            echo '<div class="info-box" id="' . h($remarkId) . '" hidden>';
+            echo '<div class="info-content"><div class="info-text"><strong>' . t("Opmerking:","Remark:",$lang) . '</strong><br>' . h($remark) . '</div></div>';
+            echo '</div>';
+          }
+
+          // Extra hotspots
             echo '<div class="info-box" id="' . htmlspecialchars($remarkId) . '" hidden><strong>' . ($lang === 'en' ? 'Remark:' : 'Opmerking:') . '</strong><br>' . htmlspecialchars($remark) . '</div>';
           }
 
@@ -75,13 +103,17 @@ $result = $conn->query("
               $extraLeftPx = safeInt($extra['pos_left']);
               if ($extraTopPx !== '' && $extraLeftPx !== '') {
                 $extraId = "extra-" . $imageId . "-" . (int)$extra['id'];
-                echo '<div class="hotspot hotspot-extra" data-target="' . htmlspecialchars($extraId) . '" data-pos-top="' . htmlspecialchars($extraTopPx) . '" data-pos-left="' . htmlspecialchars($extraLeftPx) . '" style="--hotspot-top:0%; --hotspot-left:0%;">●</div>';
                 $extraInfo = ($lang === 'en') ? $extra['info_en'] : $extra['info_nl'];
-                echo '<div class="info-box" id="' . htmlspecialchars($extraId) . '" hidden><strong>' . ($lang === 'en' ? 'Additional info:' : 'Aanvullende info:') . '</strong><br>' . htmlspecialchars($extraInfo) . '</div>';
+                echo '<div class="hotspot hotspot-extra" data-target="' . h($extraId) . '" style="top:' . h($extraTopPx) . 'px; left:' . h($extraLeftPx) . 'px;">●</div>';
+                echo '<div class="info-box" id="' . h($extraId) . '" hidden>';
+                echo '<div class="info-content">';
+                echo '<div class="info-text"><strong>' . t("Aanvullende info:","Additional info:",$lang) . '</strong><br>' . h($extraInfo) . '</div>';
                 if (!empty($extra['image'])) {
-                  $extraImg = './assets/img/' . $extra['image'];
-                  echo '<img src="' . htmlspecialchars($extraImg) . '" alt="Extra afbeelding" class="extra-img">';
+                  $extraImg = $BASE . '/admin/assets/img/' . $extra['image'];
+                  echo '<div class="info-image"><img src="' . h($extraImg) . '" alt="' . t("Extra afbeelding","Extra image",$lang) . '"></div>';
                 }
+                echo '</div>'; // info-content
+                echo '</div>'; // info-box
               }
             }
             $stmtExtra->close();
@@ -98,12 +130,12 @@ $result = $conn->query("
       </div>
     </div>
 
+    <!-- Mini-map -->
     <div class="mini-map" aria-hidden="false">
       <div class="mini-inner">
         <div class="mini-track" aria-hidden="true">
           <div class="mini-highlight"></div>
         </div>
-        <div class="mini-label">Overzicht</div>
       </div>
     </div>
   </main>

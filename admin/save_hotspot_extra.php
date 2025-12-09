@@ -2,7 +2,7 @@
 // save_hotspot_extra.php
 header('Content-Type: application/json; charset=utf-8');
 session_start();
-include __DIR__ . '/db.php'; // verwacht: $conn = new mysqli(...);
+include __DIR__ . '/db.php'; // verwacht: $conn = new mysqli(...)
 
 $response = ['success' => false, 'error' => null];
 
@@ -12,20 +12,36 @@ try {
     }
     $conn->set_charset('utf8mb4');
 
-    $raw = file_get_contents('php://input');
-    $data = json_decode($raw, true);
-    if (!is_array($data)) throw new Exception('Invalid JSON payload');
-
-    $action = strtolower($data['action'] ?? '');
-    $hotspot_id = isset($data['hotspot_id']) ? (int)$data['hotspot_id'] : null;
+    $action = strtolower($_POST['action'] ?? '');
+    $hotspot_id = isset($_POST['hotspot_id']) ? (int)$_POST['hotspot_id'] : null;
     if (!$hotspot_id) throw new Exception('Missing hotspot_id');
 
+    // Helper: upload bestand naar admin/assets/img
+    function handleUpload($fieldName) {
+        if (!isset($_FILES[$fieldName]) || $_FILES[$fieldName]['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+        $uploadDir = __DIR__ . '/assets/img/'; // admin/assets/img
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        // unieke naam genereren om botsingen te voorkomen
+        $ext = pathinfo($_FILES[$fieldName]['name'], PATHINFO_EXTENSION);
+        $fileName = 'extra_' . uniqid() . '.' . strtolower($ext);
+        $targetFile = $uploadDir . $fileName;
+
+        if (move_uploaded_file($_FILES[$fieldName]['tmp_name'], $targetFile)) {
+            return $fileName; // alleen bestandsnaam opslaan
+        }
+        return null;
+    }
+
     if ($action === 'add') {
-        $pos_top  = (isset($data['pos_top']) && $data['pos_top'] !== '') ? (int)$data['pos_top'] : null;
-        $pos_left = (isset($data['pos_left']) && $data['pos_left'] !== '') ? (int)$data['pos_left'] : null;
-        $info_nl  = (isset($data['info_nl']) && $data['info_nl'] !== '') ? $data['info_nl'] : null;
-        $info_en  = (isset($data['info_en']) && $data['info_en'] !== '') ? $data['info_en'] : null;
-        $image    = (isset($data['image']) && $data['image'] !== '') ? $data['image'] : null;
+        $pos_top  = $_POST['pos_top'] !== '' ? (int)$_POST['pos_top'] : null;
+        $pos_left = $_POST['pos_left'] !== '' ? (int)$_POST['pos_left'] : null;
+        $info_nl  = $_POST['info_nl'] ?? null;
+        $info_en  = $_POST['info_en'] ?? null;
+        $image    = handleUpload('image');
 
         $stmt = $conn->prepare("INSERT INTO hotspot_extra (hotspot_id, pos_top, pos_left, info_nl, info_en, image) VALUES (?, ?, ?, ?, ?, ?)");
         if (!$stmt) throw new Exception($conn->error);
@@ -39,18 +55,15 @@ try {
         $stmt->close();
 
     } elseif ($action === 'update') {
-        if (empty($data['extra_id'])) throw new Exception('Missing extra_id for update');
-        $extra_id = (int)$data['extra_id'];
+        if (empty($_POST['extra_id'])) throw new Exception('Missing extra_id for update');
+        $extra_id = (int)$_POST['extra_id'];
 
-        // Gebruik array_key_exists om te detecteren of veld expliciet is meegegeven.
-        // Als veld ontbreekt: laat het als NULL zodat COALESCE de oude waarde behoudt.
-        $pos_top  = array_key_exists('pos_top', $data) && $data['pos_top'] !== '' ? (int)$data['pos_top'] : null;
-        $pos_left = array_key_exists('pos_left', $data) && $data['pos_left'] !== '' ? (int)$data['pos_left'] : null;
-        $info_nl  = array_key_exists('info_nl', $data) ? $data['info_nl'] : (array_key_exists('extra_info_nl', $data) ? $data['extra_info_nl'] : null);
-        $info_en  = array_key_exists('info_en', $data) ? $data['info_en'] : (array_key_exists('extra_info_en', $data) ? $data['extra_info_en'] : null);
-        $image    = array_key_exists('image', $data) ? $data['image'] : (array_key_exists('extra_image', $data) ? $data['extra_image'] : null);
+        $pos_top  = $_POST['pos_top'] !== '' ? (int)$_POST['pos_top'] : null;
+        $pos_left = $_POST['pos_left'] !== '' ? (int)$_POST['pos_left'] : null;
+        $info_nl  = $_POST['info_nl'] ?? null;
+        $info_en  = $_POST['info_en'] ?? null;
+        $image    = handleUpload('image');
 
-        // Gebruik COALESCE zodat NULL parameters de bestaande DB-waarde behouden
         $stmt = $conn->prepare("
             UPDATE hotspot_extra
             SET pos_top = COALESCE(?, pos_top),
@@ -61,8 +74,6 @@ try {
             WHERE id = ? AND hotspot_id = ?
         ");
         if (!$stmt) throw new Exception($conn->error);
-
-        // volgorde bind_param: pos_top, pos_left, info_nl, info_en, image, extra_id, hotspot_id
         $stmt->bind_param("iisssii", $pos_top, $pos_left, $info_nl, $info_en, $image, $extra_id, $hotspot_id);
         if (!$stmt->execute()) {
             $response['error'] = $stmt->error;
@@ -73,8 +84,8 @@ try {
         $stmt->close();
 
     } elseif ($action === 'delete') {
-        if (empty($data['extra_id'])) throw new Exception('Missing extra_id for delete');
-        $extra_id = (int)$data['extra_id'];
+        if (empty($_POST['extra_id'])) throw new Exception('Missing extra_id for delete');
+        $extra_id = (int)$_POST['extra_id'];
 
         $stmt = $conn->prepare("DELETE FROM hotspot_extra WHERE id = ? AND hotspot_id = ?");
         if (!$stmt) throw new Exception($conn->error);

@@ -1,5 +1,5 @@
 // assets/js/script.js
-// Volledige, bijgewerkte client‑script voor admin: drag, touch, add, update, delete, en positionering van info-box onder hotspot.
+// Admin client-script: drag, touch, add, update, delete, file-upload voor extra hotspots
 
 const TYPE_LABELS = { desc: 'Beschrijving', remark: 'Opmerking', extra: 'Extra info' };
 
@@ -16,6 +16,7 @@ function showStatus(wrapper, message, color = 'black', timeout = 3000) {
   }
 }
 function q(wrapper, sel) { return wrapper ? wrapper.querySelector(sel) : null; }
+
 async function apiCall(url, payload) {
   try {
     const res = await fetch(url, {
@@ -29,10 +30,18 @@ async function apiCall(url, payload) {
   }
 }
 
+async function apiForm(url, formData) {
+  try {
+    const res = await fetch(url, { method: 'POST', body: formData });
+    return await res.json().catch(() => ({ success: false, error: 'Invalid JSON response' }));
+  } catch (err) {
+    return { success: false, error: err.message || 'Network error' };
+  }
+}
+
 /* ---------------- helper: lees huidige px-positie van een hotspot ---------------- */
 function getHotspotPxPos(hot) {
   if (!hot) return { top: null, left: null };
-  // inline style heeft prioriteit (drag), anders data-attributes (server-saved)
   const topRaw = hot.style.top || hot.getAttribute('data-pos-top') || '';
   const leftRaw = hot.style.left || hot.getAttribute('data-pos-left') || '';
   const top = topRaw ? Math.round(parseFloat(String(topRaw).replace('px',''))) : null;
@@ -98,35 +107,28 @@ function makeDraggable(hot, wrapper, onSavePosition) {
   hot.addEventListener('touchstart', onTouchStart, { passive: false });
 }
 
-/* ---------------- existing wrapper init ---------------- */
+/* ---------------- init wrapper ---------------- */
 function initWrapper(wrapper) {
-  // desc hotspot
-  const descHot = wrapper.querySelector('.hotspot-desc');
-  if (descHot) {
-    makeDraggable(descHot, wrapper, async (top, left) => {
-      const payload = { id: Number(wrapper.dataset.id), action: 'update', type: 'desc', desc_top: top, desc_left: left };
-      showStatus(wrapper, 'Opslaan positie...', 'black', 0);
-      const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot.php', payload);
-      if (res.success) showStatus(wrapper, '✔ Positie opgeslagen', 'green'); else showStatus(wrapper, '❌ Fout', 'red');
-    });
-  }
+  // beschrijving en opmerking hotspots (JSON endpoints)
+  ['desc','remark'].forEach(type => {
+    const hot = wrapper.querySelector(`.hotspot-${type}`);
+    if (hot) {
+      makeDraggable(hot, wrapper, async (top,left) => {
+        const payload = { id:Number(wrapper.dataset.id), action:'update', type };
+        payload[`${type}_top`] = top;
+        payload[`${type}_left`] = left;
+        showStatus(wrapper,'Opslaan positie...','black',0);
+        const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot.php', payload);
+        showStatus(wrapper,res.success?'✔ Positie opgeslagen':'❌ Fout',res.success?'green':'red');
+      });
+    }
+  });
 
-  // remark hotspot
-  const remarkHot = wrapper.querySelector('.hotspot-remark');
-  if (remarkHot) {
-    makeDraggable(remarkHot, wrapper, async (top, left) => {
-      const payload = { id: Number(wrapper.dataset.id), action: 'update', type: 'remark', remark_top: top, remark_left: left };
-      showStatus(wrapper, 'Opslaan positie...', 'black', 0);
-      const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot.php', payload);
-      if (res.success) showStatus(wrapper, '✔ Positie opgeslagen', 'green'); else showStatus(wrapper, '❌ Fout', 'red');
-    });
-  }
-
-  // existing extra hotspots
+  // bestaande extra hotspots (FormData endpoints)
   wrapper.querySelectorAll('.hotspot-extra').forEach(hot => {
     const extraId = hot.dataset.extraId || hot.getAttribute('data-extra-id') || null;
 
-    // find matching info box (prefer adjacent)
+    // koppel juiste info-box
     let box = hot.nextElementSibling && hot.nextElementSibling.classList.contains('info-extra') ? hot.nextElementSibling : null;
     if (!box) {
       box = Array.from(wrapper.querySelectorAll('.info-extra')).find(b => {
@@ -136,28 +138,45 @@ function initWrapper(wrapper) {
     }
     if (box && extraId) box.setAttribute('data-extra-id', extraId);
 
-    // draggable + auto-save position
-    makeDraggable(hot, wrapper, async (top, left) => {
+    // drag + positie opslaan
+    makeDraggable(hot, wrapper, async (top,left) => {
       if (!extraId) return;
-      const payload = { action: 'update', hotspot_id: Number(wrapper.dataset.id), extra_id: Number(extraId), pos_top: top, pos_left: left };
-      showStatus(wrapper, 'Opslaan positie...', 'black', 0);
-      const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', payload);
-      if (res.success) showStatus(wrapper, '✔ Positie opgeslagen', 'green'); else showStatus(wrapper, '❌ Fout', 'red');
+      const formData = new FormData();
+      formData.append('action','update');
+      formData.append('hotspot_id', wrapper.dataset.id);
+      formData.append('extra_id', extraId);
+      formData.append('pos_top', top);
+      formData.append('pos_left', left);
+      showStatus(wrapper,'Opslaan positie...','black',0);
+      const res = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData);
+      showStatus(wrapper,res.success?'✔ Positie opgeslagen':'❌ Fout',res.success?'green':'red');
     });
 
-    // save button inside box (zorg dat positie meegestuurd wordt)
+    // save/update knoppen in de box
     if (box) {
       const saveBtn = box.querySelector('.save-extra');
       if (saveBtn) {
         saveBtn.addEventListener('click', async () => {
           const info_nl = box.querySelector('.extra-info-nl')?.value || '';
           const info_en = box.querySelector('.extra-info-en')?.value || '';
-          const image = box.querySelector('.extra-image')?.value || '';
+          const fileInput = box.querySelector('.extra-image');
           const pos = getHotspotPxPos(hot);
-          const payload = { action: 'update', hotspot_id: Number(wrapper.dataset.id), extra_id: Number(extraId), info_nl, info_en, image, pos_top: pos.top, pos_left: pos.left };
-          showStatus(wrapper, 'Opslaan extra...', 'black', 0);
-          const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', payload);
-          if (res.success) showStatus(wrapper, '✔ Extra opgeslagen', 'green'); else showStatus(wrapper, '❌ Fout', 'red');
+
+          const formData = new FormData();
+          formData.append('action','update');
+          formData.append('hotspot_id', wrapper.dataset.id);
+          formData.append('extra_id', extraId);
+          formData.append('info_nl', info_nl);
+          formData.append('info_en', info_en);
+          formData.append('pos_top', pos.top);
+          formData.append('pos_left', pos.left);
+          if (fileInput && fileInput.files.length > 0) {
+            formData.append('image', fileInput.files[0]);
+          }
+
+          showStatus(wrapper,'Opslaan extra...','black',0);
+          const res = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData);
+          showStatus(wrapper,res.success?'✔ Extra opgeslagen':'❌ Fout',res.success?'green':'red');
         });
       }
 
@@ -165,16 +184,20 @@ function initWrapper(wrapper) {
       if (delBtn) {
         delBtn.addEventListener('click', async () => {
           if (!confirm('Weet je zeker dat je deze extra wilt verwijderen?')) return;
-          const payload = { action: 'delete', hotspot_id: Number(wrapper.dataset.id), extra_id: Number(extraId) };
-          showStatus(wrapper, 'Verwijderen...', 'black', 0);
-          const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', payload);
-          if (res.success) { hot.remove(); box.remove(); showStatus(wrapper, '✔ Verwijderd', 'green'); } else showStatus(wrapper, '❌ Fout bij verwijderen', 'red');
+          const formData = new FormData();
+          formData.append('action','delete');
+          formData.append('hotspot_id', wrapper.dataset.id);
+          formData.append('extra_id', extraId);
+          showStatus(wrapper,'Verwijderen...','black',0);
+          const res = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData);
+          if (res.success) { hot.remove(); box.remove(); showStatus(wrapper,'✔ Verwijderd','green'); }
+          else showStatus(wrapper,'❌ Fout bij verwijderen','red');
         });
       }
     }
   });
 
-  // save buttons for desc/remark (stuur positie mee)
+  // save-knoppen voor beschrijving/remark (JSON)
   wrapper.querySelectorAll('.save-hotspot').forEach(btn => {
     btn.addEventListener('click', async () => {
       const type = btn.dataset.type;
@@ -182,25 +205,23 @@ function initWrapper(wrapper) {
       if (type === 'desc') {
         payload.description_nl = q(wrapper, '.info-text-nl')?.value || '';
         payload.description_en = q(wrapper, '.info-text-en')?.value || '';
-        const hot = wrapper.querySelector('.hotspot-desc');
-        const pos = getHotspotPxPos(hot);
+        const pos = getHotspotPxPos(wrapper.querySelector('.hotspot-desc'));
         if (pos.top !== null) payload.desc_top = pos.top;
         if (pos.left !== null) payload.desc_left = pos.left;
       } else if (type === 'remark') {
         payload.remark_nl = q(wrapper, '.remark-nl')?.value || '';
         payload.remark_en = q(wrapper, '.remark-en')?.value || '';
-        const hot = wrapper.querySelector('.hotspot-remark');
-        const pos = getHotspotPxPos(hot);
+        const pos = getHotspotPxPos(wrapper.querySelector('.hotspot-remark'));
         if (pos.top !== null) payload.remark_top = pos.top;
         if (pos.left !== null) payload.remark_left = pos.left;
       }
-      showStatus(wrapper, 'Opslaan...', 'black', 0);
+      showStatus(wrapper,'Opslaan...','black',0);
       const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot.php', payload);
-      if (res.success) showStatus(wrapper, '✔ Opgeslagen', 'green'); else showStatus(wrapper, '❌ Fout', 'red');
+      showStatus(wrapper,res.success?'✔ Opgeslagen':'❌ Fout',res.success?'green':'red');
     });
   });
 
-  // add-extra button
+  // add-extra knop (FormData voor nieuwe extra + file upload)
   const addBtn = wrapper.querySelector('.add-extra');
   if (addBtn) {
     addBtn.addEventListener('click', () => {
@@ -209,7 +230,7 @@ function initWrapper(wrapper) {
       const defaultTop = Math.round(rect.height / 2);
       const defaultLeft = Math.round(rect.width / 2);
 
-      // create hotspot + info box (unsaved)
+      // nieuwe hotspot + box
       const hot = document.createElement('div');
       hot.className = 'hotspot hotspot-extra';
       hot.textContent = 'E';
@@ -225,7 +246,7 @@ function initWrapper(wrapper) {
         <label>Additional info (EN)</label>
         <textarea class="extra-info-en" rows="3"></textarea>
         <label>Extra afbeelding</label>
-        <input class="extra-image" type="text" placeholder="bestandsnaam.jpg">
+        <input class="extra-image" type="file" accept="image/*">
         <div class="controls" style="margin-top:8px">
           <button class="save-new-extra">Opslaan</button>
           <button class="cancel-new-extra">Annuleren</button>
@@ -235,27 +256,39 @@ function initWrapper(wrapper) {
       panel.appendChild(hot);
       panel.appendChild(box);
 
-      // draggable (positie saved on save)
-      makeDraggable(hot, wrapper, () => { /* no auto-save for unsaved extra */ });
+      makeDraggable(hot, wrapper, () => { /* geen autosave voor nieuwe extra */ });
 
-      // cancel
+      // annuleren
       box.querySelector('.cancel-new-extra').addEventListener('click', () => { hot.remove(); box.remove(); });
 
-      // save new
+      // opslaan nieuwe extra
       box.querySelector('.save-new-extra').addEventListener('click', async () => {
         const info_nl = box.querySelector('.extra-info-nl').value || '';
         const info_en = box.querySelector('.extra-info-en').value || '';
-        const image = box.querySelector('.extra-image').value || '';
+        const fileInput = box.querySelector('.extra-image');
         const pos = getHotspotPxPos(hot);
         const pos_top = pos.top ?? defaultTop;
         const pos_left = pos.left ?? defaultLeft;
-        const payload = { action: 'add', hotspot_id: Number(wrapper.dataset.id), pos_top, pos_left, info_nl, info_en, image };
-        showStatus(wrapper, 'Opslaan extra...', 'black', 0);
-        const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', payload);
+
+        const formData = new FormData();
+        formData.append('action','add');
+        formData.append('hotspot_id', wrapper.dataset.id);
+        formData.append('pos_top', pos_top);
+        formData.append('pos_left', pos_left);
+        formData.append('info_nl', info_nl);
+        formData.append('info_en', info_en);
+        if (fileInput && fileInput.files.length > 0) {
+          formData.append('image', fileInput.files[0]);
+        }
+
+        showStatus(wrapper,'Opslaan extra...','black',0);
+        const res = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData);
         if (res.success && res.insert_id) {
+          // set id en knoppen omzetten
           hot.dataset.extraId = res.insert_id;
           box.setAttribute('data-extra-id', res.insert_id);
-          // convert buttons: replace save-new with save-extra and delete
+          const controls = box.querySelector('.controls');
+          controls.innerHTML = '';
           const saveBtn = document.createElement('button');
           saveBtn.className = 'save-extra';
           saveBtn.dataset.extraId = res.insert_id;
@@ -264,33 +297,48 @@ function initWrapper(wrapper) {
           delBtn.className = 'delete-extra';
           delBtn.dataset.extraId = res.insert_id;
           delBtn.textContent = 'Verwijderen';
-          const controls = box.querySelector('.controls');
-          controls.innerHTML = '';
-          controls.appendChild(saveBtn);
-          controls.appendChild(delBtn);
           const statusSpan = document.createElement('span');
           statusSpan.className = 'save-status';
+          controls.appendChild(saveBtn);
+          controls.appendChild(delBtn);
           controls.appendChild(statusSpan);
 
-          // attach handlers
+          // handlers voor nieuwe knoppen
           saveBtn.addEventListener('click', async () => {
             const info_nl2 = box.querySelector('.extra-info-nl').value || '';
             const info_en2 = box.querySelector('.extra-info-en').value || '';
-            const image2 = box.querySelector('.extra-image').value || '';
+            const fileInput2 = box.querySelector('.extra-image');
             const pos2 = getHotspotPxPos(hot);
-            const payload2 = { action: 'update', hotspot_id: Number(wrapper.dataset.id), extra_id: Number(res.insert_id), info_nl: info_nl2, info_en: info_en2, image: image2, pos_top: pos2.top, pos_left: pos2.left };
-            showStatus(wrapper, 'Opslaan extra...', 'black', 0);
-            const r2 = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', payload2);
-            if (r2.success) showStatus(wrapper, '✔ Extra opgeslagen', 'green'); else showStatus(wrapper, '❌ Fout', 'red');
+            const formData2 = new FormData();
+            formData2.append('action','update');
+            formData2.append('hotspot_id', wrapper.dataset.id);
+            formData2.append('extra_id', res.insert_id);
+            formData2.append('info_nl', info_nl2);
+            formData2.append('info_en', info_en2);
+            formData2.append('pos_top', pos2.top);
+            formData2.append('pos_left', pos2.left);
+            if (fileInput2 && fileInput2.files.length > 0) {
+              formData2.append('image', fileInput2.files[0]);
+            }
+            showStatus(wrapper,'Opslaan extra...','black',0);
+            const r2 = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData2);
+            showStatus(wrapper, r2.success ? '✔ Extra opgeslagen' : '❌ Fout', r2.success ? 'green' : 'red');
           });
+
           delBtn.addEventListener('click', async () => {
             if (!confirm('Weet je zeker dat je deze extra wilt verwijderen?')) return;
-            const r3 = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', { action: 'delete', hotspot_id: Number(wrapper.dataset.id), extra_id: Number(res.insert_id) });
-            if (r3.success) { hot.remove(); box.remove(); showStatus(wrapper, '✔ Verwijderd', 'green'); } else showStatus(wrapper, '❌ Fout', 'red');
+            const r3Form = new FormData();
+            r3Form.append('action','delete');
+            r3Form.append('hotspot_id', wrapper.dataset.id);
+            r3Form.append('extra_id', res.insert_id);
+            const r3 = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', r3Form);
+            if (r3.success) { hot.remove(); box.remove(); showStatus(wrapper,'✔ Verwijderd','green'); }
+            else showStatus(wrapper,'❌ Fout','red');
           });
-          showStatus(wrapper, '✔ Extra opgeslagen', 'green');
+
+          showStatus(wrapper,'✔ Extra opgeslagen','green');
         } else {
-          showStatus(wrapper, '❌ Fout bij opslaan', 'red');
+          showStatus(wrapper,'❌ Fout bij opslaan','red');
         }
       });
     });
@@ -304,13 +352,12 @@ document.addEventListener('click', (e) => {
   const wrapper = hot.closest('.image-wrapper');
   if (!wrapper) return;
 
-  // helper: zet box precies onder hotspot (px-waarden)
   function placeBoxUnderHotspot(hotEl, boxEl) {
     if (!hotEl || !boxEl) return;
     const wrapRect = wrapper.getBoundingClientRect();
     const hotRect = hotEl.getBoundingClientRect();
     const hotCenterX = hotRect.left + hotRect.width / 2;
-    const topPx = Math.round(hotRect.bottom - wrapRect.top + 6); // 6px marge
+    const topPx = Math.round(hotRect.bottom - wrapRect.top + 6);
     const leftPx = Math.round(hotCenterX - wrapRect.left);
     boxEl.style.left = leftPx + 'px';
     boxEl.style.top = topPx + 'px';
