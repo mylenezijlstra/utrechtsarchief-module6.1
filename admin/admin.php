@@ -91,7 +91,8 @@ usort($files, function ($a, $b) {
 
             <!-- Beschrijving-hotspot -->
             <div class="hotspot hotspot-desc" style="top:<?php echo (int)$spot['pos_top']; ?>px; left:<?php echo (int)$spot['pos_left']; ?>px;">D</div>
-            <div class="info-box info-desc" style="display:none;left:10px;top:10px">
+            <div class="info-box info-desc" style="display:none;">
+
               <label>Beschrijving (NL)</label>
               <textarea class="info-text-nl" rows="3"><?php echo htmlspecialchars($spot['description_nl'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
               <label>Beschrijving (EN)</label>
@@ -111,7 +112,8 @@ usort($files, function ($a, $b) {
             <!-- Opmerking-hotspot -->
             <?php if ($spot['remark_top'] !== null && $spot['remark_left'] !== null): ?>
               <div class="hotspot hotspot-remark" style="top:<?php echo (int)$spot['remark_top']; ?>px; left:<?php echo (int)$spot['remark_left']; ?>px;">R</div>
-              <div class="info-box info-remark" style="display:none;left:10px;top:10px">
+              <div class="info-box info-remark" style="display:none;">
+
                 <label>Opmerking (NL)</label>
                 <textarea class="remark-nl" rows="3"><?php echo htmlspecialchars($spot['remark_nl'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
                 <label>Opmerking (EN)</label>
@@ -133,7 +135,8 @@ usort($files, function ($a, $b) {
             <?php foreach ($extras as $ex): ?>
               <div class="hotspot hotspot-extra" data-extra-id="<?php echo (int)$ex['id']; ?>"
                 style="top:<?php echo (int)$ex['pos_top']; ?>px; left:<?php echo (int)$ex['pos_left']; ?>px;">E</div>
-              <div class="info-box info-extra" style="display:none;left:10px;top:10px">
+              <div class="info-box info-extra" style="display:none;">
+
                 <label>Aanvullende info (NL)</label>
                 <textarea class="extra-info-nl" rows="3"><?php echo htmlspecialchars($ex['info_nl'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
                 <label>Additional info (EN)</label>

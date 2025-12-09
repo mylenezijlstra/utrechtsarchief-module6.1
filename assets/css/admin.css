@@ -330,4 +330,19 @@ nav a:hover {
     font-size: 0.9rem;
   }
 
+  .info-box {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    max-width: 800px;
+    width: 90%;
+    z-index: 1000;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+
 }
