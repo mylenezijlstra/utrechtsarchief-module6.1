@@ -396,3 +396,22 @@ document.addEventListener('click', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.image-wrapper').forEach(initWrapper);
 });
+
+
+// Sluit info-boxen bij klik buiten
+document.addEventListener('click', function (e) {
+  // alle info-boxen ophalen
+  const boxes = document.querySelectorAll('.info-box');
+
+  boxes.forEach(box => {
+    // als de box zichtbaar is en de klik niet in de box zelf of op een hotspot was
+    if (box.style.display !== 'none') {
+      const clickedInsideBox = box.contains(e.target);
+      const clickedHotspot = e.target.classList.contains('hotspot');
+
+      if (!clickedInsideBox && !clickedHotspot) {
+        box.style.display = 'none';
+      }
+    }
+  });
+});
