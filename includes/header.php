@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="<?php echo $_COOKIE['lang'] ?? 'nl'; ?>">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -9,24 +10,58 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
       margin: 0;
     }
+
     header {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 70px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 70px;
       z-index: 1000;
       background: #fff;
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 0 1rem;
       box-sizing: border-box;
     }
-    .logo { position: relative; width: 120px; height: 70px; display: flex; align-items: center; justify-content: center; }
-    .logo img { position: absolute; bottom: -40px; height: 95px; transition: all .25s ease; }
-    .logo.shrink img { height: 60px; bottom: 0; }
 
-    nav { display: flex; gap: 1.2rem; font-size: 1.05rem; }
-    nav a { text-decoration: none; color: #000; font-weight: 500; }
+    .logo {
+      position: relative;
+      width: 120px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-    .menu-toggle { display: none; }
+    .logo img {
+      position: absolute;
+      bottom: -40px;
+      height: 95px;
+      transition: all .25s ease;
+    }
+
+    .logo.shrink img {
+      height: 60px;
+      bottom: 0;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 1.05rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #000;
+      font-weight: 500;
+    }
+
+    .menu-toggle {
+      display: none;
+    }
 
     /* Zoekveld direct achter icoon */
     .search-container {
@@ -34,15 +69,18 @@
       align-items: center;
       gap: 6px;
     }
+
     .search-icon {
       height: 40px;
       cursor: pointer;
     }
+
     #searchInput {
       padding: 6px;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+
     #searchBtn {
       padding: 6px 12px;
       background: #288074;
@@ -51,12 +89,41 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    #searchBtn:hover { background: #288062; }
+
+    #searchBtn:hover {
+      background: #288062;
+    }
 
     /* Highlight bij zoeken */
-    .image-wrapper.highlight { outline: 4px solid orange; transition: outline 0.4s ease; }
+    .image-wrapper.highlight {
+      outline: 4px solid orange;
+      transition: outline 0.4s ease;
+    }
+
+    /* Taal-knoppen mooi maken */
+    .lang-btn {
+      background: #288074;
+      color: #fff;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: background 0.25s ease, transform 0.15s ease;
+    }
+
+    .lang-btn:hover {
+      background: #1f645c;
+      transform: translateY(-2px);
+    }
+
+    .lang-btn:active {
+      transform: translateY(0);
+    }
   </style>
 </head>
+
 <body>
   <header>
     <!-- Zoekcontainer -->
@@ -69,12 +136,13 @@
     <div class="menu-toggle">☰</div>
 
     <nav>
-      <a href="startscherm.php">Startscherm</a>
+      <a href="startscherm.php">Start</a>
       <a href="archiefbreed.php">Leporello</a>
       <a href="colofon.php">Colofon</a>
       <a href="https://hetutrechtsarchief.nl/contact">Contact</a>
-      <button id="btn-en">English</button>
-      <button id="btn-nl">Nederlands</button>
+      <button id="btn-en" class="lang-btn">EN</button>
+      <button id="btn-nl" class="lang-btn">NL</button>
+
     </nav>
 
     <a class="logo" href="/">
@@ -164,7 +232,10 @@
       if (foundPage) {
         const target = document.querySelector(`.image-wrapper[data-id="${foundPage}"]`);
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
           target.classList.add('highlight');
           setTimeout(() => target.classList.remove('highlight'), 2000);
         }
@@ -174,4 +245,5 @@
     });
   </script>
 </body>
+
 </html>

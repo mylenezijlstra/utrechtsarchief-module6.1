@@ -250,3 +250,26 @@ header, .site-header {
 
 .hidden { display: none !important; }
 .center { display: flex; align-items: center; justify-content: center; }
+
+.panorama {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.image-wrapper {
+    margin: 0;
+    padding: 0;
+    flex: 0 0 auto; /* blokken worden niet uitgerekt */
+}
+
+.panorama img {
+    display: block;   /* voorkomt witruimte */
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+}
+
+body {
+  padding-top: 0px !important;
+}
