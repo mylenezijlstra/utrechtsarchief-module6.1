@@ -147,7 +147,7 @@ body::before {
 <body>
   <div class="login-box">
     <h2>Login beheer</h2>
-    <form method="post" action="/utrechtsarchief-module6.1/admin/login.php">
+    <form method="post" action="<?php echo WEBSITEROOT; ?>/admin/login.php">
       <input name="username" placeholder="Gebruiker" autocomplete="username">
       <input name="password" type="password" placeholder="Wachtwoord" autocomplete="current-password">
       <button type="submit">Login</button>
