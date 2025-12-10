@@ -4,11 +4,6 @@
 // Databaseverbinding
 include "db.php";
 
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die("Verbinding mislukt: " . $conn->connect_error);
-}
-
 // Opslaan van wijzigingen
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title   = $_POST['title'] ?? '';
