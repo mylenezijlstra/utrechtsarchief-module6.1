@@ -1,8 +1,8 @@
 <?php 
 $servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "utrechtsarchief";
+$username   = "u240381_utrechtsarchief";
+$password   = "dauB4hsUwxpcHkZdMGTd";
+$dbname     = "u240381_utrechtsarchief";
 
 // Maak verbinding met de database
 $conn = new mysqli($servername, $username, $password, $dbname);

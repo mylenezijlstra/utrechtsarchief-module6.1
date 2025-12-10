@@ -2,10 +2,10 @@
 // colofonadmin.php
 
 // Databaseverbinding
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db   = "utrechtsarchief";
+$servername = "localhost";
+$username   = "u240381_utrechtsarchief";
+$password   = "dauB4hsUwxpcHkZdMGTd";
+$dbname     = "u240381_utrechtsarchief";
 
 $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
