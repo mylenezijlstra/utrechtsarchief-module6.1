@@ -16,7 +16,7 @@ function t($nl, $en, $lang)
 }
 
 // Zet hier je projectmap base
-$BASE = '/utrechtsarchief-module6.1';
+$BASE = WEBSITEROOT;
 
 $result = $conn->query("
     SELECT p.filename,
