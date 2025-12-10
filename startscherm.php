@@ -81,7 +81,6 @@ function t($nl, $en, $lang) {
             <a href="archiefbreed.php">
                 <button class="button"><?php echo t("Start Panorama","Start Panorama",$lang); ?></button>
             </a>
-            <button class="button"><?php echo t("Bekijk Details","View Details",$lang); ?></button>
         </div>
     </div>
 

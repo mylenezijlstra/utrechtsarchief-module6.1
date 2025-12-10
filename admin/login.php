@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
-  <link rel="stylesheet" href="/utrechtsarchief-module6.1/assets/css/admin.css" />
+  <link rel="stylesheet" href="<?php echo WEBSITEROOT; ?>/assets/css/admin.css" />
 
   <style>
 

@@ -118,7 +118,7 @@ function initWrapper(wrapper) {
         payload[`${type}_top`] = top;
         payload[`${type}_left`] = left;
         showStatus(wrapper,'Opslaan positie...','black',0);
-        const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot.php', payload);
+        const res = await apiCall('/utrechtsarchief/admin/save_hotspot.php', payload);
         showStatus(wrapper,res.success?'✔ Positie opgeslagen':'❌ Fout',res.success?'green':'red');
       });
     }
@@ -148,7 +148,7 @@ function initWrapper(wrapper) {
       formData.append('pos_top', top);
       formData.append('pos_left', left);
       showStatus(wrapper,'Opslaan positie...','black',0);
-      const res = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData);
+      const res = await apiForm('/utrechtsarchief/admin/save_hotspot_extra.php', formData);
       showStatus(wrapper,res.success?'✔ Positie opgeslagen':'❌ Fout',res.success?'green':'red');
     });
 
@@ -175,7 +175,7 @@ function initWrapper(wrapper) {
           }
 
           showStatus(wrapper,'Opslaan extra...','black',0);
-          const res = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData);
+          const res = await apiForm('/utrechtsarchief/admin/save_hotspot_extra.php', formData);
           showStatus(wrapper,res.success?'✔ Extra opgeslagen':'❌ Fout',res.success?'green':'red');
         });
       }
@@ -189,7 +189,7 @@ function initWrapper(wrapper) {
           formData.append('hotspot_id', wrapper.dataset.id);
           formData.append('extra_id', extraId);
           showStatus(wrapper,'Verwijderen...','black',0);
-          const res = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData);
+          const res = await apiForm('/utrechtsarchief/admin/save_hotspot_extra.php', formData);
           if (res.success) { hot.remove(); box.remove(); showStatus(wrapper,'✔ Verwijderd','green'); }
           else showStatus(wrapper,'❌ Fout bij verwijderen','red');
         });
@@ -216,7 +216,7 @@ function initWrapper(wrapper) {
         if (pos.left !== null) payload.remark_left = pos.left;
       }
       showStatus(wrapper,'Opslaan...','black',0);
-      const res = await apiCall('/utrechtsarchief-module6.1/admin/save_hotspot.php', payload);
+      const res = await apiCall('/utrechtsarchief/admin/save_hotspot.php', payload);
       showStatus(wrapper,res.success?'✔ Opgeslagen':'❌ Fout',res.success?'green':'red');
     });
   });
@@ -282,7 +282,7 @@ function initWrapper(wrapper) {
         }
 
         showStatus(wrapper,'Opslaan extra...','black',0);
-        const res = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData);
+        const res = await apiForm('/utrechtsarchief/admin/save_hotspot_extra.php', formData);
         if (res.success && res.insert_id) {
           // set id en knoppen omzetten
           hot.dataset.extraId = res.insert_id;
@@ -321,7 +321,7 @@ function initWrapper(wrapper) {
               formData2.append('image', fileInput2.files[0]);
             }
             showStatus(wrapper,'Opslaan extra...','black',0);
-            const r2 = await apiForm('/utrechtsarchief-module6.1/admin/save_hotspot_extra.php', formData2);
+            const r2 = await apiForm('/utrechtsarchief/admin/save_hotspot_extra.php', formData2);
             showStatus(wrapper, r2.success ? '✔ Extra opgeslagen' : '❌ Fout', r2.success ? 'green' : 'red');
           });
 

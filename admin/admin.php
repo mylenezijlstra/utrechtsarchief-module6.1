@@ -160,7 +160,7 @@ usort($files, function ($a, $b) {
     </div>
   </main>
 
-  <script src="/<?php echo WEBSITEROOT; ?>assets/js/script.js"></script>
+  <script src="<?php echo WEBSITEROOT; ?>/assets/js/script.js"></script>
 </body>
 
 </html>
