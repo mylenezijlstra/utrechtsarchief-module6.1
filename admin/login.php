@@ -7,7 +7,7 @@ include 'db.php';
 
 // Als al ingelogd, ga naar admin
 if (!empty($_SESSION['logged_in'])) {
-  header("Location: /utrechtsarchief-module6.1/admin/admin.php");
+  header("Location: ".WEBSITEROOT."/admin/admin.php");
   exit;
 }
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($user && password_verify($password, $user['password_hash'])) {
     $_SESSION['logged_in'] = true;
     $_SESSION['username'] = $username;
-    header("Location: /utrechtsarchief-module6.1/admin/admin.php");
+    header("Location: ".WEBSITEROOT."/admin/admin.php");
     exit;
   } else {
     $error = "Onjuiste login";
@@ -65,10 +65,16 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url("/utrechtsarchief-module6.1/assets/img/2.jpg") center/cover no-repeat;
+    background: url("<?php echo WEBSITEROOT; ?>/assets/img/2.jpg") center/cover no-repeat;
     filter: blur(6px) brightness(0.55); /* wazig + donkerder */
     z-index: -1;
 }
+
+.login-box input,
+.login-box button {
+    box-sizing: border-box;
+}
+
 
 /* LOGIN BOX */
 .login-box {

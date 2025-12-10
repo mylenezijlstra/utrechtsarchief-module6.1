@@ -2,7 +2,7 @@
 // delete_hotspot.php
 session_start();
 if (empty($_SESSION['logged_in'])) {
-    header("Location: /utrechtsarchief-module6.1/admin/login.php");
+    header("Location: ".WEBSITEROOT."/admin/login.php");
     exit;
 }
 
@@ -27,5 +27,7 @@ $stmt2->execute();
 $stmt2->close();
 
 // Terug naar de adminpagina
-header("Location: /utrechtsarchief-module6.1/admin/admin.php");
+header("Location: ".WEBSITEROOT."/admin/admin.php");
 exit;
+
+?>

@@ -183,7 +183,7 @@
 <body>
 
     <header>
-        <?php include "includes/header.php"; ?>
+        <?php include "includes/headercolofon.php"; ?>
     </header>
 
     <main class="page" aria-labelledby="colofon-title">
@@ -203,15 +203,9 @@
             <div class="content" id="colofonText">
                 <?php
                 // Databaseverbinding
-                $host = "localhost";
-                $user = "root";
-                $pass = "";
-                $db   = "utrechtsarchief";
+              include "includes/db.php";
 
-                $conn = new mysqli($host, $user, $pass, $db);
-                if ($conn->connect_error) {
-                    die("Verbinding mislukt: " . $conn->connect_error);
-                }
+
 
                 // Haal de laatste versie van colofon op
                 $result = $conn->query("SELECT * FROM colofon ORDER BY id DESC LIMIT 1");

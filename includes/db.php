@@ -11,6 +11,7 @@ $dbname     = "u240381_utrechtsarchief";
 
 // Maak verbinding met de database
 $conn = new mysqli($servername, $username, $password, $dbname);
+$conn -> set_charset("utf8");
 
 // Controleer verbinding
 if ($conn->connect_error) {

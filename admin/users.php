@@ -57,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Gebruikersbeheer</title>
   <style>
     body {
-      margin: 0;
-      padding: 40px;
+      margin: 0px !important;
+      padding: 0px !important;
       background: #f3ecdd; /* perkamentkleur */
       font-family: "Georgia", serif;
       color: #3b2a1a;
@@ -159,14 +159,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       top: 20px;
       left: 20px;
     }
+
+    .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f1e3;
+    padding: 10px 20px;
+    border-bottom: 2px solid #c4ae8a;
+    font-family: "Georgia", serif;
+}
+
+nav {
+    display: flex;
+    gap: 12px;
+}
+
+nav a {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: #d6c3a3;
+    color: #4b3a26;
+    border-radius: 6px;
+    border: 1px solid #bfa68c;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+nav a:hover {
+    background-color: #cbb694;
+    border-color: #a89172;
+    color: #3f2f1f;
+}
+
+.logout-btn {
+    background: #e8dbc4;
+    border: 1px solid #8c7455;
+    padding: 6px 10px;
+    text-decoration: none;
+    color: #4b3a26;
+}
+
+.logout-btn:hover {
+    background: #d6c4a5;
+}
+
   </style>
 </head>
 <body>
-  <div class="frame">
-    <!-- Terugknop linksboven -->
-    <div class="back-container">
-      <a href="admin.php" class="back-button">← Terug naar Admin</a>
+
+<header>
+
+ <header class="admin-header">
+    <div>
+      <h2>Admin beheren</h2>
     </div>
+    <nav>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/users.php">Admin toevoegen</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/admin.php">Hotspots</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/colofonadmin.php">Colofon</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/logout.php">Logout</a>
+    </nav>
+  </header>
+</header>
+  <div class="frame">
 
     <h1>Gebruikersbeheer</h1>
 

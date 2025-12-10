@@ -178,17 +178,18 @@ $row = $result->fetch_assoc();
 
 <body>
 
-    <header class="admin-header">
-        <div>
-            <h2>Colofon beheren</h2>
-        </div>
-        <nav>
-            <a href="<?php echo WEBSITEROOT; ?>/admin/users.php">Admin toevoegen</a>
-            <a href="<?php echo WEBSITEROOT; ?>/admin/admin.php">Hotspots</a>
-            <a href="<?php echo WEBSITEROOT; ?>/admin/colofonadmin.php">Colofon</a>
-            <a href="<?php echo WEBSITEROOT; ?>/admin/logout.php">Logout</a>
-        </nav>
-    </header>
+     <header class="admin-header">
+    <div>
+      <h2>Colofon beheren</h2>
+      <div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></div>
+    </div>
+    <nav>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/users.php">Admin toevoegen</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/admin.php">Hotspots</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/colofonadmin.php">Colofon</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/logout.php">Logout</a>
+    </nav>
+  </header>
 
     <main class="page">
         <article class="card">
