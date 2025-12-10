@@ -1,11 +1,14 @@
 <?php
 // admin.php
+
+include __DIR__ . '/db.php'; // verwacht $conn (mysqli)
+
 session_start();
 if (empty($_SESSION['logged_in'])) {
-  header("Location: /utrechtsarchief-module6.1/admin/login.php");
+  header("Location: ".WEBSITEROOT."/admin/login.php");
   exit;
 }
-include __DIR__ . '/db.php'; // verwacht $conn (mysqli)
+
 
 // Lees alle afbeeldingen
 $files = glob(__DIR__ . "/../assets/img/*.jpg");
@@ -23,7 +26,7 @@ usort($files, function ($a, $b) {
 <head>
   <meta charset="utf-8">
   <title>Panorama Admin</title>
-  <link rel="stylesheet" href="/utrechtsarchief-module6.1/assets/css/admin.css">
+  <link rel="stylesheet" href="<?php echo WEBSITEROOT; ?>/assets/css/admin.css">
 </head>
 
 <body>
@@ -33,10 +36,10 @@ usort($files, function ($a, $b) {
       <div>Ingelogd als <?php echo htmlspecialchars($_SESSION['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></div>
     </div>
     <nav>
-      <a href="/utrechtsarchief-module6.1/admin/users.php">Admin toevoegen</a>
-      <a href="/utrechtsarchief-module6.1/admin/admin.php">Hotspots</a>
-      <a href="/utrechtsarchief-module6.1/admin/colofonadmin.php">Colofon</a>
-      <a href="/utrechtsarchief-module6.1/admin/logout.php">Logout</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/users.php">Admin toevoegen</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/admin.php">Hotspots</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/colofonadmin.php">Colofon</a>
+      <a href="<?php echo WEBSITEROOT; ?>/admin/logout.php">Logout</a>
     </nav>
   </header>
 
@@ -84,7 +87,7 @@ usort($files, function ($a, $b) {
       ?>
         <div class="image-wrapper" data-id="<?php echo $idx; ?>">
           <div class="image-panel">
-            <?php $safeFile = '/utrechtsarchief-module6.1/assets/img/' . rawurlencode(basename($file)); ?>
+            <?php $safeFile = WEBSITEROOT.'/assets/img/' . rawurlencode(basename($file)); ?>
             <img src="<?php echo $safeFile; ?>" alt="Panorama <?php echo $idx; ?>">
 
             <!-- Hoofd-hotspot -->
@@ -96,7 +99,7 @@ usort($files, function ($a, $b) {
               <textarea class="info-text-en" rows="3"><?php echo htmlspecialchars($spot['description_en'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
               <div class="controls">
                 <button class="save-hotspot" data-type="desc">Opslaan</button>
-                <form method="post" action="/utrechtsarchief-module6.1/admin/delete_hotspot.php" onsubmit="return confirm('Hoofd-hotspot van afbeelding <?php echo $idx; ?> verwijderen?');" style="display:inline;">
+                <form method="post" action="<?php echo WEBSITEROOT; ?>/admin/delete_hotspot.php" onsubmit="return confirm('Hoofd-hotspot van afbeelding <?php echo $idx; ?> verwijderen?');" style="display:inline;">
                   <input type="hidden" name="image_id" value="<?php echo $idx; ?>">
                   <button type="submit" class="delete-extra">Verwijderen</button>
                 </form>
@@ -114,7 +117,7 @@ usort($files, function ($a, $b) {
                 <textarea class="remark-en" rows="3"><?php echo htmlspecialchars($spot['remark_en'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
                 <div class="controls">
                   <button class="save-hotspot" data-type="remark">Opslaan</button>
-                  <form method="post" action="/utrechtsarchief-module6.1/admin/delete_hotspot.php" onsubmit="return confirm('Hoofd-hotspot van afbeelding <?php echo $idx; ?> verwijderen?');" style="display:inline;">
+                  <form method="post" action="<?php echo WEBSITEROOT; ?>/admin/delete_hotspot.php" onsubmit="return confirm('Hoofd-hotspot van afbeelding <?php echo $idx; ?> verwijderen?');" style="display:inline;">
                     <input type="hidden" name="image_id" value="<?php echo $idx; ?>">
                     <button type="submit" class="delete-extra">Verwijderen</button>
                   </form>
@@ -157,7 +160,7 @@ usort($files, function ($a, $b) {
     </div>
   </main>
 
-  <script src="/utrechtsarchief-module6.1/assets/js/script.js"></script>
+  <script src="/<?php echo WEBSITEROOT; ?>assets/js/script.js"></script>
 </body>
 
 </html>
