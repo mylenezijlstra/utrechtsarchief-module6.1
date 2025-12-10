@@ -10,6 +10,7 @@ $password   = "dauB4hsUwxpcHkZdMGTd";
 $dbname     = "u240381_utrechtsarchief";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
+$conn -> set_charset("utf8");
 
 if ($conn->connect_error) {
     die("Verbinding mislukt: " . $conn->connect_error);

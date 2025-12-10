@@ -183,10 +183,10 @@ $row = $result->fetch_assoc();
             <h2>Colofon beheren</h2>
         </div>
         <nav>
-            <a href="/utrechtsarchief-module6.1/admin/users.php">Admin toevoegen</a>
-            <a href="/utrechtsarchief-module6.1/admin/admin.php">Hotspots</a>
-            <a href="/utrechtsarchief-module6.1/admin/colofonadmin.php">Colofon</a>
-            <a href="/utrechtsarchief-module6.1/admin/logout.php">Logout</a>
+            <a href="<?php echo WEBSITEROOT; ?>/admin/users.php">Admin toevoegen</a>
+            <a href="<?php echo WEBSITEROOT; ?>/admin/admin.php">Hotspots</a>
+            <a href="<?php echo WEBSITEROOT; ?>/admin/colofonadmin.php">Colofon</a>
+            <a href="<?php echo WEBSITEROOT; ?>/admin/logout.php">Logout</a>
         </nav>
     </header>
 
